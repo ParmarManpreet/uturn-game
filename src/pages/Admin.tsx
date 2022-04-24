@@ -1,10 +1,14 @@
-import { getGameStartState } from "./services/AdminStateService";
+import { updateGameStartState } from "./services/GameStateService";
+
+function startGame() {
+    updateGameStartState(true)
+}
 
 export const Admin = () => {
     return (
         <>
             <div>Admin Page</div>
-            <button onClick={() => console.log(getGameStartState())}>Start</button>
+            <button onClick={() => startGame()}>Start</button>
         </>
     );
 }

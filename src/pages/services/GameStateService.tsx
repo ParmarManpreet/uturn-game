@@ -1,13 +1,14 @@
-import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../..";
 
-export async function setGameStartState(isGameStated: boolean) {
+export async function updateGameStartState(isGameStarted: boolean) {
     try {
         await setDoc(doc(db, "GameStates", "GameStart"), {
-            isGameStated: isGameStated
+            isGameStarted: isGameStarted
         })
+        console.log(`Successfully updated isGameStarted to ${isGameStarted}`)
     } catch (error) {
-        console.log(`Firestore could not set GameState to ${isGameStated}\n ${error}`)
+        console.log(`Firestore could not set GameState to ${isGameStarted}\n ${error}`)
     }
 }
 
