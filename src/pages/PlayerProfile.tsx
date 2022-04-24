@@ -1,10 +1,25 @@
-import { useState } from "react";
+import { doc, onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { db } from "..";
 
 export const PlayerProfile = () => {
     const [isWaitingForStart, setIsWaitingForStart] = useState(false)
     const [isGameStarting, setIsGameStarting] = useState(false)
 
+    function setupGameStartListeners() {
+        const unsub = onSnapshot(doc(db, "GameStates", "GameStart"), (doc) => {
+            if (doc.exists()) {
+                setIsWaitingForStart(false)
+                setIsGameStarting(doc.data().isGameStarted)
+            }
+        })
     
+        return unsub
+    }
+
+    useEffect(() =>{
+        setupGameStartListeners()
+    }, [])
 
     if (isWaitingForStart) {
         return (
