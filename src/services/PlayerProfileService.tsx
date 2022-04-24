@@ -1,5 +1,5 @@
 import { doc, setDoc } from "firebase/firestore"
-import { db } from "../.."
+import { db } from ".."
 
 export interface PlayerCreateDTO {
     name: string
@@ -13,6 +13,7 @@ export async function createPlayerProfile(playerDetails: PlayerCreateDTO) {
             picture: "",
             name: playerDetails.name
         })
+        
         console.log(`Successfully Created profile for ${prettyPrintCreateDTO(playerDetails)}`)
     } catch (error) {
         console.log(`Firestore could not create profile with player details: ${prettyPrintCreateDTO(playerDetails)}\n ${error}`)

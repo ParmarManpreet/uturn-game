@@ -1,11 +1,10 @@
 import { doc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "..";
-import { createPlayerProfile, PlayerCreateDTO } from "./services/PlayerProfileService";
 import { Box, Button, IconButton, Input, TextField } from "@mui/material";
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { styled } from '@mui/material/styles';
-import { classicNameResolver } from "typescript";
+import { createPlayerProfile, PlayerCreateDTO } from "../services/PlayerProfileService";
 
 interface PlayerProfileProps {
     numberOfFacts: number

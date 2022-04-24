@@ -1,4 +1,4 @@
-import { updateGameStartState } from "./services/GameStateService";
+import { updateGameStartState } from "../services/GameStateService";
 
 function startGame() {
     updateGameStartState(true)
