@@ -1,7 +1,7 @@
 import { doc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "..";
-import { Box, Button, IconButton, Input, TextField } from "@mui/material";
+import { Box, Button, IconButton, TextField } from "@mui/material";
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { styled } from '@mui/material/styles';
 import { createPlayerProfile, PlayerCreateDTO } from "../services/PlayerProfileService";
@@ -52,7 +52,8 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
     function handlePlayerDetailsSubmitButton() {
         const playerDetails: PlayerCreateDTO = {
             name: name,
-            picture: ""
+            picture: "",
+            facts: facts
         }
         createPlayerProfile(playerDetails)
         setIsWaitingForStart(true)
