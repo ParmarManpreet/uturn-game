@@ -1,11 +1,11 @@
 import { doc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "..";
-import { createPlayerProfile, PlayerCreateDTO } from "./services/PlayerProfileService";
-import { Box, Button, IconButton, Input, TextField } from "@mui/material";
+import { Box, Button, IconButton, TextField } from "@mui/material";
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { styled } from '@mui/material/styles';
-import { classicNameResolver } from "typescript";
+import { createPlayerProfile, PlayerCreateDTO } from "../services/PlayerProfileService";
+import { createFacts, FactModelCreateDTO } from "../services/FactService";
 
 interface PlayerProfileProps {
     numberOfFacts: number
@@ -50,13 +50,24 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
         setName(nameValue)
     }
 
-    function handlePlayerDetailsSubmitButton() {
-        const playerDetails: PlayerCreateDTO = {
-            name: name,
-            picture: ""
+    async function handlePlayerDetailsSubmitButton() {
+        try {
+            const playerDetails: PlayerCreateDTO = {
+                name: name,
+                picture: "",
+                facts: facts
+            }
+
+            const factDetails: FactModelCreateDTO = {
+                playerName: name,
+                facts: facts
+            }
+            await createPlayerProfile(playerDetails)
+            await createFacts(factDetails)
+            setIsWaitingForStart(true)
+        } catch(error) {
+            console.log(error)
         }
-        createPlayerProfile(playerDetails)
-        setIsWaitingForStart(true)
     }
 
     useEffect(() =>{

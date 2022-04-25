@@ -1,5 +1,5 @@
 import { doc, getDoc, updateDoc,  } from "firebase/firestore";
-import { db } from "../..";
+import { db } from "..";
 
 export async function updateGameStartState(isGameStarted: boolean) {
     try {
