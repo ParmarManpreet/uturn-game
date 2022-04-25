@@ -1,7 +1,7 @@
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore"
 import { db } from ".."
-import { prettyPrintCreateDTO, prettyPrintFacts } from "../utils/PrettyPrintService"
-import { createPlayerProfilesFacts, FactModel } from "./FactService"
+import { prettyPrintCreateDTO } from "../utils/PrettyPrintService"
+import { createPlayerProfilesFacts, PlayerProfileFactModel } from "./FactService"
 
 export interface PlayerCreateDTO {
     name: string
@@ -50,17 +50,16 @@ async function updatePlayerURLToId(id: string) {
     }
 }
 
-
 async function addFactsToPlayerProfile(playerId: string, playerName: string, facts: Array<string>) {
     try {
         const factDetailList = mapPlayerCreateDetailstoFactList(playerId, playerName, facts)
         await createPlayerProfilesFacts(factDetailList)
     } catch (error) {
-        console.log(`Firestore could not create facts for: ${prettyPrintFacts(facts)}\n`)
+        console.log(`Firestore could not create facts for: ${facts.toString()}\n`)
     }
 }
 
-function mapPlayerCreateDetailstoFactList(playerId: string, playerName: string, facts: Array<string>): Array<FactModel> {
+function mapPlayerCreateDetailstoFactList(playerId: string, playerName: string, facts: Array<string>): Array<PlayerProfileFactModel> {
     return facts.map((fact) => ({
         playerId: playerId,
         playerName: playerName,
