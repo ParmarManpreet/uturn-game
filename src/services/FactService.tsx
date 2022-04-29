@@ -3,7 +3,7 @@ import { db } from "..";
 import { prettyPrintFactDetailsArray } from "../utils/PrettyPrintService";
 
 
-interface FactModel {
+export interface FactModel {
     playerId: string, 
     playerName: string,
     fact: string
