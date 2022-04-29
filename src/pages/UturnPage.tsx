@@ -1,5 +1,6 @@
 import { Box, Container, Grid } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { FactModel } from "../services/FactService";
 import { getAllFactsNotFromCurrentPlayer } from "../services/PlayerProfileService";
 
 function Card() {
@@ -58,14 +59,33 @@ function UTurnCard() {
     );
 }
 
-async function fetchAllPlayableFacts(playerId: string) {
-    const playableFacts = await getAllFactsNotFromCurrentPlayer(playerId)
-    console.log(playableFacts)
-}
-
 export const UturnPage = () => {
+    const emptyFactList: Array<FactModel> = []
+    const [facts, setFacts] = useState(emptyFactList)
+
+    console.log(facts)
+
     useEffect(() => {
-        fetchAllPlayableFacts("XR4MJZTHPDMjdeztyHvH")  
+        async function fetchAllPlayableFacts(playerId: string) {
+            const playableFacts = await getAllFactsNotFromCurrentPlayer(playerId)
+            if(playableFacts) {
+                const shuffledFacts = shufflePlayableFacts(playableFacts)
+                setFacts(shuffledFacts)
+            }
+        }
+
+        function shufflePlayableFacts(playableFacts: Array<FactModel>) {
+            let playableFactsCopy = [...playableFacts]
+            let shuffledFacts: Array<FactModel> = []
+            for(let indexesToSort = playableFactsCopy.length; indexesToSort > 0; indexesToSort--) {
+                const index: number = Math.floor(Math.random() * indexesToSort)
+                const removedItem = playableFactsCopy.splice(index, 1)[0]
+                shuffledFacts.push(removedItem)
+            }
+            return shuffledFacts.slice(0, 25)
+        }
+
+        fetchAllPlayableFacts("XR4MJZTHPDMjdeztyHvH")
     }, [])
     
     return (
