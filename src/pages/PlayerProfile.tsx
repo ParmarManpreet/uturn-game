@@ -4,8 +4,9 @@ import { db } from "..";
 import { Box, Button, IconButton, TextField } from "@mui/material";
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { styled } from '@mui/material/styles';
-import { createPlayerProfile, PlayerCreateDTO } from "../services/PlayerProfileService";
+import { createPlayerProfile, PlayerCreateDTO, updatePlayerURLToId } from "../services/PlayerProfileService";
 import { createFacts, FactModelCreateDTO } from "../services/FactService";
+import { Navigate } from "react-router-dom";
 
 interface PlayerProfileProps {
     numberOfFacts: number
@@ -52,23 +53,37 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
 
     async function handlePlayerDetailsSubmitButton() {
         try {
-            const playerDetails: PlayerCreateDTO = {
-                name: name,
-                picture: "",
-                facts: facts
-            }
-
-            const factDetails: FactModelCreateDTO = {
-                playerName: name,
-                facts: facts
-            }
-            await createPlayerProfile(playerDetails)
-            await createFacts(factDetails)
-            setIsWaitingForStart(true)
+            const isSucessful = await saveProfileInformation()
+            setIsWaitingForStart(isSucessful)
         } catch(error) {
             console.log(error)
         }
     }
+
+    async function saveProfileInformation() {
+        let isSuccesful = false 
+        const playerDetails: PlayerCreateDTO = {
+            name: name,
+            picture: "",
+            facts: facts
+        }
+
+        const playerId = await createPlayerProfile(playerDetails)
+        
+        if (playerId) {
+            await updatePlayerURLToId(playerId)
+            const factDetails: FactModelCreateDTO = {
+                playerId: playerId,
+                playerName: name,
+                facts: facts,
+            }
+            await createFacts(factDetails)
+            isSuccesful = true
+        }
+
+        return isSuccesful
+    }
+
 
     useEffect(() =>{
         setupGameStartListeners()
@@ -82,7 +97,7 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
     
     else if (isGameStarting) {
         return (
-            <div>Game Starting</div>
+            <Navigate to="/uturn-page" replace={true} />
         )
     } 
     
