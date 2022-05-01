@@ -1,7 +1,6 @@
-import { addDoc, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore"
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore"
 import { db } from ".."
 import { prettyPrintCreateDTO } from "../utils/PrettyPrintService"
-import { FactModel } from "./FactService"
 
 export interface PlayerCreateDTO {
     name: string
@@ -48,28 +47,5 @@ export async function updatePlayerURLToId(id: string) {
         console.log(`Successfully Updated profile url to ${id}`)
     } catch (error) {
         console.log(`Firestore could not update profile url to ${id}`)
-    }
-}
-
-export async function getAllFactsNotFromCurrentPlayer(playerId: string) {
-    try {
-        let factsFromOtherPlayers: Array<FactModel>= []
-        const factsRef = collection(db, "Facts")
-        const queryOfFacts = query(factsRef, where("playerId", "!=", playerId))
-
-        const querySnapshot = await getDocs(queryOfFacts)
-        for(const document of querySnapshot.docs) {
-            if (document.data()) {
-                const playerFact: FactModel = {
-                    playerId: document.data().playerId,
-                    playerName: document.data().playerName,
-                    fact: document.data().fact
-                }
-                factsFromOtherPlayers.push(playerFact)
-            }
-        }
-        return factsFromOtherPlayers
-    } catch(error) {
-        console.log(`Firestore could not Filter Facts Not Belonging to player with id: ${playerId}`)
     }
 }

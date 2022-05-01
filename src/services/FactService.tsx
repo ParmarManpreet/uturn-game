@@ -1,4 +1,4 @@
-import { addDoc, collection} from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where} from "firebase/firestore";
 import { db } from "..";
 import { prettyPrintFactDetailsArray } from "../utils/PrettyPrintService";
 
@@ -26,9 +26,32 @@ export async function createFacts(factDetails: FactModelCreateDTO) {
 
             const playerFactsRef = collection(db, "Facts")
             addDoc(playerFactsRef, factItem)
-            console.log(`Successfully Create Fact with Details: \n {playerName: ${factDetails.playerName}, fact:${fact}}`)
+            console.log(`Successfully Create Fact with Details: \n { playerId: ${factDetails.playerId}, playerName: ${factDetails.playerName}, fact: ${fact} }`)
         }
     } catch (error) {
         console.log(`Firestore could not create facts with details: ${prettyPrintFactDetailsArray(factDetails)}\n ${error}`)
+    }
+}
+
+export async function getAllFactsNotFromCurrentPlayer(playerId: string) {
+    try {
+        let factsFromOtherPlayers: Array<FactModel>= []
+        const factsRef = collection(db, "Facts")
+        const queryOfFacts = query(factsRef, where("playerId", "!=", playerId))
+
+        const querySnapshot = await getDocs(queryOfFacts)
+        for(const document of querySnapshot.docs) {
+            if (document.data()) {
+                const playerFact: FactModel = {
+                    playerId: document.data().playerId,
+                    playerName: document.data().playerName,
+                    fact: document.data().fact
+                }
+                factsFromOtherPlayers.push(playerFact)
+            }
+        }
+        return factsFromOtherPlayers
+    } catch(error) {
+        console.log(`Firestore could not Filter Facts Not Belonging to player with id: ${playerId}`)
     }
 }
