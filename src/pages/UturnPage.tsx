@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { GuessFactOwnerDialog } from "../components/dialogs/GuessFactOwnerDialog";
+import { LoadingView } from "../components/LoadingView";
 import { UTurnCard } from "../components/UTurnCard";
 import { FactModel } from "../services/FactService";
 import { getAllFactsNotFromCurrentPlayer } from "../services/FactService";
@@ -6,9 +8,20 @@ import { getAllFactsNotFromCurrentPlayer } from "../services/FactService";
 export const UturnPage = () => {
     const emptyFactList: FactModel[][] = []
     const [facts, setFacts] = useState(emptyFactList)
+    const [previewedFact, setPreviewedFact] = useState("")
+    const [openSubmitDialog, setOpenSubmitDialog] = useState(false)
+    const [isLoading, setIsloading] = useState(true)
 
     console.log(facts)
 
+    const handleSubmitDialogClose = () => setOpenSubmitDialog(false)
+
+    function handleFactSelection(fact: string) {
+        setPreviewedFact(fact)
+        setOpenSubmitDialog(true)
+    }
+
+    // Initalization of facts in the UseEffect
     useEffect(() => {
         async function fetchAllPlayableFacts(playerId: string) {
             const playableFacts = await getAllFactsNotFromCurrentPlayer(playerId)
@@ -16,6 +29,7 @@ export const UturnPage = () => {
                 const shuffledFacts = shufflePlayableFacts(playableFacts)
                 const shuffledFactsMatrix: FactModel[][] = mapFactsListToMatrix(shuffledFacts)
                 setFacts(shuffledFactsMatrix)
+                setIsloading(false)
             }
         }
 
@@ -47,8 +61,18 @@ export const UturnPage = () => {
 
         fetchAllPlayableFacts("XR4MJZTHPDMjdeztyHvH")
     }, [])
-    
-    return (
-        <UTurnCard facts={facts}/>
-    )
+
+    // Possibly hide the fetching with an animation
+    if (isLoading) {
+        return (
+            <LoadingView/>
+        )
+    } else {
+        return (
+            <>
+                <UTurnCard facts={facts} onItemSelect={handleFactSelection}/>
+                <GuessFactOwnerDialog open={openSubmitDialog} onClose={handleSubmitDialogClose} factText={previewedFact}/>
+            </>
+        )
+    }
 }
