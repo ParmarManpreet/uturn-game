@@ -9,8 +9,7 @@ import { getAllButCurrentPlayer, PlayerGetDTO } from "../services/PlayerProfileS
 
 export const UturnPage = () => {
     const emptyFactList: FactModel[][] = []
-    // const emptyFactOwnerList: Array<PlayerGetDTO> = []
-    const emptyFactOwnerList: Array<string> = []
+    const emptyFactOwnerList: Array<PlayerGetDTO> = []
     const [facts, setFacts] = useState(emptyFactList)
     const [factOwnerDetails, setFactOwnerDetails] = useState(emptyFactOwnerList)
     const [previewedFact, setPreviewedFact] = useState("")
@@ -39,13 +38,15 @@ export const UturnPage = () => {
         }
 
         function filterDuplicateDetails(playerDetails: Array<PlayerGetDTO> ) {
-            let existingEntries: Array<string> = []
+            let distinctPlayerDetails: Array<PlayerGetDTO> = []
+            let existingEntries: Map<string, number> = new Map()
             for(const playerDetail of playerDetails) {
-                if(!existingEntries.includes(playerDetail.name)) {
-                    existingEntries.push(playerDetail.name) 
+                if(!existingEntries.get(playerDetail.name + playerDetail.picture)) {
+                    existingEntries.set(playerDetail.name + playerDetail.picture, 1) 
+                    distinctPlayerDetails.push(playerDetail)
                 }
             }
-            return existingEntries
+            return distinctPlayerDetails
         }
 
         async function fetchAllPlayableFacts(playerId: string) {

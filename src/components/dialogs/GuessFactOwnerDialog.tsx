@@ -5,7 +5,7 @@ interface SubmitAnswerDialogProps {
     open: boolean,
     onClose: () => void
     factText: string
-    factOwners: Array<string>
+    factOwners: Array<PlayerGetDTO>
 }
 
 export const GuessFactOwnerDialog = (props: SubmitAnswerDialogProps) => {
@@ -17,8 +17,7 @@ export const GuessFactOwnerDialog = (props: SubmitAnswerDialogProps) => {
                     {props.factText}
                 </DialogContentText>
                 <Autocomplete
-                    freeSolo
-                    options={props.factOwners.map((factOwnerDetails) => factOwnerDetails)}
+                    options={props.factOwners.map((factOwnerDetails) => factOwnerDetails.name)}
                     renderInput={(params) => <TextField {...params} label="Name" />}
                 />
             </DialogContent>
