@@ -1,9 +1,11 @@
-import { Dialog, DialogTitle, DialogContent, DialogContentText } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogContentText, Autocomplete, TextField } from "@mui/material";
+import { PlayerGetDTO } from "../../services/PlayerProfileService";
 
 interface SubmitAnswerDialogProps {
     open: boolean,
     onClose: () => void
     factText: string
+    factOwners: Array<string>
 }
 
 export const GuessFactOwnerDialog = (props: SubmitAnswerDialogProps) => {
@@ -14,6 +16,11 @@ export const GuessFactOwnerDialog = (props: SubmitAnswerDialogProps) => {
                 <DialogContentText>
                     {props.factText}
                 </DialogContentText>
+                <Autocomplete
+                    freeSolo
+                    options={props.factOwners.map((factOwnerDetails) => factOwnerDetails)}
+                    renderInput={(params) => <TextField {...params} label="Name" />}
+                />
             </DialogContent>
         </Dialog>
     );

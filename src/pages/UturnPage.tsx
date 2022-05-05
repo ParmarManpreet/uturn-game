@@ -1,16 +1,23 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router";
 import { GuessFactOwnerDialog } from "../components/dialogs/GuessFactOwnerDialog";
 import { LoadingView } from "../components/LoadingView";
 import { UTurnCard } from "../components/UTurnCard";
 import { FactModel } from "../services/FactService";
 import { getAllFactsNotFromCurrentPlayer } from "../services/FactService";
+import { getAllButCurrentPlayer, PlayerGetDTO } from "../services/PlayerProfileService";
 
 export const UturnPage = () => {
     const emptyFactList: FactModel[][] = []
+    // const emptyFactOwnerList: Array<PlayerGetDTO> = []
+    const emptyFactOwnerList: Array<string> = []
     const [facts, setFacts] = useState(emptyFactList)
+    const [factOwnerDetails, setFactOwnerDetails] = useState(emptyFactOwnerList)
     const [previewedFact, setPreviewedFact] = useState("")
     const [openSubmitDialog, setOpenSubmitDialog] = useState(false)
     const [isLoading, setIsloading] = useState(true)
+
+    let params = useParams();
 
     console.log(facts)
 
@@ -23,6 +30,24 @@ export const UturnPage = () => {
 
     // Initalization of facts in the UseEffect
     useEffect(() => {
+        async function fetchAllPlayerDetailsButCurrentPlayer(playerId: string) {
+            const playerDetails = await getAllButCurrentPlayer(playerId)
+            if(playerDetails) {
+                const filteredPlayerDetails = filterDuplicateDetails(playerDetails)
+                setFactOwnerDetails(filteredPlayerDetails)
+            }
+        }
+
+        function filterDuplicateDetails(playerDetails: Array<PlayerGetDTO> ) {
+            let existingEntries: Array<string> = []
+            for(const playerDetail of playerDetails) {
+                if(!existingEntries.includes(playerDetail.name)) {
+                    existingEntries.push(playerDetail.name) 
+                }
+            }
+            return existingEntries
+        }
+
         async function fetchAllPlayableFacts(playerId: string) {
             const playableFacts = await getAllFactsNotFromCurrentPlayer(playerId)
             if(playableFacts) {
@@ -59,8 +84,11 @@ export const UturnPage = () => {
             return factsMatrix
         }
 
-        fetchAllPlayableFacts("XR4MJZTHPDMjdeztyHvH")
-    }, [])
+        if (params.playerURL) {
+            fetchAllPlayableFacts(params.playerURL)
+            fetchAllPlayerDetailsButCurrentPlayer(params.playerURL)          
+        }
+    }, [params.playerURL])
 
     // Possibly hide the fetching with an animation
     if (isLoading) {
@@ -71,7 +99,7 @@ export const UturnPage = () => {
         return (
             <>
                 <UTurnCard facts={facts} onItemSelect={handleFactSelection}/>
-                <GuessFactOwnerDialog open={openSubmitDialog} onClose={handleSubmitDialogClose} factText={previewedFact}/>
+                <GuessFactOwnerDialog open={openSubmitDialog} onClose={handleSubmitDialogClose} factText={previewedFact} factOwners={factOwnerDetails}/>
             </>
         )
     }

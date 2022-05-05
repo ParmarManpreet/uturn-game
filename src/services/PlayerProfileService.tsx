@@ -1,11 +1,21 @@
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore"
+import { addDoc, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore"
 import { db } from ".."
 import { prettyPrintCreateDTO } from "../utils/PrettyPrintService"
+
+export interface PlayerProfileModel {
+    name: string
+    picture: string
+    url: string
+}
 
 export interface PlayerCreateDTO {
     name: string
     picture: string
-    facts: Array<string>
+}
+
+export interface PlayerGetDTO {
+    name: string
+    picture: string
 }
 
 export async function createPlayerProfile(playerDetails: PlayerCreateDTO) {
@@ -47,5 +57,26 @@ export async function updatePlayerURLToId(id: string) {
         console.log(`Successfully Updated profile url to ${id}`)
     } catch (error) {
         console.log(`Firestore could not update profile url to ${id}`)
+    }
+}
+
+export async function getAllButCurrentPlayer(playerId: string) {
+    try {
+        const profiles = collection(db, "Profiles")
+        const queryOfProfiles = query(profiles, where("url", "!=", playerId))
+        const querySnapshot = await getDocs(queryOfProfiles)
+        let playerProfiles: Array<PlayerGetDTO> = []
+        for(const document of querySnapshot.docs) {
+            if (document.data()) {
+                const playerProfile: PlayerGetDTO = {
+                    name: document.data().name,
+                    picture: document.data().picture
+                }
+                playerProfiles.push(playerProfile)
+            }
+        }
+        return playerProfiles
+    } catch (error) {
+        console.log(`Firebase was not able to get player that do not have the id: ${playerId}\n ${error}`)
     }
 }

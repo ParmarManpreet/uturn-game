@@ -20,6 +20,7 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
     const [isGameStarting, setIsGameStarting] = useState(false)
     const [name, setName] = useState("")
     const [facts, setFacts] = useState(initializeFacts(props.numberOfFacts))
+    const [urlParameter, setUrlParameter] = useState("")
     const [imgUrl, setImgUrl] = useState(null);
     const [progresspercent, setProgresspercent] = useState(0);
     const types = ['image/png', 'image/jpeg'];
@@ -107,7 +108,6 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
         const playerDetails: PlayerCreateDTO = {
             name: name,
             picture: "",
-            facts: facts
         }
 
         const playerId = await createPlayerProfile(playerDetails)
@@ -120,6 +120,7 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
                 facts: facts,
             }
             await createFacts(factDetails)
+            setUrlParameter(playerId)
             isSuccesful = true
         }
 
@@ -139,7 +140,7 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
     
     else if (isGameStarting) {
         return (
-            <Navigate to="/uturn-page" replace={true} />
+            <Navigate to={`/uturn-page/${urlParameter}`} replace={true} />
         )
     } 
     
