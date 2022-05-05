@@ -10,9 +10,10 @@ import { getAllButCurrentPlayer, PlayerGetDTO } from "../services/PlayerProfileS
 export const UturnPage = () => {
     const emptyFactList: FactModel[][] = []
     const emptyFactOwnerList: Array<PlayerGetDTO> = []
+    const emptyFact: FactModel= {playerId: "", playerName: "", fact: ""}
     const [facts, setFacts] = useState(emptyFactList)
     const [factOwnerDetails, setFactOwnerDetails] = useState(emptyFactOwnerList)
-    const [previewedFact, setPreviewedFact] = useState("")
+    const [previewedFact, setPreviewedFact] = useState<FactModel>(emptyFact)
     const [openSubmitDialog, setOpenSubmitDialog] = useState(false)
     const [isLoading, setIsloading] = useState(true)
 
@@ -22,7 +23,7 @@ export const UturnPage = () => {
 
     const handleSubmitDialogClose = () => setOpenSubmitDialog(false)
 
-    function handleFactSelection(fact: string) {
+    function handleFactSelection(fact: FactModel) {
         setPreviewedFact(fact)
         setOpenSubmitDialog(true)
     }
@@ -100,7 +101,7 @@ export const UturnPage = () => {
         return (
             <>
                 <UTurnCard facts={facts} onItemSelect={handleFactSelection}/>
-                <GuessFactOwnerDialog open={openSubmitDialog} onClose={handleSubmitDialogClose} factText={previewedFact} factOwners={factOwnerDetails}/>
+                <GuessFactOwnerDialog open={openSubmitDialog} onClose={handleSubmitDialogClose} factDetails={previewedFact} factOwners={factOwnerDetails}/>
             </>
         )
     }

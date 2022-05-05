@@ -7,19 +7,19 @@ interface UTurnCardItem {
     rowIndex: number
     columnIndex: number
     updateCardProgress: (rowIndex: number, columnIndex: number) => void
-    onItemSelect: (fact: string) => void
+    onItemSelect: (fact: FactModel) => void
 }
 
 interface UTurnCardProps {
     facts: FactModel[][]
-    onItemSelect: (fact: string) => void
+    onItemSelect: (fact: FactModel) => void
 }
 
 interface UTurnCardRow {
     factsRowData: FactModel[],
     rowIndex: number
     updateCardProgress: (rowIndex: number, columnIndex: number) => void
-    onItemSelect: (fact: string) => void
+    onItemSelect: (fact: FactModel) => void
 }
 
 function GridItem(props: UTurnCardItem) {
@@ -28,7 +28,7 @@ function GridItem(props: UTurnCardItem) {
     function handleCorrectAnswer() {
         setCardColour("primary.dark")
         props.updateCardProgress(props.rowIndex, props.columnIndex)
-        props.onItemSelect(props.factItem.fact)
+        props.onItemSelect(props.factItem)
     }
 
     return (
