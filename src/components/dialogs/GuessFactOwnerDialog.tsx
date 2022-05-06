@@ -18,6 +18,29 @@ interface GuessingDialogProps {
     onSubmit: (factOwnerName: string | null) => void
 }
 
+interface IncorrectAnswerDialog {
+    open: boolean
+    onClose: () => void
+    onTryAgain: () => void
+}
+
+const IncorrectGuessDialog = (props: IncorrectAnswerDialog) => {
+    return(
+        <Dialog open={props.open} onClose={props.onClose}>
+            <DialogTitle>Incorrect</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    {"Try Again!"}
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={props.onClose}>Close</Button>
+                <Button onClick={props.onTryAgain}>Try Again</Button>
+            </DialogActions>
+        </Dialog>
+    )
+}
+
 const GuessingForm = (props: GuessingDialogProps) => {
     const [factOwnerGuess, setFactOwnerGuess] = useState<string | null>(null)
 
@@ -64,9 +87,20 @@ export const GuessFactOwnerDialog = (props: SubmitAnswerDialogProps) => {
         }
     }
 
+    function handleCloseDialog() {
+        setIsCorrect(false)
+        setIsIncorrect(false)
+        props.onClose()
+    }
+
+    function handleTryAgain() {
+        setIsCorrect(false)
+        setIsIncorrect(false)
+    }
+
     if (isCorrect) {
         return (
-            <Dialog open={props.open} onClose={props.onClose}>
+            <Dialog open={props.open} onClose={handleCloseDialog}>
                 <DialogTitle>Correct</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -81,22 +115,20 @@ export const GuessFactOwnerDialog = (props: SubmitAnswerDialogProps) => {
     } 
     else if (isIncorrect) {
         return (
-            <Dialog open={props.open} onClose={props.onClose}>
-                <DialogTitle>Incorrect</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        {"Try Again!"}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={props.onClose}>Close</Button>
-                </DialogActions>
-            </Dialog>
+            <IncorrectGuessDialog open={props.open}
+                onClose={handleCloseDialog} 
+                onTryAgain={handleTryAgain}
+            />
         );
     }
     else {
         return (
-            <GuessingForm {...props} onSubmit={isGuessCorrect}/>
+            <GuessingForm open={props.open}
+                factDetails={props.factDetails}
+                factOwners={props.factOwners}
+                onClose={handleCloseDialog} 
+                onSubmit={isGuessCorrect}
+            />
         );
     }
 }
