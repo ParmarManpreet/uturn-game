@@ -1,5 +1,4 @@
 import { Box, Container, Grid } from "@mui/material";
-import { useState } from "react";
 import { FactModel } from "../services/FactService";
 
 export interface FactPosition {
@@ -9,6 +8,7 @@ export interface FactPosition {
 
 interface UTurnCardItem {
     factItem: FactModel
+    cardItemProgress: boolean
     rowIndex: number
     columnIndex: number
     onItemSelect: (factDetails: FactModel, cardPosition: FactPosition) => void
@@ -16,22 +16,35 @@ interface UTurnCardItem {
 
 interface UTurnCardProps {
     facts: FactModel[][]
+    cardProgress: boolean[][]
     onItemSelect: (factDetails: FactModel, cardPosition: FactPosition) => void
 }
 
 interface UTurnCardRow {
     factsRowData: FactModel[],
+    cardProgressRow: boolean[],
     rowIndex: number
     onItemSelect: (factDetails: FactModel, cardPosition: FactPosition) => void
 }
 
-function GridItem(props: UTurnCardItem) {
-    const [cardColour, setCardColour] = useState("primary.light")
+function FactItem(props: UTurnCardItem) {
     const itemPosition: FactPosition = {rowIndex: props.rowIndex, columnIndex: props.columnIndex}
+
+    if (props.cardItemProgress) {
+        return (
+            <Box sx={{
+                backgroundColor: "primary.dark",
+                textAlign: 'center',
+                height: 100,
+                overflowWrap: 'break-word'
+              }} 
+            >{props.factItem.playerName}</Box>
+        )
+    }
 
     return (
         <Box sx={{
-            backgroundColor: cardColour,
+            backgroundColor: "primary.light",
             textAlign: 'center',
             height: 100,
             overflowWrap: 'break-word'
@@ -45,7 +58,8 @@ function FactRow(props: UTurnCardRow) {
         <Grid container item spacing={1}>
             {props.factsRowData.map((fact, index) => (
                 <Grid key={`Fact${index}`} item xs={2.4}>
-                    <GridItem factItem={fact} 
+                    <FactItem factItem={fact}
+                        cardItemProgress={props.cardProgressRow[index]}
                         rowIndex={props.rowIndex}
                         columnIndex={index}
                         onItemSelect={props.onItemSelect}
@@ -61,9 +75,10 @@ export const UTurnCard = (props: UTurnCardProps) => {
         <Container>
             <Grid container spacing={1}>
                 {props.facts.map((factsRowData, index) => (
-                    <FactRow key={`Row${index}`} 
+                    <FactRow key={`Row${index}`}
                         rowIndex={index}
                         factsRowData={factsRowData}
+                        cardProgressRow={props.cardProgress[index]}
                         onItemSelect={props.onItemSelect}
                     />
                 ))}

@@ -43,8 +43,6 @@ export const UturnPage = () => {
 
     let params = useParams();
 
-    console.log(facts)
-
     const handleSubmitDialogClose = () => setOpenSubmitDialog(false)
 
     function handleFactSelection(factDetails: FactModel, cardPosition: FactPosition) {
@@ -146,7 +144,10 @@ export const UturnPage = () => {
     } else {
         return (
             <>
-                <UTurnCard facts={facts} onItemSelect={handleFactSelection}/>
+                <UTurnCard facts={facts}
+                    cardProgress={cardProgress}
+                    onItemSelect={handleFactSelection}
+                />
                 <GuessFactOwnerDialog fact={previewedFactDialogDetails.fact}
                     playerName={previewedFactDialogDetails.playerName}
                     open={openSubmitDialog} 
