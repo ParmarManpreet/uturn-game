@@ -1,7 +1,6 @@
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore"
 import { db } from ".."
 import { prettyPrintCreateDTO } from "../utils/PrettyPrintService"
-import { createPlayerProfilesFacts, PlayerProfileFactModel } from "./FactService"
 
 export interface PlayerCreateDTO {
     name: string
@@ -11,13 +10,14 @@ export interface PlayerCreateDTO {
 
 export async function createPlayerProfile(playerDetails: PlayerCreateDTO) {
     try {
+        let id = ""
         const playerId = await initializePlayerProfile(playerDetails)
         if (playerId) {
-            await updatePlayerURLToId(playerId)
-            await addFactsToPlayerProfile(playerId, playerDetails.name, playerDetails.facts)
+            id = playerId
         } else {
             throw new Error(`Player Id is Empty`)
         }
+        return id 
     } catch (error) {
         console.log(`Firestore could not create profile with player details: ${prettyPrintCreateDTO(playerDetails)}\n ${error}`)
     }
@@ -38,7 +38,7 @@ async function initializePlayerProfile(playerDetails: PlayerCreateDTO) {
     }
 }
 
-async function updatePlayerURLToId(id: string) {
+export async function updatePlayerURLToId(id: string) {
     try {
         const profile = doc(db, "Profiles", id)
         await updateDoc(profile, {
@@ -48,21 +48,4 @@ async function updatePlayerURLToId(id: string) {
     } catch (error) {
         console.log(`Firestore could not update profile url to ${id}`)
     }
-}
-
-async function addFactsToPlayerProfile(playerId: string, playerName: string, facts: Array<string>) {
-    try {
-        const factDetailList = mapPlayerCreateDetailstoFactList(playerId, playerName, facts)
-        await createPlayerProfilesFacts(factDetailList)
-    } catch (error) {
-        console.log(`Firestore could not create facts for: ${facts.toString()}\n`)
-    }
-}
-
-function mapPlayerCreateDetailstoFactList(playerId: string, playerName: string, facts: Array<string>): Array<PlayerProfileFactModel> {
-    return facts.map((fact) => ({
-        playerId: playerId,
-        playerName: playerName,
-        fact: fact
-    }))
 }
