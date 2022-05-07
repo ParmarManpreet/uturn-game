@@ -1,27 +1,51 @@
 import { useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogContentText, Autocomplete, TextField, DialogActions, Button } from "@mui/material";
 import { PlayerGetDTO } from "../../services/PlayerProfileService";
-import { FactModel } from "../../services/FactService";
 
-interface SubmitAnswerDialogProps {
-    open: boolean,
+interface CorrectAnswerDialog {
+    open: boolean
     onClose: () => void
-    factDetails: FactModel
-    factOwners: Array<PlayerGetDTO>
-}
-
-interface GuessingDialogProps {
-    open: boolean,
-    onClose: () => void
-    factDetails: FactModel
-    factOwners: Array<PlayerGetDTO>
-    onSubmit: (factOwnerName: string | null) => void
 }
 
 interface IncorrectAnswerDialog {
     open: boolean
     onClose: () => void
     onTryAgain: () => void
+}
+
+interface GuessingDialogProps {
+    fact: string,
+    playerName: string
+    open: boolean,
+    onClose: () => void
+    factOwners: Array<PlayerGetDTO>
+    onSubmit: (factOwnerName: string | null) => void
+}
+
+interface SubmitAnswerDialogProps {
+    fact: string,
+    playerName: string
+    open: boolean,
+    onClose: () => void
+    factOwners: Array<PlayerGetDTO>
+    onSubmitCorrectAnswer: () => void
+}
+
+
+const CorrectGuessDialog = (props: CorrectAnswerDialog) => {
+    return (
+        <Dialog open={props.open} onClose={props.onClose}>
+            <DialogTitle>Correct</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    {"Congratulations you guessed correctly!"}
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={props.onClose}>Close</Button>
+            </DialogActions>
+        </Dialog>
+    );
 }
 
 const IncorrectGuessDialog = (props: IncorrectAnswerDialog) => {
@@ -57,7 +81,7 @@ const GuessingForm = (props: GuessingDialogProps) => {
             <DialogTitle>Who wrote this fact?</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    {props.factDetails.fact}
+                    {props.fact}
                 </DialogContentText>
                 <Autocomplete
                     onChange={(event: any, newValue: string | null) => {
@@ -80,7 +104,8 @@ export const GuessFactOwnerDialog = (props: SubmitAnswerDialogProps) => {
     const [isIncorrect, setIsIncorrect] = useState(false)
     
     function isGuessCorrect(factOwnerName: string | null ) {
-        if (factOwnerName === props.factDetails.playerName) {
+        if (factOwnerName === props.playerName) {
+            props.onSubmitCorrectAnswer()
             setIsCorrect(true)
         } else {
             setIsIncorrect(true)
@@ -100,17 +125,7 @@ export const GuessFactOwnerDialog = (props: SubmitAnswerDialogProps) => {
 
     if (isCorrect) {
         return (
-            <Dialog open={props.open} onClose={handleCloseDialog}>
-                <DialogTitle>Correct</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        {"Congratulations you guessed correctly!"}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={props.onClose}>Close</Button>
-                </DialogActions>
-            </Dialog>
+            <CorrectGuessDialog open={props.open} onClose={handleCloseDialog}/>
         );
     } 
     else if (isIncorrect) {
@@ -123,8 +138,9 @@ export const GuessFactOwnerDialog = (props: SubmitAnswerDialogProps) => {
     }
     else {
         return (
-            <GuessingForm open={props.open}
-                factDetails={props.factDetails}
+            <GuessingForm fact={props.fact}
+                playerName={props.playerName}
+                open={props.open}
                 factOwners={props.factOwners}
                 onClose={handleCloseDialog} 
                 onSubmit={isGuessCorrect}

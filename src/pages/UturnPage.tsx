@@ -2,20 +2,44 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { GuessFactOwnerDialog } from "../components/dialogs/GuessFactOwnerDialog";
 import { LoadingView } from "../components/LoadingView";
-import { UTurnCard } from "../components/UTurnCard";
+import { FactPosition, UTurnCard } from "../components/UTurnCard";
 import { FactModel } from "../services/FactService";
 import { getAllFactsNotFromCurrentPlayer } from "../services/FactService";
 import { getAllButCurrentPlayer, PlayerGetDTO } from "../services/PlayerProfileService";
 
+export interface DialogInformation {
+    playerName: string
+    fact: string
+    factPosition: FactPosition
+}
+
 export const UturnPage = () => {
     const emptyFactList: FactModel[][] = []
     const emptyFactOwnerList: Array<PlayerGetDTO> = []
-    const emptyFact: FactModel= {playerId: "", playerName: "", fact: ""}
+    const emptyCardProgress: boolean[][] = []
+    const emptyDialogInformation: DialogInformation = {playerName: "", fact: "", factPosition: {rowIndex: -1, columnIndex: -1}}
+
+    // Loading State
+    const [isLoading, setIsloading] = useState(true)
+
+    // Common Information
     const [facts, setFacts] = useState(emptyFactList)
     const [factOwnerDetails, setFactOwnerDetails] = useState(emptyFactOwnerList)
-    const [previewedFact, setPreviewedFact] = useState<FactModel>(emptyFact)
+    const [cardProgress, setCardProgress] = useState(emptyCardProgress)
+
+    // Fact for Dialog
+    const [previewedFactDialogDetails, setPreviewedFactDialogDetails] = useState<DialogInformation>(emptyDialogInformation)
     const [openSubmitDialog, setOpenSubmitDialog] = useState(false)
-    const [isLoading, setIsloading] = useState(true)
+
+    function updateCardProgress() {
+        const copyOfCardProgress: boolean[][] = cloneCardProgress(cardProgress)
+        copyOfCardProgress[previewedFactDialogDetails.factPosition.rowIndex][previewedFactDialogDetails.factPosition.columnIndex] = true
+        setCardProgress(copyOfCardProgress)
+    }
+
+    function cloneCardProgress(factGrid: boolean[][]) {
+        return factGrid.map((factRow) => [...factRow])
+    }
 
     let params = useParams();
 
@@ -23,8 +47,13 @@ export const UturnPage = () => {
 
     const handleSubmitDialogClose = () => setOpenSubmitDialog(false)
 
-    function handleFactSelection(fact: FactModel) {
-        setPreviewedFact(fact)
+    function handleFactSelection(factDetails: FactModel, cardPosition: FactPosition) {
+        const factDialogInformation: DialogInformation = {
+            playerName: factDetails.playerName,
+            fact: factDetails.fact,
+            factPosition: cardPosition
+        }
+        setPreviewedFactDialogDetails(factDialogInformation)
         setOpenSubmitDialog(true)
     }
 
@@ -57,6 +86,7 @@ export const UturnPage = () => {
                 const shuffledFactsMatrix: FactModel[][] = mapFactsListToMatrix(shuffledFacts)
                 setFacts(shuffledFactsMatrix)
                 setIsloading(false)
+                setCardProgress(initializeCardProgress(shuffledFactsMatrix))
             }
         }
 
@@ -86,9 +116,25 @@ export const UturnPage = () => {
             return factsMatrix
         }
 
+        function initializeCardProgress(facts: FactModel[][]): boolean[][] {
+            let initialIsGridItemSelected: boolean[][] = []
+            if (facts.length !== 0) {
+                const numberOfRows = facts.length
+                const numberOfColumns = facts[0].length
+                for (let i = 0; i < numberOfRows; i++) {
+                    let rowValues = []
+                    for (let j = 0; j < numberOfColumns; j++) {
+                        rowValues.push(false)
+                    }
+                    initialIsGridItemSelected.push(rowValues)
+                }
+            }
+            return initialIsGridItemSelected
+        }
+
         if (params.playerURL) {
             fetchAllPlayableFacts(params.playerURL)
-            fetchAllPlayerDetailsButCurrentPlayer(params.playerURL)          
+            fetchAllPlayerDetailsButCurrentPlayer(params.playerURL)
         }
     }, [params.playerURL])
 
@@ -101,7 +147,13 @@ export const UturnPage = () => {
         return (
             <>
                 <UTurnCard facts={facts} onItemSelect={handleFactSelection}/>
-                <GuessFactOwnerDialog open={openSubmitDialog} onClose={handleSubmitDialogClose} factDetails={previewedFact} factOwners={factOwnerDetails}/>
+                <GuessFactOwnerDialog fact={previewedFactDialogDetails.fact}
+                    playerName={previewedFactDialogDetails.playerName}
+                    open={openSubmitDialog} 
+                    onClose={handleSubmitDialogClose} 
+                    factOwners={factOwnerDetails}
+                    onSubmitCorrectAnswer={updateCardProgress}
+                />
             </>
         )
     }

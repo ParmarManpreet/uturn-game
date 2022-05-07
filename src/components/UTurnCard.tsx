@@ -2,34 +2,32 @@ import { Box, Container, Grid } from "@mui/material";
 import { useState } from "react";
 import { FactModel } from "../services/FactService";
 
+export interface FactPosition {
+    rowIndex: number
+    columnIndex: number
+}
+
 interface UTurnCardItem {
     factItem: FactModel
     rowIndex: number
     columnIndex: number
-    updateCardProgress: (rowIndex: number, columnIndex: number) => void
-    onItemSelect: (fact: FactModel) => void
+    onItemSelect: (factDetails: FactModel, cardPosition: FactPosition) => void
 }
 
 interface UTurnCardProps {
     facts: FactModel[][]
-    onItemSelect: (fact: FactModel) => void
+    onItemSelect: (factDetails: FactModel, cardPosition: FactPosition) => void
 }
 
 interface UTurnCardRow {
     factsRowData: FactModel[],
     rowIndex: number
-    updateCardProgress: (rowIndex: number, columnIndex: number) => void
-    onItemSelect: (fact: FactModel) => void
+    onItemSelect: (factDetails: FactModel, cardPosition: FactPosition) => void
 }
 
 function GridItem(props: UTurnCardItem) {
     const [cardColour, setCardColour] = useState("primary.light")
-
-    function handleCorrectAnswer() {
-        setCardColour("primary.dark")
-        props.updateCardProgress(props.rowIndex, props.columnIndex)
-        props.onItemSelect(props.factItem)
-    }
+    const itemPosition: FactPosition = {rowIndex: props.rowIndex, columnIndex: props.columnIndex}
 
     return (
         <Box sx={{
@@ -38,7 +36,7 @@ function GridItem(props: UTurnCardItem) {
             height: 100,
             overflowWrap: 'break-word'
           }} 
-          onClick={handleCorrectAnswer}>{props.factItem.fact}</Box>
+          onClick={() => props.onItemSelect(props.factItem, itemPosition)}>{props.factItem.fact}</Box>
     )
 }
 
@@ -48,7 +46,6 @@ function FactRow(props: UTurnCardRow) {
             {props.factsRowData.map((fact, index) => (
                 <Grid key={`Fact${index}`} item xs={2.4}>
                     <GridItem factItem={fact} 
-                        updateCardProgress={props.updateCardProgress}
                         rowIndex={props.rowIndex}
                         columnIndex={index}
                         onItemSelect={props.onItemSelect}
@@ -60,34 +57,6 @@ function FactRow(props: UTurnCardRow) {
 }
 
 export const UTurnCard = (props: UTurnCardProps) => {
-    const [cardProgress, setCardProgress] = useState(initializeCardProgress())
-
-    function initializeCardProgress(): boolean[][] {
-        let initialIsGridItemSelected: boolean[][] = []
-        if (props.facts.length !== 0) {
-            const numberOfRows = props.facts.length
-            const numberOfColumns = props.facts[0].length
-            for (let i = 0; i < numberOfRows; i++) {
-                let rowValues = []
-                for (let j = 0; j < numberOfColumns; j++) {
-                    rowValues.push(false)
-                }
-                initialIsGridItemSelected.push(rowValues)
-            }
-        }
-        return initialIsGridItemSelected
-    }
-
-    function updateCardProgress(rowIndex: number, columnIndex: number) {
-        const copyOfCardProgress: boolean[][] = cloneCardProgress(cardProgress)
-        copyOfCardProgress[rowIndex][columnIndex] = true
-        setCardProgress(copyOfCardProgress)
-    }
-
-    function cloneCardProgress(factGrid: boolean[][]) {
-        return factGrid.map((factRow) => [...factRow])
-    }
-    
     return (
         <Container>
             <Grid container spacing={1}>
@@ -95,7 +64,6 @@ export const UTurnCard = (props: UTurnCardProps) => {
                     <FactRow key={`Row${index}`} 
                         rowIndex={index}
                         factsRowData={factsRowData}
-                        updateCardProgress={updateCardProgress}
                         onItemSelect={props.onItemSelect}
                     />
                 ))}
