@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogContentText, Autocomplete, TextField, DialogActions, Button } from "@mui/material";
 import { PlayerGetDTO } from "../../services/PlayerProfileService";
+import { FactModelGetDTO } from "../../services/FactService";
 
 interface CorrectAnswerDialog {
     open: boolean
@@ -14,8 +15,7 @@ interface IncorrectAnswerDialog {
 }
 
 interface GuessingDialogProps {
-    fact: string,
-    playerName: string
+    selectedFact: FactModelGetDTO,
     open: boolean,
     onClose: () => void
     factOwners: Array<PlayerGetDTO>
@@ -23,8 +23,7 @@ interface GuessingDialogProps {
 }
 
 interface SubmitAnswerDialogProps {
-    fact: string,
-    playerName: string
+    selectedFact: FactModelGetDTO,
     open: boolean,
     onClose: () => void
     factOwners: Array<PlayerGetDTO>
@@ -81,7 +80,7 @@ const GuessingForm = (props: GuessingDialogProps) => {
             <DialogTitle>Who wrote this fact?</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    {props.fact}
+                    {props.selectedFact.fact}
                 </DialogContentText>
                 <Autocomplete
                     onChange={(event: any, newValue: string | null) => {
@@ -104,7 +103,7 @@ export const GuessFactOwnerDialog = (props: SubmitAnswerDialogProps) => {
     const [isIncorrect, setIsIncorrect] = useState(false)
     
     function isGuessCorrect(factOwnerName: string | null ) {
-        if (factOwnerName === props.playerName) {
+        if (factOwnerName === props.selectedFact.playerName) {
             props.onSubmitCorrectAnswer()
             setIsCorrect(true)
         } else {
@@ -138,8 +137,7 @@ export const GuessFactOwnerDialog = (props: SubmitAnswerDialogProps) => {
     }
     else {
         return (
-            <GuessingForm fact={props.fact}
-                playerName={props.playerName}
+            <GuessingForm selectedFact={props.selectedFact}
                 open={props.open}
                 factOwners={props.factOwners}
                 onClose={handleCloseDialog} 

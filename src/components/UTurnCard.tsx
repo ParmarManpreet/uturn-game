@@ -1,5 +1,5 @@
 import { Box, Container, Grid } from "@mui/material";
-import { FactModel } from "../services/FactService";
+import { FactModelGetDTO } from "../services/FactService";
 
 export interface FactPosition {
     rowIndex: number
@@ -7,24 +7,24 @@ export interface FactPosition {
 }
 
 interface UTurnCardItem {
-    factItem: FactModel
+    factItem: FactModelGetDTO
     cardItemProgress: boolean
     rowIndex: number
     columnIndex: number
-    onItemSelect: (factDetails: FactModel, cardPosition: FactPosition) => void
+    onItemSelect: (factDetails: FactModelGetDTO, cardPosition: FactPosition) => void
 }
 
 interface UTurnCardProps {
-    facts: FactModel[][]
+    facts: FactModelGetDTO[][]
     cardProgress: boolean[][]
-    onItemSelect: (factDetails: FactModel, cardPosition: FactPosition) => void
+    onItemSelect: (factDetails: FactModelGetDTO, cardPosition: FactPosition) => void
 }
 
 interface UTurnCardRow {
-    factsRowData: FactModel[],
+    factsRowData: FactModelGetDTO[],
     cardProgressRow: boolean[],
     rowIndex: number
-    onItemSelect: (factDetails: FactModel, cardPosition: FactPosition) => void
+    onItemSelect: (factDetails: FactModelGetDTO, cardPosition: FactPosition) => void
 }
 
 function FactItem(props: UTurnCardItem) {

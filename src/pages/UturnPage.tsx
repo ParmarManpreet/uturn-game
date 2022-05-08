@@ -3,21 +3,20 @@ import { useParams } from "react-router";
 import { GuessFactOwnerDialog } from "../components/dialogs/GuessFactOwnerDialog";
 import { LoadingView } from "../components/LoadingView";
 import { FactPosition, UTurnCard } from "../components/UTurnCard";
-import { FactModel } from "../services/FactService";
+import { FactModelGetDTO } from "../services/FactService";
 import { getAllFactsNotFromCurrentPlayer } from "../services/FactService";
 import { getAllButCurrentPlayer, PlayerGetDTO } from "../services/PlayerProfileService";
 
 export interface DialogInformation {
-    playerName: string
-    fact: string
+    factItem: FactModelGetDTO
     factPosition: FactPosition
 }
 
 export const UturnPage = () => {
-    const emptyFactList: FactModel[][] = []
+    const emptyFactList: FactModelGetDTO[][] = []
     const emptyFactOwnerList: Array<PlayerGetDTO> = []
     const emptyCardProgress: boolean[][] = []
-    const emptyDialogInformation: DialogInformation = {playerName: "", fact: "", factPosition: {rowIndex: -1, columnIndex: -1}}
+    const emptyDialogInformation: DialogInformation = {factItem: {playerName: "", fact: "", playerPicture: "" }, factPosition: {rowIndex: -1, columnIndex: -1}}
 
     // Loading State
     const [isLoading, setIsloading] = useState(true)
@@ -45,10 +44,9 @@ export const UturnPage = () => {
 
     const handleSubmitDialogClose = () => setOpenSubmitDialog(false)
 
-    function handleFactSelection(factDetails: FactModel, cardPosition: FactPosition) {
+    function handleFactSelection(factDetails: FactModelGetDTO, cardPosition: FactPosition) {
         const factDialogInformation: DialogInformation = {
-            playerName: factDetails.playerName,
-            fact: factDetails.fact,
+            factItem: factDetails,
             factPosition: cardPosition
         }
         setPreviewedFactDialogDetails(factDialogInformation)
@@ -81,16 +79,16 @@ export const UturnPage = () => {
             const playableFacts = await getAllFactsNotFromCurrentPlayer(playerId)
             if(playableFacts) {
                 const shuffledFacts = shufflePlayableFacts(playableFacts)
-                const shuffledFactsMatrix: FactModel[][] = mapFactsListToMatrix(shuffledFacts)
+                const shuffledFactsMatrix: FactModelGetDTO[][] = mapFactsListToMatrix(shuffledFacts)
                 setFacts(shuffledFactsMatrix)
                 setIsloading(false)
                 setCardProgress(initializeCardProgress(shuffledFactsMatrix))
             }
         }
 
-        function shufflePlayableFacts(playableFacts: Array<FactModel>) {
+        function shufflePlayableFacts(playableFacts: Array<FactModelGetDTO>) {
             let playableFactsCopy = [...playableFacts]
-            let shuffledFacts: Array<FactModel> = []
+            let shuffledFacts: Array<FactModelGetDTO> = []
             for(let i = 0; i < 25; i++) {
                 const currentTotalIndexes = playableFactsCopy.length - i
                 const selectedIndex: number = Math.floor(Math.random() * currentTotalIndexes)
@@ -100,12 +98,12 @@ export const UturnPage = () => {
             return shuffledFacts
         }
 
-        function mapFactsListToMatrix(facts: Array<FactModel>): FactModel[][]{
+        function mapFactsListToMatrix(facts: Array<FactModelGetDTO>): FactModelGetDTO[][]{
             const numberOfRows = Math.ceil(facts.length / 5)
             const numberOfColumns = 5
-            let factsMatrix: FactModel[][] = []
+            let factsMatrix: FactModelGetDTO[][] = []
             for (let i = 0; i < numberOfRows; i++) {
-                let rowValues: Array<FactModel> = []
+                let rowValues: Array<FactModelGetDTO> = []
                 for (let j = 0; j < numberOfColumns; j++) {
                     rowValues.push(facts[i * 5 + j])
                 }
@@ -114,7 +112,7 @@ export const UturnPage = () => {
             return factsMatrix
         }
 
-        function initializeCardProgress(facts: FactModel[][]): boolean[][] {
+        function initializeCardProgress(facts: FactModelGetDTO[][]): boolean[][] {
             let initialIsGridItemSelected: boolean[][] = []
             if (facts.length !== 0) {
                 const numberOfRows = facts.length
@@ -148,8 +146,7 @@ export const UturnPage = () => {
                     cardProgress={cardProgress}
                     onItemSelect={handleFactSelection}
                 />
-                <GuessFactOwnerDialog fact={previewedFactDialogDetails.fact}
-                    playerName={previewedFactDialogDetails.playerName}
+                <GuessFactOwnerDialog selectedFact={previewedFactDialogDetails.factItem}
                     open={openSubmitDialog} 
                     onClose={handleSubmitDialogClose} 
                     factOwners={factOwnerDetails}

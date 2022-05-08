@@ -117,6 +117,7 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
             const factDetails: FactModelCreateDTO = {
                 playerId: playerId,
                 playerName: name,
+                playerPicture: "",
                 facts: facts,
             }
             await createFacts(factDetails)
