@@ -47,7 +47,7 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
     const [imgUrl, setImgUrl] = useState(null);
     const [progresspercent, setProgresspercent] = useState(0);
     const types = ['image/png', 'image/jpeg'];
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const ITEM_HEIGHT = 50;
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -57,7 +57,6 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
         setAnchorEl(null);
       };
       const handleOpen = () => {
-        //setAnchorEl(null);
         console.log("on open clicked")
       };
     const Input = styled('input')({
@@ -229,7 +228,6 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
                         <PhotoCamera />
                     </IconButton>
                 </label>
-                    {/* <Box> */}
                         <Tooltip title="Default Avatars">
                             <IconButton
                                 onClick={handleClick}
