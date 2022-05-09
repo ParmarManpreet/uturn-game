@@ -1,53 +1,35 @@
-import { Box, Button, FormControl, OutlinedInput, TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { useState } from "react";
-import { Card, Form } from 'react-bootstrap'
 import * as React from 'react'
-import { Link, Navigate, Route, useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 
 export const NumberOfPlayerPage = () => {
     const [numberOfPlayers, setNumberOfPlayers] = useState("")
-    const [numberOfFacts, setNumberOfFacts] = useState("")
     const regex = /^[0-9\b]+$/
-    const navigate = useNavigate();
 
-    const redirectToPlayerLinkPage = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        navigate('/player-links', { state: { numberOfFacts} })
-        // {
-        //     <Link
-        //         to={{
-        //             pathname: "/page",
-        //             state: numberOfFacts // your data array of objects
-        //         }}
-        // ></Link>
-        // }
+    let navigate = useNavigate();
+
+    const redirectToPlayerLinkPage = (factsPerPerson: number) => {
+        navigate('/player-links', { state: {numberOfFacts: factsPerPerson} })
     }
 
-    function handleSubmit (e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault()
-        console.log("submit")
-        redirectToPlayerLinkPage(e)
-        
-    }
-
-
-    const handleFactInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let numberFacts = e.target.value  
-        console.log("handle # facts ")
-        console.log(numberFacts)
-        console.log(regex.test(numberFacts))
-
-        if (numberFacts === "" || regex.test(numberFacts)) {
-            setNumberOfFacts(numberFacts)
+    function handleSubmit () {
+        let factsPerPerson = 1
+        let playerCount = parseInt(numberOfPlayers)
+        if (playerCount <= 1) {
+            console.log("Cannot be less than 1")
+        } else {
+            while(factsPerPerson * (playerCount - 1) < 25) {
+                factsPerPerson++
+            }
+            console.log(factsPerPerson)
+            redirectToPlayerLinkPage(factsPerPerson)
         }
     }
     
     const handlePlayerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        let numberPlayers = e.target.value  
-        console.log("handle # players ")
-        console.log(numberPlayers)
-        console.log(regex.test(numberPlayers))
+        let numberPlayers = e.target.value
 
         if (numberPlayers === "" || regex.test(numberPlayers)) {
             setNumberOfPlayers(numberPlayers)
@@ -56,31 +38,9 @@ export const NumberOfPlayerPage = () => {
 
         return (
             <>
-            <section className="select-groups">
-                <div className="select-groups__body">
-                    <Card className="select-groups__body__card">
-                        {/* <FormControl sx={{ width: '30ch' }}> */}
-                            <Form onSubmit={(e) => handleSubmit(e)}>
-                                <h3 style={{"textAlign": "center"}}> How Many Players Are There? </h3>
-                                <Form.Group className="mb-3" controlId="formNumberOfPlayers">
-                                    <Form.Label>How Many Players Are There? </Form.Label>
-                                    <OutlinedInput type="text"  placeholder="Number of Players" onChange={(e) => handlePlayerInputChange(e as any) } value={numberOfPlayers} style={{"textAlign": "center"} }/>
-                                </Form.Group>
-
-                                <Form.Group className="mb-3" controlId="formNumberOfFacts">
-                                <Form.Label>How Many Facts Per Player </Form.Label>
-                                <OutlinedInput type="text"  placeholder="Number of Facts" onChange={(e) => handleFactInputChange(e as any) } value={numberOfFacts} style={{"textAlign": "center"}}/>
-                                </Form.Group>
-
-                                <div className="d-grid gap-5">
-                                    <Button variant="contained" color="primary" type="submit" disabled={numberOfPlayers.length <= 0}>
-                                        Submit
-                                    </Button>
-                                </div>
-                            </Form> 
-                    </Card>
-                </div>
-            </section>
+                <h1>Number of players</h1>
+                <TextField value={numberOfPlayers} onChange={handlePlayerInputChange}></TextField>
+                <Button onClick={handleSubmit}>Submit</Button>
             </>
     
         );

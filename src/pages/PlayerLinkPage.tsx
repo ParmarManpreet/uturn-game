@@ -1,31 +1,15 @@
-import { Link, useLocation } from "react-router-dom";
-
-// interface PlayerLinkPage {
-//     numberOfFacts: number
-// }
+import { useLocation } from "react-router-dom";
 
 export const PlayerLinkPage = () => {
-    const location = useLocation();
-    const initialFactNumber = location.state
-    // const initialFactNumber = location.state.numberOfFacts as string
-    // const location = useLocation();
-    // const initialGroupNumber : number = Number(location.state.numberOfFacts)
+    const location =  useLocation();
+    const factState: any = location.state
+    const factNumber: number = factState.numberOfFacts
+    console.log(factState.numberOfFacts)
     
     return (
         <>
             <div>Player Link Page</div>
-                <ul>
-                    <Link
-                        // to={{
-                        //     pathname: "/player-profile",
-                        //     // numberOfFacts: props.numberOfFacts // your data array of objects
-                        // }}
-                        to={"/player-profile"}
-                        //key={initialFactNumber}
-                        >Profile Page
-                    </Link>
-                </ul>
+            <div> {`localhost:3000/player-profile/?factNumber=${factNumber}`} </div>
         </>
-
     );
 }
