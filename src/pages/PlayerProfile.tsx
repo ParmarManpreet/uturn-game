@@ -35,6 +35,7 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
     const handleUploadPicture = (e: {target: { files: any; }; }) => {
     //e.preventDefault()
     const file = e.target.files[0]
+    console.log("change")
 
     if (!file) return;
     if(file && types.includes(file.type)){
@@ -175,19 +176,18 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
                         />
                     </div>
                 ))}
-                <label htmlFor="folder-button-file">
+                <label>
+                    {/* <input  accept="image/*" id="icon-button-file" type="file" style={{ display: 'none'}} onChange={handleUploadPicture}/> */}
                     <Input accept="image/*" id="icon-button-file" type="file" onChange={handleUploadPicture} />
-                    <IconButton color="primary" aria-label="upload picture" component="span">
+                    <IconButton color="primary" component="span">
                         <FolderIcon />
                     </IconButton>
+                    {/* <input type="file" onChange={handleUploadPicture} /> */}
                     <Input accept="image/*" id="icon-button-file" type="file" onChange={handleTakePicture} />
                     <IconButton color="primary" aria-label="upload picture" component="span">
                         <PhotoCamera />
                     </IconButton>
                 </label>
-                {/* <form>
-                    <input type="file" onChange={handleSubmit} />
-                </form> */}
 
                 <Button  variant="contained" disableElevation onClick={() => handlePlayerDetailsSubmitButton()}>Submit</Button>
            

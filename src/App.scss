@@ -156,6 +156,7 @@ h1 {
   overflow: auto;
 
   &__body {
+    padding: 70px;
     position: relative;
     z-index: 1;
     display: flex;
@@ -181,17 +182,17 @@ h1 {
       }
     }
 
-    h2 {
-      color: $text-color;
-      margin-bottom: 30px;
-      flex-direction: column;
-    }
+    // h2 {
+    //   color: $text-color;
+    //   margin-bottom: 30px;
+    //   flex-direction: column;
+    // }
   
-    p {
-      max-width: 800px;
-      text-align: center;
-      font-size: 24px;
-    }
+    // p {
+    //   max-width: 800px;
+    //   text-align: center;
+    //   font-size: 24px;
+    // }
   }
 
   &:hover &__btn {
