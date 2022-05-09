@@ -1,5 +1,6 @@
 import { Box, Container, Grid } from "@mui/material";
 import { FactModelGetDTO } from "../services/FactService";
+import { ScoreLegend } from "./ScoreLegend";
 
 export interface FactPosition {
     rowIndex: number
@@ -72,7 +73,7 @@ function FactRow(props: UTurnCardRow) {
 
 export const UTurnCard = (props: UTurnCardProps) => {
     return (
-        <Container>
+        <>
             <Grid container spacing={1}>
                 {props.facts.map((factsRowData, index) => (
                     <FactRow key={`Row${index}`}
@@ -83,6 +84,7 @@ export const UTurnCard = (props: UTurnCardProps) => {
                     />
                 ))}
             </Grid>
-        </Container>
+            <ScoreLegend/>
+        </>
     );
 }
