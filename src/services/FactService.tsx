@@ -4,14 +4,22 @@ import { prettyPrintFactDetailsArray } from "../utils/PrettyPrintService";
 
 
 export interface FactModel {
-    playerId: string, 
-    playerName: string,
+    playerId: string
+    playerName: string
+    playerPicture: string
+    fact: string
+}
+
+export interface FactModelGetDTO {
+    playerName: string
+    playerPicture: string
     fact: string
 }
 
 export interface FactModelCreateDTO {
-    playerId: string, 
-    playerName: string,
+    playerId: string
+    playerName: string
+    playerPicture: string
     facts: Array<string>
 }
 
@@ -21,6 +29,7 @@ export async function createFacts(factDetails: FactModelCreateDTO) {
             const factItem: FactModel = {
                 playerId: factDetails.playerId,
                 playerName: factDetails.playerName,
+                playerPicture: factDetails.playerPicture,
                 fact: fact
             }
 
@@ -35,16 +44,16 @@ export async function createFacts(factDetails: FactModelCreateDTO) {
 
 export async function getAllFactsNotFromCurrentPlayer(playerId: string) {
     try {
-        let factsFromOtherPlayers: Array<FactModel>= []
+        let factsFromOtherPlayers: Array<FactModelGetDTO>= []
         const factsRef = collection(db, "Facts")
         const queryOfFacts = query(factsRef, where("playerId", "!=", playerId))
 
         const querySnapshot = await getDocs(queryOfFacts)
         for(const document of querySnapshot.docs) {
             if (document.data()) {
-                const playerFact: FactModel = {
-                    playerId: document.data().playerId,
+                const playerFact: FactModelGetDTO = {
                     playerName: document.data().playerName,
+                    playerPicture: document.data().playerPicture,
                     fact: document.data().fact
                 }
                 factsFromOtherPlayers.push(playerFact)

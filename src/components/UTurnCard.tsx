@@ -1,40 +1,55 @@
 import { Box, Container, Grid } from "@mui/material";
-import { useEffect, useState } from "react";
-import { FactModel } from "../services/FactService";
+import { FactModelGetDTO } from "../services/FactService";
 
-interface UTurnCardItem {
-    factItem: FactModel
+export interface FactPosition {
     rowIndex: number
     columnIndex: number
-    updateGridItemSelected: (rowIndex: number, columnIndex: number) => void
+}
+
+interface UTurnCardItem {
+    factItem: FactModelGetDTO
+    cardItemProgress: boolean
+    rowIndex: number
+    columnIndex: number
+    onItemSelect: (factDetails: FactModelGetDTO, cardPosition: FactPosition) => void
 }
 
 interface UTurnCardProps {
-    facts: FactModel[][]
+    facts: FactModelGetDTO[][]
+    cardProgress: boolean[][]
+    onItemSelect: (factDetails: FactModelGetDTO, cardPosition: FactPosition) => void
 }
 
 interface UTurnCardRow {
-    factsRowData: FactModel[],
+    factsRowData: FactModelGetDTO[],
+    cardProgressRow: boolean[],
     rowIndex: number
-    updateGridItemSelected: (rowIndex: number, columnIndex: number) => void
+    onItemSelect: (factDetails: FactModelGetDTO, cardPosition: FactPosition) => void
 }
 
-function GridItem(props: UTurnCardItem) {
-    const [cardColour, setCardColour] = useState("primary.light")
+function FactItem(props: UTurnCardItem) {
+    const itemPosition: FactPosition = {rowIndex: props.rowIndex, columnIndex: props.columnIndex}
 
-    function handleCorrectAnswer() {
-        setCardColour("primary.dark")
-        props.updateGridItemSelected(props.rowIndex, props.columnIndex)
+    if (props.cardItemProgress) {
+        return (
+            <Box sx={{
+                backgroundColor: "primary.dark",
+                textAlign: 'center',
+                height: 100,
+                overflowWrap: 'break-word'
+              }} 
+            >{props.factItem.playerName}</Box>
+        )
     }
 
     return (
         <Box sx={{
-            backgroundColor: cardColour,
+            backgroundColor: "primary.light",
             textAlign: 'center',
             height: 100,
             overflowWrap: 'break-word'
           }} 
-          onClick={handleCorrectAnswer}>{props.factItem.fact}</Box>
+          onClick={() => props.onItemSelect(props.factItem, itemPosition)}>{props.factItem.fact}</Box>
     )
 }
 
@@ -43,10 +58,11 @@ function FactRow(props: UTurnCardRow) {
         <Grid container item spacing={1}>
             {props.factsRowData.map((fact, index) => (
                 <Grid key={`Fact${index}`} item xs={2.4}>
-                    <GridItem factItem={fact} 
-                        updateGridItemSelected={props.updateGridItemSelected}
+                    <FactItem factItem={fact}
+                        cardItemProgress={props.cardProgressRow[index]}
                         rowIndex={props.rowIndex}
                         columnIndex={index}
+                        onItemSelect={props.onItemSelect}
                     />
                 </Grid>
             ))}
@@ -55,50 +71,15 @@ function FactRow(props: UTurnCardRow) {
 }
 
 export const UTurnCard = (props: UTurnCardProps) => {
-    const emptyBooleanMatrix: boolean[][] = []
-    const [isGridItemSelected, setIsGridItemSelected] = useState(emptyBooleanMatrix)
-
-    function updateGridItemSelected(rowIndex: number, columnIndex: number) {
-        if (isGridItemSelected) {
-            const copyOfGridItemSelected: boolean[][] = cloneGrid(isGridItemSelected)
-            copyOfGridItemSelected[rowIndex][columnIndex] = true
-            setIsGridItemSelected(copyOfGridItemSelected)
-        }
-        
-    }
-
-    function cloneGrid(factGrid: boolean[][]) {
-        return factGrid.map((factRow) => [...factRow])
-    }
-
-    function initializeIsGridItemSelected(facts: FactModel[][]) {
-        if (props.facts.length !== 0) {
-            const numberOfRows = facts.length
-            const numberOfColumns = facts[0].length
-            let initialIsGridItemSelected: boolean[][] = []
-            for (let i = 0; i < numberOfRows; i++) {
-                let rowValues = []
-                for (let j = 0; j < numberOfColumns; j++) {
-                    rowValues.push(false)
-                }
-                initialIsGridItemSelected.push(rowValues)
-            }
-            setIsGridItemSelected(initialIsGridItemSelected)
-        }
-    }
-
-    useEffect(() => {
-        initializeIsGridItemSelected(props.facts)
-    }, [props.facts])
-    
     return (
         <Container>
             <Grid container spacing={1}>
                 {props.facts.map((factsRowData, index) => (
-                    <FactRow key={`Row${index}`} 
+                    <FactRow key={`Row${index}`}
                         rowIndex={index}
                         factsRowData={factsRowData}
-                        updateGridItemSelected={updateGridItemSelected}
+                        cardProgressRow={props.cardProgress[index]}
+                        onItemSelect={props.onItemSelect}
                     />
                 ))}
             </Grid>
