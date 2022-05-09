@@ -1,7 +1,9 @@
+import { Container } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { GuessFactOwnerDialog } from "../components/dialogs/GuessFactOwnerDialog";
 import { LoadingView } from "../components/LoadingView";
+import { PlayerScore } from "../components/PlayerScore";
 import { FactPosition, UTurnCard } from "../components/UTurnCard";
 import { FactModelGetDTO } from "../services/FactService";
 import { getAllFactsNotFromCurrentPlayer } from "../services/FactService";
@@ -141,7 +143,8 @@ export const UturnPage = () => {
         )
     } else {
         return (
-            <>
+            <Container>
+                <PlayerScore cardProgress={cardProgress}/>
                 <UTurnCard facts={facts}
                     cardProgress={cardProgress}
                     onItemSelect={handleFactSelection}
@@ -152,7 +155,7 @@ export const UturnPage = () => {
                     factOwners={factOwnerDetails}
                     onSubmitCorrectAnswer={updateCardProgress}
                 />
-            </>
+            </Container>
         )
     }
 }
