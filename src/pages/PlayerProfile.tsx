@@ -193,6 +193,7 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
+                        alignItems: 'center',
                         '& .MuiTextField-root': { m: 1, width: '25ch' },
                     }}
                     noValidate
