@@ -228,7 +228,6 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
                 ))}
                 </Box>
                 <Box 
-                    // component="form"
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -241,7 +240,8 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
                         sx={{
                             color: 'white',
                         }}
-                        color="primary" aria-label="upload picture" component="span">
+                        aria-label="upload picture" 
+                        component="span">
                         <FolderIcon />
                     </IconButton>
                     <Input accept="image/*" id="icon-button-file" type="file" onChange={handleTakePicture} />
@@ -250,93 +250,77 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
                             color: 'white',
                             ml: 2 
                         }}
-                        color="primary" aria-label="upload picture" component="span">
+                        aria-label="upload picture" 
+                        component="span">
                         <PhotoCamera />
                     </IconButton>
-
-                        <Tooltip title="Default Avatars">
-                            <IconButton
-                                onClick={handleClick}
-                                size="small"
+                    <Tooltip title="Default Avatars">
+                        <IconButton
+                            onClick={handleClick}
+                            size="small"
+                            sx={{ 
+                                ml: 2 
+                            }}
+                            aria-controls={open ? 'avatars-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? 'true' : undefined}
+                            >
+                            <FaceIcon 
                                 sx={{ 
-                                    ml: 2 
-                                }}
-                                aria-controls={open ? 'avatars-menu' : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={open ? 'true' : undefined}
-                                >
-                                <FaceIcon 
-                                    sx={{ 
-                                        color: 'white',
-                                        fontSize: 27 
-                                    }}    
-                                ></FaceIcon>
-                            </IconButton>
+                                    color: 'white',
+                                    fontSize: 27 
+                                }}    
+                            >
+                            </FaceIcon>
+                        </IconButton>
                         </Tooltip>
-                    {/* </Box> */}
-                    {/* </Box> */}
                     <Menu
-                    anchorEl={anchorEl}
-                    id="account-menu"
-                    MenuListProps={{
-                        'aria-labelledby': 'long-button',
-                      }}
-                    open={open}
-                    onClose={handleClose}
-                    onClick={handleOpen}
-                    PaperProps={{
-                        style: {
-                            maxHeight: ITEM_HEIGHT*4.5
+                        anchorEl={anchorEl}
+                        id="account-menu"
+                        MenuListProps={{
+                            'aria-labelledby': 'long-button',
+                        }}
+                        open={open}
+                        onClose={handleClose}
+                        onClick={handleOpen}
+                        PaperProps={{
+                            style: {
+                                maxHeight: ITEM_HEIGHT*4.5
+                            },
+                        elevation: 0,
+                        sx: {
+                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                            mt: 1.5,
+                            '& .MuiAvatar-root': {
+                            ml: -0.5,
+                            mr: 1,
+                            },
+                            '&:before': {
+                            content: '""',
+                            display: 'block',
+                            position: 'absolute',
+                            top: 0,
+                            right: 14,
+                            width: 10,
+                            height: 10,
+                            bgcolor: 'background.paper',
+                            transform: 'translateY(-50%) rotate(45deg)',
+                            zIndex: 0,
+                            },
                         },
-                    elevation: 0,
-                    sx: {
-                        // overflow: 'visible',
-                        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                        mt: 1.5,
-                        '& .MuiAvatar-root': {
-                        // width: 32,
-                        // height: 32,
-                        ml: -0.5,
-                        mr: 1,
-                        },
-                        '&:before': {
-                        content: '""',
-                        display: 'block',
-                        position: 'absolute',
-                        top: 0,
-                        right: 14,
-                        width: 10,
-                        height: 10,
-                        bgcolor: 'background.paper',
-                        transform: 'translateY(-50%) rotate(45deg)',
-                        zIndex: 0,
-                        },
-                    },
-                    }}
-                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                >
+                        }}
+                        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                    >
                     {defaultAvatars.map((avatar) => (
                         <MenuItem key={avatar} onClick={handleSelectedIcon}>
-                            {/* {avatar} */}
                             <Avatar
                                 src={avatar}>
                             </Avatar>
                         </MenuItem>
                     ))}
-                    {/* <MenuItem>
-                    <Avatar /> Profile
-                    </MenuItem>
-                    <MenuItem>
-                    <Avatar /> My account
-                    </MenuItem> */}
-                </Menu>
-
-                {/* </label> */}
-                {/* <form>
-                    <input type="file" onChange={handleSubmit} />
-                </form> */}
-                    </label>
+                    </Menu>
+                </label>
                 <Button  sx={{ color: '#333',}}     variant="contained" disableElevation onClick={() => handlePlayerDetailsSubmitButton()}>Submit</Button>
                 </Box>
             </section>
