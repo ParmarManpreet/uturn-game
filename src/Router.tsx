@@ -10,7 +10,7 @@ export const Router = () => {
     return (
         <Routes>
             <Route path="/" element={<Admin />} />
-            <Route path="/player-profile" element={<PlayerProfile numberOfFacts={3}/>} />
+            <Route path="/player-profile" element={<PlayerProfile/>} />
             <Route path="/number-players" element={<NumberOfPlayerPage/>} />
             <Route path="/player-links" element={<PlayerLinkPage/>} />
             <Route path="/settings" element={<SettingsPage/>} />
