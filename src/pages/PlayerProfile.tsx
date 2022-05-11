@@ -1,7 +1,7 @@
 import { doc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "..";
-import { Box, Button, IconButton, TextField } from "@mui/material";
+import { Avatar, Box, Button, IconButton, Menu, MenuItem, TextField, Tooltip } from "@mui/material";
 import FolderIcon from '@mui/icons-material/Folder';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { styled } from '@mui/material/styles';
@@ -10,22 +10,59 @@ import { createFacts, FactModelCreateDTO } from "../services/FactService";
 import { Navigate } from "react-router-dom";
 import { storage } from '../index';
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import FaceIcon from '@mui/icons-material/Face';
+import actress from './defaultAvatarTemp/actress.png';
+import female from './defaultAvatarTemp/female.png';
+import male from './defaultAvatarTemp/male.png';
+import bolivianGirl from './defaultAvatarTemp/bolivian-girl.png';
+import caveman from './defaultAvatarTemp/caveman.png';
+import otherFemale from './defaultAvatarTemp/other-female.png';
+import manager from './defaultAvatarTemp/manager.png';
+import supportPerson from './defaultAvatarTemp/support-person.png';
+import userMale from './defaultAvatarTemp/user-male.png';
+import writeMale from './defaultAvatarTemp/writer-male.png';
 
 interface PlayerProfileProps {
     numberOfFacts: number
 }
 
 export const PlayerProfile = (props: PlayerProfileProps) => {
+    const defaultAvatars = [
+       actress,
+       female,
+       male,
+       bolivianGirl,
+       caveman,
+       otherFemale,
+       manager,
+       supportPerson,
+       userMale,
+       writeMale
+      ];
     const [isWaitingForStart, setIsWaitingForStart] = useState(false)
     const [isGameStarting, setIsGameStarting] = useState(false)
     const [name, setName] = useState("")
     const [facts, setFacts] = useState(initializeFacts(props.numberOfFacts))
+    const [urlParameter, setUrlParameter] = useState("")
     const [imgUrl, setImgUrl] = useState(null);
     const [progresspercent, setProgresspercent] = useState(0);
     const types = ['image/png', 'image/jpeg'];
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const ITEM_HEIGHT = 50;
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+      };
+      const handleClose = () => {
+        setAnchorEl(null);
+      };
+      const handleOpen = () => {
+        console.log("on open clicked")
+      };
     const Input = styled('input')({
         display: 'none',
       });
+      
 
     const handleTakePicture = (e: { target: { files: any; }; }) => {
         let selected = e.target.files[0];
@@ -63,6 +100,9 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
         return;
         //error
     }
+    }
+    function handleSelectedIcon(){
+
     }
     function setupGameStartListeners() {
         const unsub = onSnapshot(doc(db, "GameStates", "GameStart"), (doc) => {
@@ -108,7 +148,6 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
         const playerDetails: PlayerCreateDTO = {
             name: name,
             picture: "",
-            facts: facts
         }
 
         const playerId = await createPlayerProfile(playerDetails)
@@ -118,9 +157,11 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
             const factDetails: FactModelCreateDTO = {
                 playerId: playerId,
                 playerName: name,
+                playerPicture: "",
                 facts: facts,
             }
             await createFacts(factDetails)
+            setUrlParameter(playerId)
             isSuccesful = true
         }
 
@@ -140,7 +181,7 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
     
     else if (isGameStarting) {
         return (
-            <Navigate to="/uturn-page" replace={true} />
+            <Navigate to={`/uturn-page/${urlParameter}`} replace={true} />
         )
     } 
     
@@ -176,8 +217,9 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
                         />
                     </div>
                 ))}
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
                 <label>
-                    {/* <input  accept="image/*" id="icon-button-file" type="file" style={{ display: 'none'}} onChange={handleUploadPicture}/> */}
                     <Input accept="image/*" id="icon-button-file" type="file" onChange={handleUploadPicture} />
                     <IconButton color="primary" component="span">
                         <FolderIcon />
@@ -188,10 +230,84 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
                         <PhotoCamera />
                     </IconButton>
                 </label>
+                        <Tooltip title="Default Avatars">
+                            <IconButton
+                                onClick={handleClick}
+                                size="small"
+                                sx={{ ml: 2 }}
+                                aria-controls={open ? 'avatars-menu' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                                >
+                                <FaceIcon sx={{ fontSize: 27 }} color="primary"></FaceIcon>
+                            </IconButton>
+                        </Tooltip>
+                    {/* </Box> */}
+                    </Box>
+                    <Menu
+                    anchorEl={anchorEl}
+                    id="account-menu"
+                    MenuListProps={{
+                        'aria-labelledby': 'long-button',
+                      }}
+                    open={open}
+                    onClose={handleClose}
+                    onClick={handleOpen}
+                    PaperProps={{
+                        style: {
+                            maxHeight: ITEM_HEIGHT*4.5
+                        },
+                    elevation: 0,
+                    sx: {
+                        // overflow: 'visible',
+                        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                        mt: 1.5,
+                        '& .MuiAvatar-root': {
+                        // width: 32,
+                        // height: 32,
+                        ml: -0.5,
+                        mr: 1,
+                        },
+                        '&:before': {
+                        content: '""',
+                        display: 'block',
+                        position: 'absolute',
+                        top: 0,
+                        right: 14,
+                        width: 10,
+                        height: 10,
+                        bgcolor: 'background.paper',
+                        transform: 'translateY(-50%) rotate(45deg)',
+                        zIndex: 0,
+                        },
+                    },
+                    }}
+                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                >
+                    {defaultAvatars.map((avatar) => (
+                        <MenuItem key={avatar} onClick={handleSelectedIcon}>
+                            {/* {avatar} */}
+                            <Avatar
+                                src={avatar}>
+                            </Avatar>
+                        </MenuItem>
+                    ))}
+                    {/* <MenuItem>
+                    <Avatar /> Profile
+                    </MenuItem>
+                    <MenuItem>
+                    <Avatar /> My account
+                    </MenuItem> */}
+                </Menu>
+
+                {/* </label> */}
+                {/* <form>
+                    <input type="file" onChange={handleSubmit} />
+                </form> */}
 
                 <Button  variant="contained" disableElevation onClick={() => handlePlayerDetailsSubmitButton()}>Submit</Button>
            
-                </Box>
             </>
         );
     }

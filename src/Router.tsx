@@ -11,10 +11,10 @@ export const Router = () => {
         <Routes>
             <Route path="/" element={<Admin />} />
             <Route path="/player-profile" element={<PlayerProfile numberOfFacts={3}/>} />
-            <Route path="/uturn-page" element={<UturnPage/>} />
             <Route path="/number-players" element={<NumberOfPlayerPage/>} />
             <Route path="/player-links" element={<PlayerLinkPage/>} />
             <Route path="/settings" element={<SettingsPage/>} />
+            <Route path="/uturn-page/:playerURL" element={<UturnPage/>} />
         </Routes>
     );
 }
