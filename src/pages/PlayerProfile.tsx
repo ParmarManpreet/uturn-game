@@ -187,18 +187,24 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
     else {
         return (
             <>
+            <section className="home">
                 <h1>Create Profile</h1>
                 <Box
                     component="form"
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
-                        '& .MuiTextField-root': { m: 1, width: '25ch' },
+                        alignItems: 'center',
+                        '& .MuiTextField-root': { m: 1, width: '25ch' , backgroundColor:'white'},
                     }}
                     noValidate
                     autoComplete="off"
                 >
                 <TextField
+                    sx={{'& label.Mui-focused': {
+                        color: 'black',
+                        },
+                    }}
                     id="player-name"
                     label="Enter your name"
                     type="string" 
@@ -208,6 +214,10 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
                 {facts.map((value, index) => (
                     <div key={index}>
                         <TextField
+                            sx={{'& label.Mui-focused': {
+                                color: 'black',
+                                },
+                            }}
                             id="player-facts"
                             label={`Enter Fact #${index + 1}`}
                             type="string"
@@ -217,98 +227,104 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
                     </div>
                 ))}
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+                <Box 
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
                 <label>
                     <Input accept="image/*" id="icon-button-file" type="file" onChange={handleUploadPicture} />
-                    <IconButton color="primary" aria-label="upload picture" component="span">
+                    <IconButton 
+                        sx={{
+                            color: 'white',
+                        }}
+                        aria-label="upload picture" 
+                        component="span">
                         <FolderIcon />
                     </IconButton>
                     <Input accept="image/*" id="icon-button-file" type="file" onChange={handleTakePicture} />
-                    <IconButton color="primary" aria-label="upload picture" component="span">
+                    <IconButton 
+                        sx={{ 
+                            color: 'white',
+                            ml: 2 
+                        }}
+                        aria-label="upload picture" 
+                        component="span">
                         <PhotoCamera />
                     </IconButton>
-                </label>
-                        <Tooltip title="Default Avatars">
-                            <IconButton
-                                onClick={handleClick}
-                                size="small"
-                                sx={{ ml: 2 }}
-                                aria-controls={open ? 'avatars-menu' : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={open ? 'true' : undefined}
-                                >
-                                <FaceIcon sx={{ fontSize: 27 }} color="primary"></FaceIcon>
-                            </IconButton>
+                    <Tooltip title="Default Avatars">
+                        <IconButton
+                            onClick={handleClick}
+                            size="small"
+                            sx={{ 
+                                ml: 2 
+                            }}
+                            aria-controls={open ? 'avatars-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? 'true' : undefined}
+                            >
+                            <FaceIcon 
+                                sx={{ 
+                                    color: 'white',
+                                    fontSize: 27 
+                                }}    
+                            >
+                            </FaceIcon>
+                        </IconButton>
                         </Tooltip>
-                    {/* </Box> */}
-                    </Box>
                     <Menu
-                    anchorEl={anchorEl}
-                    id="account-menu"
-                    MenuListProps={{
-                        'aria-labelledby': 'long-button',
-                      }}
-                    open={open}
-                    onClose={handleClose}
-                    onClick={handleOpen}
-                    PaperProps={{
-                        style: {
-                            maxHeight: ITEM_HEIGHT*4.5
+                        anchorEl={anchorEl}
+                        id="account-menu"
+                        MenuListProps={{
+                            'aria-labelledby': 'long-button',
+                        }}
+                        open={open}
+                        onClose={handleClose}
+                        onClick={handleOpen}
+                        PaperProps={{
+                            style: {
+                                maxHeight: ITEM_HEIGHT*4.5
+                            },
+                        elevation: 0,
+                        sx: {
+                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                            mt: 1.5,
+                            '& .MuiAvatar-root': {
+                            ml: -0.5,
+                            mr: 1,
+                            },
+                            '&:before': {
+                            content: '""',
+                            display: 'block',
+                            position: 'absolute',
+                            top: 0,
+                            right: 14,
+                            width: 10,
+                            height: 10,
+                            bgcolor: 'background.paper',
+                            transform: 'translateY(-50%) rotate(45deg)',
+                            zIndex: 0,
+                            },
                         },
-                    elevation: 0,
-                    sx: {
-                        // overflow: 'visible',
-                        filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                        mt: 1.5,
-                        '& .MuiAvatar-root': {
-                        // width: 32,
-                        // height: 32,
-                        ml: -0.5,
-                        mr: 1,
-                        },
-                        '&:before': {
-                        content: '""',
-                        display: 'block',
-                        position: 'absolute',
-                        top: 0,
-                        right: 14,
-                        width: 10,
-                        height: 10,
-                        bgcolor: 'background.paper',
-                        transform: 'translateY(-50%) rotate(45deg)',
-                        zIndex: 0,
-                        },
-                    },
-                    }}
-                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                >
+                        }}
+                        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                    >
                     {defaultAvatars.map((avatar) => (
                         <MenuItem key={avatar} onClick={handleSelectedIcon}>
-                            {/* {avatar} */}
                             <Avatar
                                 src={avatar}>
                             </Avatar>
                         </MenuItem>
                     ))}
-                    {/* <MenuItem>
-                    <Avatar /> Profile
-                    </MenuItem>
-                    <MenuItem>
-                    <Avatar /> My account
-                    </MenuItem> */}
-                </Menu>
-
-                {/* </label> */}
-                {/* <form>
-                    <input type="file" onChange={handleSubmit} />
-                </form> */}
-
-                <Button  variant="contained" disableElevation onClick={() => handlePlayerDetailsSubmitButton()}>Submit</Button>
-           
+                    </Menu>
+                </label>
+                <Button  sx={{ color: '#333',}}     variant="contained" disableElevation onClick={() => handlePlayerDetailsSubmitButton()}>Submit</Button>
+                </Box>
+            </section>
             </>
         );
-    }
-
-    
+    }    
 }
