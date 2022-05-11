@@ -1,0 +1,39 @@
+
+/* variables */
+$text-color: #333;
+$bg-color: #f1f1f1;
+$light-color: #fff;
+$dark-color: #000;
+
+ $ff-primary: 'Poppins', sans-serif;
+
+html, body, #root {
+  font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
+  height: 100%;
+}
+
+// .container {
+//   max-width: 1140px;
+//   margin: 0 auto;
+//   padding: 0 15px;
+// }
+
+
+.home {
+  height:100%;
+  overflow: auto;
+  background-color: $text-color;
+  background-repeat: no-repeat;
+  // background-size: cover;
+  position: relative;
+
+    h1{
+      padding-top: 120px;
+      text-align: center;
+      color: $light-color;
+    }
+    
+}
+
+
+

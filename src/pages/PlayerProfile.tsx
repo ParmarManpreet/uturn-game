@@ -187,6 +187,7 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
     else {
         return (
             <>
+            <section className="home">
                 <h1>Create Profile</h1>
                 <Box
                     component="form"
@@ -194,12 +195,16 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        '& .MuiTextField-root': { m: 1, width: '25ch' },
+                        '& .MuiTextField-root': { m: 1, width: '25ch' , backgroundColor:'white'},
                     }}
                     noValidate
                     autoComplete="off"
                 >
                 <TextField
+                    sx={{'& label.Mui-focused': {
+                        color: 'black',
+                        },
+                    }}
                     id="player-name"
                     label="Enter your name"
                     type="string" 
@@ -209,6 +214,10 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
                 {facts.map((value, index) => (
                     <div key={index}>
                         <TextField
+                            sx={{'& label.Mui-focused': {
+                                color: 'black',
+                                },
+                            }}
                             id="player-facts"
                             label={`Enter Fact #${index + 1}`}
                             type="string"
@@ -218,31 +227,54 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
                     </div>
                 ))}
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+                <Box 
+                    // component="form"
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
                 <label>
                     <Input accept="image/*" id="icon-button-file" type="file" onChange={handleUploadPicture} />
-                    <IconButton color="primary" aria-label="upload picture" component="span">
+                    <IconButton 
+                        sx={{
+                            color: 'white',
+                        }}
+                        color="primary" aria-label="upload picture" component="span">
                         <FolderIcon />
                     </IconButton>
                     <Input accept="image/*" id="icon-button-file" type="file" onChange={handleTakePicture} />
-                    <IconButton color="primary" aria-label="upload picture" component="span">
+                    <IconButton 
+                        sx={{ 
+                            color: 'white',
+                            ml: 2 
+                        }}
+                        color="primary" aria-label="upload picture" component="span">
                         <PhotoCamera />
                     </IconButton>
-                </label>
+
                         <Tooltip title="Default Avatars">
                             <IconButton
                                 onClick={handleClick}
                                 size="small"
-                                sx={{ ml: 2 }}
+                                sx={{ 
+                                    ml: 2 
+                                }}
                                 aria-controls={open ? 'avatars-menu' : undefined}
                                 aria-haspopup="true"
                                 aria-expanded={open ? 'true' : undefined}
                                 >
-                                <FaceIcon sx={{ fontSize: 27 }} color="primary"></FaceIcon>
+                                <FaceIcon 
+                                    sx={{ 
+                                        color: 'white',
+                                        fontSize: 27 
+                                    }}    
+                                ></FaceIcon>
                             </IconButton>
                         </Tooltip>
                     {/* </Box> */}
-                    </Box>
+                    {/* </Box> */}
                     <Menu
                     anchorEl={anchorEl}
                     id="account-menu"
@@ -304,12 +336,11 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
                 {/* <form>
                     <input type="file" onChange={handleSubmit} />
                 </form> */}
-
-                <Button  variant="contained" disableElevation onClick={() => handlePlayerDetailsSubmitButton()}>Submit</Button>
-           
+                    </label>
+                <Button  sx={{ color: '#333',}}     variant="contained" disableElevation onClick={() => handlePlayerDetailsSubmitButton()}>Submit</Button>
+                </Box>
+            </section>
             </>
         );
-    }
-
-    
+    }    
 }
