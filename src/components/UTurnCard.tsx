@@ -1,4 +1,4 @@
-import { Box, Container, Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { FactModelGetDTO } from "../services/FactService";
 import { ScoreLegend } from "./ScoreLegend";
 

@@ -7,7 +7,7 @@ import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { styled } from '@mui/material/styles';
 import { createPlayerProfile, PlayerCreateDTO, updatePlayerURLToId } from "../services/PlayerProfileService";
 import { createFacts, FactModelCreateDTO } from "../services/FactService";
-import { Navigate } from "react-router-dom";
+import { Navigate, useSearchParams } from "react-router-dom";
 import { storage } from '../index';
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import FaceIcon from '@mui/icons-material/Face';
@@ -22,11 +22,7 @@ import supportPerson from './defaultAvatarTemp/support-person.png';
 import userMale from './defaultAvatarTemp/user-male.png';
 import writeMale from './defaultAvatarTemp/writer-male.png';
 
-interface PlayerProfileProps {
-    numberOfFacts: number
-}
-
-export const PlayerProfile = (props: PlayerProfileProps) => {
+export const PlayerProfile = () => {
     const defaultAvatars = [
        actress,
        female,
@@ -39,10 +35,12 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
        userMale,
        writeMale
       ];
+    
+    const emptyFacts: Array<string> = []
     const [isWaitingForStart, setIsWaitingForStart] = useState(false)
     const [isGameStarting, setIsGameStarting] = useState(false)
     const [name, setName] = useState("")
-    const [facts, setFacts] = useState(initializeFacts(props.numberOfFacts))
+    const [facts, setFacts] = useState(emptyFacts)
     const [urlParameter, setUrlParameter] = useState("")
     const [imgUrl, setImgUrl] = useState(null);
     const [progresspercent, setProgresspercent] = useState(0);
@@ -50,6 +48,7 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const ITEM_HEIGHT = 50;
+    let [searchParams] = useSearchParams();
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
       };
@@ -72,6 +71,7 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
     const handleUploadPicture = (e: {target: { files: any; }; }) => {
     //e.preventDefault()
     const file = e.target.files[0]
+    console.log("change")
 
     if (!file) return;
     if(file && types.includes(file.type)){
@@ -102,23 +102,6 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
     }
     function handleSelectedIcon(){
 
-    }
-    function setupGameStartListeners() {
-        const unsub = onSnapshot(doc(db, "GameStates", "GameStart"), (doc) => {
-            if (doc.exists()) {
-                setIsWaitingForStart(false)
-                setIsGameStarting(doc.data().isGameStarted)
-            }
-        })
-        return unsub
-    }
-
-    function initializeFacts(numberOfFacts: number) {
-        const factList: Array<string> = []
-        for (let i = 0; i < numberOfFacts; i++) {
-            factList.push("")
-        }
-        return factList
     }
 
     function handleOnChangeFactInput(index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -169,6 +152,30 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
 
 
     useEffect(() =>{
+        function setupGameStartListeners() {
+            const unsub = onSnapshot(doc(db, "GameStates", "GameStart"), (doc) => {
+                if (doc.exists()) {
+                    setIsWaitingForStart(false)
+                    setIsGameStarting(doc.data().isGameStarted)
+                }
+            })
+            return unsub
+        }
+    
+        function initializeFacts() {
+            const numberFactsQueryParam = searchParams.get('factNumber')
+            let numberOfFacts: number = 0
+            const factList: Array<string> = []
+            if (numberFactsQueryParam) {
+                numberOfFacts = parseInt(numberFactsQueryParam)
+            }
+            for (let i = 0; i < numberOfFacts; i++) {
+                factList.push("")
+            }
+            setFacts(factList)
+        }
+
+        initializeFacts()
         setupGameStartListeners()
     }, [])
 
@@ -244,6 +251,7 @@ export const PlayerProfile = (props: PlayerProfileProps) => {
                         component="span">
                         <FolderIcon />
                     </IconButton>
+                    {/* <input type="file" onChange={handleUploadPicture} /> */}
                     <Input accept="image/*" id="icon-button-file" type="file" onChange={handleTakePicture} />
                     <IconButton 
                         sx={{ 
