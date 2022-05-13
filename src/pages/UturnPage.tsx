@@ -1,4 +1,4 @@
-import { Container } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { GuessFactOwnerDialog } from "../components/dialogs/GuessFactOwnerDialog";
@@ -143,19 +143,21 @@ export const UturnPage = () => {
         )
     } else {
         return (
-            <Container>
-                <PlayerScore cardProgress={cardProgress}/>
-                <UTurnCard facts={facts}
-                    cardProgress={cardProgress}
-                    onItemSelect={handleFactSelection}
-                />
-                <GuessFactOwnerDialog selectedFact={previewedFactDialogDetails.factItem}
-                    open={openSubmitDialog} 
-                    onClose={handleSubmitDialogClose} 
-                    factOwners={factOwnerDetails}
-                    onSubmitCorrectAnswer={updateCardProgress}
-                />
-            </Container>
+            <Box className="home">
+                <Container>
+                    <PlayerScore cardProgress={cardProgress}/>
+                    <UTurnCard facts={facts}
+                        cardProgress={cardProgress}
+                        onItemSelect={handleFactSelection}
+                    />
+                    <GuessFactOwnerDialog selectedFact={previewedFactDialogDetails.factItem}
+                        open={openSubmitDialog} 
+                        onClose={handleSubmitDialogClose} 
+                        factOwners={factOwnerDetails}
+                        onSubmitCorrectAnswer={updateCardProgress}
+                    />
+                </Container>
+            </Box>
         )
     }
 }

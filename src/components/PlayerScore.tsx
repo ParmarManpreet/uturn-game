@@ -52,21 +52,20 @@ export const PlayerScore = (props: PlayerScoreProps) => {
                     break;
                 }
             }
-
             return isRightUpDiagonalComplete
         }
 
         function isRightDownDiagonalComplete(){
             let isRightDownDiagonalComplete = true
             for(let rowIndex = 0; rowIndex < props.cardProgress.length; rowIndex++) {
-                const columnIndex = rowIndex
-                const cardItem = props.cardProgress[rowIndex][columnIndex]
+                const cardItem = props.cardProgress[rowIndex][rowIndex]
+                console.log(cardItem)
                 if (cardItem === false){
                     isRightDownDiagonalComplete = false
                     break;
                 }
-                return isRightDownDiagonalComplete
             }
+            return isRightDownDiagonalComplete
         }
 
 
@@ -86,6 +85,7 @@ export const PlayerScore = (props: PlayerScoreProps) => {
 
             if (isRightUpDiagonalComplete()) {
                 totalScore = totalScore + 500
+
             }
             
             if (isRightDownDiagonalComplete()) {
@@ -100,6 +100,6 @@ export const PlayerScore = (props: PlayerScoreProps) => {
     }, [props.cardProgress])
 
     return (
-        <Box sx={{display:'flex', flexDirection: 'column', alignItems:'center'}}>Score: {score}</Box>
+        <Box sx={{color: 'white', width: '100%', textAlign: 'center'}}> <h1>Score: {score}</h1> </Box>
     );
 }
