@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogContentText, Autocomplete, TextField, DialogActions, Button, Paper, Avatar } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogContentText, Autocomplete, TextField, DialogActions, Button, Paper, Avatar, styled } from "@mui/material";
 import { PlayerGetDTO } from "../../services/PlayerProfileService";
 import { FactModelGetDTO } from "../../services/FactService";
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
@@ -36,17 +36,18 @@ interface SubmitAnswerDialogProps {
 
 const CorrectGuessDialog = (props: CorrectAnswerDialog) => {
     return (
-        <Dialog open={props.open} onClose={props.onClose}>
-            <DialogTitle className="card_title">Correct</DialogTitle>
+        <Dialog open={props.open} onClose={props.onClose} fullWidth={true}
+        maxWidth={'sm'}>
+            <DialogTitle className="dialog_title">Correct</DialogTitle>
             <DialogContent>
-                <Paper elevation={3} className="card">
-                        <Avatar sx={{width:'60px', height:'60px', marginBottom: 2, backgroundColor: green[500]}} className="card_content">
+                <Paper elevation={3} className="dialog">
+                        <Avatar sx={{width:'60px', height:'60px', marginBottom: 2, backgroundColor: green[500]}} className="dialog_content">
                             <SentimentSatisfiedAltIcon sx={{height:'70%', width:'70%'}}/>
                         </Avatar>
-                        <span className="card_content">{`Congratulations!`}</span>
+                        <span className="dialog_content">{`Congratulations!`}</span>
                 </Paper>
             </DialogContent>
-            <DialogActions className="card_actions">
+            <DialogActions className="dialog_actions">
                 <Button color="success" onClick={props.onClose}>Close</Button>
             </DialogActions>
         </Dialog>
@@ -55,20 +56,21 @@ const CorrectGuessDialog = (props: CorrectAnswerDialog) => {
 
 const IncorrectGuessDialog = (props: IncorrectAnswerDialog) => {
     return(
-        <Dialog open={props.open} onClose={props.onClose}>
-            <DialogTitle className="card_title">Incorrect</DialogTitle>
+        <Dialog open={props.open} onClose={props.onClose} fullWidth={true}
+        maxWidth={'sm'}>
+            <DialogTitle className="dialog_title">Incorrect</DialogTitle>
             <DialogContent>
-                <Paper elevation={3} className="card">
-                    <Avatar sx={{width:'60px', height:'60px', marginBottom: 2, backgroundColor: red[500]}} className="card_content">
+                <Paper elevation={3} className="dialog">
+                    <Avatar sx={{width:'60px', height:'60px', marginBottom: 2, backgroundColor: red[500]}} className="dialog_content">
                         <SentimentVeryDissatisfiedIcon sx={{height:'70%', width:'70%'}}/>
                     </Avatar>
-                    <span className="card_content">{`Incorrect`}</span>
-                    <span className="card_content">{`Please Try Again!`}</span>
+                    <span className="dialog_content">{`Incorrect`}</span>
+                    <span className="dialog_content">{`Please Try Again!`}</span>
                 </Paper>
             </DialogContent>
-            <DialogActions className="card_actions">
-                <Button  color="error" onClick={props.onClose}>Close</Button>
-                <Button  color="error" onClick={props.onTryAgain}>Try Again</Button>
+            <DialogActions className="dialog_actions">
+                <Button color="error" onClick={props.onClose}>Close</Button>
+                <Button color="error" onClick={props.onTryAgain}>Try Again</Button>
             </DialogActions>
         </Dialog>
     )
@@ -84,12 +86,25 @@ const GuessingForm = (props: GuessingDialogProps) => {
             return false
         }
     }
-    
+
+    // const ResizableDialog = styled(Dialog)(({ theme }) => ({
+    //     [theme.breakpoints.down('md')]: {
+    //         padding: 1,
+    //         height:'110px',
+    //         fontSize: '0.8rem'
+    //     },
+    //     [theme.breakpoints.up('md')]: {
+    //         padding: 2,
+    //         height:'200px',
+    //     }
+    // }));    
+
     return (
-        <Dialog open={props.open} onClose={props.onClose}>
+        <Dialog open={props.open} onClose={props.onClose} fullWidth={true}
+        maxWidth={'sm'}>
             <DialogTitle>Who wrote this fact?</DialogTitle>
             <DialogContent>
-                <DialogContentText>
+                <DialogContentText sx={{textAlign: 'center', margin: 2}}>
                     {props.selectedFact.fact}
                 </DialogContentText>
                 <Autocomplete
