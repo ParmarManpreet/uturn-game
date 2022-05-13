@@ -59,7 +59,7 @@ html, body, #root {
   }
 }
 
-.card {
+.dialog {
   height: 200px;
   width: 150px;
   border: 1px solid grey;
@@ -80,4 +80,13 @@ html, body, #root {
   &_actions {
     animation: cardTitleAndActionsAppear 5s ease;
   }
+}
+
+.card {
+  &_text{
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;  
+    overflow: hidden;
+  } 
 }
