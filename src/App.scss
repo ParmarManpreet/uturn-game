@@ -26,5 +26,58 @@ html, body, #root {
     
 }
 
+@keyframes cardflip {
+  from {
+    transform: rotateY(180deg);
+  }
+  to {
+    transform: rotateY(0deg);
+  }
+}
 
+@keyframes cardappear {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
 
+@keyframes cardTitleAndActionsAppear {
+  0% {
+    opacity: 0;
+  }
+  60% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.card {
+  height: 200px;
+  width: 150px;
+  border: 1px solid grey;
+  animation: cardflip 4s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  &_title {
+    animation: cardTitleAndActionsAppear 5s ease;
+  }
+
+  &_content {
+    animation: cardappear 4s;
+  }
+
+  &_actions {
+    animation: cardTitleAndActionsAppear 5s ease;
+  }
+}

@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogContentText, Autocomplete, TextField, DialogActions, Button } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogContentText, Autocomplete, TextField, DialogActions, Button, Paper, Avatar } from "@mui/material";
 import { PlayerGetDTO } from "../../services/PlayerProfileService";
 import { FactModelGetDTO } from "../../services/FactService";
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+import { green, red } from "@mui/material/colors";
 
 interface CorrectAnswerDialog {
     open: boolean
@@ -34,14 +37,17 @@ interface SubmitAnswerDialogProps {
 const CorrectGuessDialog = (props: CorrectAnswerDialog) => {
     return (
         <Dialog open={props.open} onClose={props.onClose}>
-            <DialogTitle>Correct</DialogTitle>
+            <DialogTitle className="card_title">Correct</DialogTitle>
             <DialogContent>
-                <DialogContentText>
-                    {"Congratulations you guessed correctly!"}
-                </DialogContentText>
+                <Paper elevation={3} className="card">
+                        <Avatar sx={{width:'60px', height:'60px', marginBottom: 2, backgroundColor: green[500]}} className="card_content">
+                            <SentimentSatisfiedAltIcon sx={{height:'70%', width:'70%'}}/>
+                        </Avatar>
+                        <span className="card_content">{`Congratulations!`}</span>
+                </Paper>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={props.onClose}>Close</Button>
+            <DialogActions className="card_actions">
+                <Button color="success" onClick={props.onClose}>Close</Button>
             </DialogActions>
         </Dialog>
     );
@@ -50,15 +56,19 @@ const CorrectGuessDialog = (props: CorrectAnswerDialog) => {
 const IncorrectGuessDialog = (props: IncorrectAnswerDialog) => {
     return(
         <Dialog open={props.open} onClose={props.onClose}>
-            <DialogTitle>Incorrect</DialogTitle>
+            <DialogTitle className="card_title">Incorrect</DialogTitle>
             <DialogContent>
-                <DialogContentText>
-                    {"Try Again!"}
-                </DialogContentText>
+                <Paper elevation={3} className="card">
+                    <Avatar sx={{width:'60px', height:'60px', marginBottom: 2, backgroundColor: red[500]}} className="card_content">
+                        <SentimentVeryDissatisfiedIcon sx={{height:'70%', width:'70%'}}/>
+                    </Avatar>
+                    <span className="card_content">{`Incorrect`}</span>
+                    <span className="card_content">{`Please Try Again!`}</span>
+                </Paper>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={props.onClose}>Close</Button>
-                <Button onClick={props.onTryAgain}>Try Again</Button>
+            <DialogActions className="card_actions">
+                <Button  color="error" onClick={props.onClose}>Close</Button>
+                <Button  color="error" onClick={props.onTryAgain}>Try Again</Button>
             </DialogActions>
         </Dialog>
     )
