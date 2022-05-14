@@ -14,20 +14,23 @@ interface UTurnCardItem {
     cardItemProgress: boolean
     rowIndex: number
     columnIndex: number
-    onItemSelect: (factDetails: FactModelGetDTO, cardPosition: FactPosition) => void
+    onCardItemSelectWhenTrue: (factDetails: FactModelGetDTO, cardPosition: FactPosition) => void
+    onCardItemSelectWhenFalse: (factDetails: FactModelGetDTO, cardPosition: FactPosition) => void
 }
 
 interface UTurnCardProps {
     facts: FactModelGetDTO[][]
     cardProgress: boolean[][]
-    onItemSelect: (factDetails: FactModelGetDTO, cardPosition: FactPosition) => void
+    onCardItemSelectWhenTrue: (factDetails: FactModelGetDTO, cardPosition: FactPosition) => void
+    onCardItemSelectWhenFalse: (factDetails: FactModelGetDTO, cardPosition: FactPosition) => void
 }
 
 interface UTurnCardRow {
     factsRowData: FactModelGetDTO[],
     cardProgressRow: boolean[],
     rowIndex: number
-    onItemSelect: (factDetails: FactModelGetDTO, cardPosition: FactPosition) => void
+    onCardItemSelectWhenTrue: (factDetails: FactModelGetDTO, cardPosition: FactPosition) => void
+    onCardItemSelectWhenFalse: (factDetails: FactModelGetDTO, cardPosition: FactPosition) => void
 }
 
 const ResizablePaper = styled(Paper)(({ theme }) => ({
@@ -67,7 +70,9 @@ function FactItem(props: UTurnCardItem) {
                     backgroundColor: 'white',
                     textAlign: 'center',
                     overflow: 'hidden'
-                }}>
+                }}
+                onClick={() => props.onCardItemSelectWhenFalse(props.factItem, itemPosition)}
+            >
                 <Box 
                     sx={{
                         width:'100%', 
@@ -112,7 +117,7 @@ function FactItem(props: UTurnCardItem) {
                 backgroundColor: 'white',
                 textAlign: 'center',
             }} 
-            onClick={() => props.onItemSelect(props.factItem, itemPosition)}>
+            onClick={() => props.onCardItemSelectWhenTrue(props.factItem, itemPosition)}>
             <Box 
                 sx={{
                     display: 'flex',
@@ -153,7 +158,8 @@ function FactRow(props: UTurnCardRow) {
                         cardItemProgress={props.cardProgressRow[index]}
                         rowIndex={props.rowIndex}
                         columnIndex={index}
-                        onItemSelect={props.onItemSelect}
+                        onCardItemSelectWhenTrue={props.onCardItemSelectWhenTrue}
+                        onCardItemSelectWhenFalse={props.onCardItemSelectWhenFalse}
                     />
                 </Grid>
             ))}
@@ -170,7 +176,8 @@ export const UTurnCard = (props: UTurnCardProps) => {
                         rowIndex={index}
                         factsRowData={factsRowData}
                         cardProgressRow={props.cardProgress[index]}
-                        onItemSelect={props.onItemSelect}
+                        onCardItemSelectWhenTrue={props.onCardItemSelectWhenTrue}
+                        onCardItemSelectWhenFalse={props.onCardItemSelectWhenFalse}
                     />
                 ))}
             </Grid>

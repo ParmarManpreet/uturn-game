@@ -1,6 +1,7 @@
 import { Box, Container } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { FactSummaryDialog } from "../components/dialogs/FactSummaryDialog";
 import { GuessFactOwnerDialog } from "../components/dialogs/GuessFactOwnerDialog";
 import { LoadingView } from "../components/LoadingView";
 import { PlayerScore } from "../components/PlayerScore";
@@ -20,6 +21,9 @@ export const UturnPage = () => {
     const emptyCardProgress: boolean[][] = []
     const emptyDialogInformation: DialogInformation = {factItem: {playerName: "", fact: "", playerPicture: "" }, factPosition: {rowIndex: -1, columnIndex: -1}}
 
+    // Getting URL Parameters
+    let params = useParams();
+
     // Loading State
     const [isLoading, setIsloading] = useState(true)
 
@@ -31,6 +35,10 @@ export const UturnPage = () => {
     // Fact for Dialog
     const [previewedFactDialogDetails, setPreviewedFactDialogDetails] = useState<DialogInformation>(emptyDialogInformation)
     const [openSubmitDialog, setOpenSubmitDialog] = useState(false)
+    const [openFactSummaryDialog, setOpenFactSummary] = useState(false)
+
+    const handleFactSummaryDialogClose = () => setOpenFactSummary(false)
+    const handleSubmitDialogClose = () => setOpenSubmitDialog(false)
 
     function updateCardProgress() {
         const copyOfCardProgress: boolean[][] = cloneCardProgress(cardProgress)
@@ -42,17 +50,22 @@ export const UturnPage = () => {
         return factGrid.map((factRow) => [...factRow])
     }
 
-    let params = useParams();
+    function handleFactSelectionForSubmission(factDetails: FactModelGetDTO, cardPosition: FactPosition) {
+        selectFactForPreview(factDetails, cardPosition)
+        setOpenSubmitDialog(true)
+    }
 
-    const handleSubmitDialogClose = () => setOpenSubmitDialog(false)
+    function handleFactSelectionForSummary(factDetails: FactModelGetDTO, cardPosition: FactPosition) {
+        selectFactForPreview(factDetails, cardPosition)
+        setOpenFactSummary(true)
+    }
 
-    function handleFactSelection(factDetails: FactModelGetDTO, cardPosition: FactPosition) {
+    function selectFactForPreview (factDetails: FactModelGetDTO, cardPosition: FactPosition) {
         const factDialogInformation: DialogInformation = {
             factItem: factDetails,
             factPosition: cardPosition
         }
         setPreviewedFactDialogDetails(factDialogInformation)
-        setOpenSubmitDialog(true)
     }
 
     // Initalization of facts in the UseEffect
@@ -148,13 +161,19 @@ export const UturnPage = () => {
                     <PlayerScore cardProgress={cardProgress}/>
                     <UTurnCard facts={facts}
                         cardProgress={cardProgress}
-                        onItemSelect={handleFactSelection}
+                        onCardItemSelectWhenTrue={handleFactSelectionForSubmission}
+                        onCardItemSelectWhenFalse={handleFactSelectionForSummary}
                     />
                     <GuessFactOwnerDialog selectedFact={previewedFactDialogDetails.factItem}
                         open={openSubmitDialog} 
                         onClose={handleSubmitDialogClose} 
                         factOwners={factOwnerDetails}
                         onSubmitCorrectAnswer={updateCardProgress}
+                    />
+                    <FactSummaryDialog
+                        open={openFactSummaryDialog}
+                        onClose={handleFactSummaryDialogClose}
+                        selectedFact={previewedFactDialogDetails.factItem}
                     />
                 </Container>
             </Box>

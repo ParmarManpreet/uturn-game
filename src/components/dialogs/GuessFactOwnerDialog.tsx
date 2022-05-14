@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogContentText, Autocomplete, TextField, DialogActions, Button, Paper, Avatar, styled } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogContentText, Autocomplete, TextField, DialogActions, Button, Paper, Avatar } from "@mui/material";
 import { PlayerGetDTO } from "../../services/PlayerProfileService";
 import { FactModelGetDTO } from "../../services/FactService";
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
@@ -85,19 +85,7 @@ const GuessingForm = (props: GuessingDialogProps) => {
         } else {
             return false
         }
-    }
-
-    // const ResizableDialog = styled(Dialog)(({ theme }) => ({
-    //     [theme.breakpoints.down('md')]: {
-    //         padding: 1,
-    //         height:'110px',
-    //         fontSize: '0.8rem'
-    //     },
-    //     [theme.breakpoints.up('md')]: {
-    //         padding: 2,
-    //         height:'200px',
-    //     }
-    // }));    
+    } 
 
     return (
         <Dialog open={props.open} onClose={props.onClose} fullWidth={true}
