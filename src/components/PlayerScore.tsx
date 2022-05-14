@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 
 interface PlayerScoreProps {
     cardProgress: boolean[][]
+    isScoreVisible: boolean
 }
 
 export const PlayerScore = (props: PlayerScoreProps) => {
@@ -100,6 +101,8 @@ export const PlayerScore = (props: PlayerScoreProps) => {
     }, [props.cardProgress])
 
     return (
-        <Box sx={{color: 'white', width: '100%', textAlign: 'center'}}> <h1>Score: {score}</h1> </Box>
+        <>
+            {props.isScoreVisible === true ? <Box sx={{color: 'white', width: '100%', textAlign: 'center'}}> <h1>Score: {score}</h1> </Box>: null}
+        </>        
     );
 }

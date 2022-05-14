@@ -8,6 +8,7 @@ import { PlayerScore } from "../components/PlayerScore";
 import { FactPosition, UTurnCard } from "../components/UTurnCard";
 import { FactModelGetDTO } from "../services/FactService";
 import { getAllFactsNotFromCurrentPlayer } from "../services/FactService";
+import { getVisibleScoreState } from "../services/GameStatesService";
 import { getAllButCurrentPlayer, PlayerGetDTO } from "../services/PlayerProfileService";
 
 export interface DialogInformation {
@@ -40,6 +41,8 @@ export const UturnPage = () => {
     const handleFactSummaryDialogClose = () => setOpenFactSummary(false)
     const handleSubmitDialogClose = () => setOpenSubmitDialog(false)
 
+    // Game State for Score Visibility
+    const [isScoreVisible, setIsScoreVisible] = useState(false)
     function updateCardProgress() {
         const copyOfCardProgress: boolean[][] = cloneCardProgress(cardProgress)
         copyOfCardProgress[previewedFactDialogDetails.factPosition.rowIndex][previewedFactDialogDetails.factPosition.columnIndex] = true
@@ -143,9 +146,17 @@ export const UturnPage = () => {
             return initialIsGridItemSelected
         }
 
+        async function fetchScoreVisibleGameState() {
+            const fetchedIsScoreVisible = await getVisibleScoreState() 
+            if(fetchedIsScoreVisible) {
+                setIsScoreVisible(fetchedIsScoreVisible)
+            }
+        }
+
         if (params.playerURL) {
             fetchAllPlayableFacts(params.playerURL)
             fetchAllPlayerDetailsButCurrentPlayer(params.playerURL)
+            fetchScoreVisibleGameState()
         }
     }, [params.playerURL])
 
@@ -158,7 +169,9 @@ export const UturnPage = () => {
         return (
             <Box className="home">
                 <Container>
-                    <PlayerScore cardProgress={cardProgress}/>
+                    <PlayerScore cardProgress={cardProgress}
+                        isScoreVisible={isScoreVisible}
+                    />
                     <UTurnCard facts={facts}
                         cardProgress={cardProgress}
                         onCardItemSelectWhenTrue={handleFactSelectionForSubmission}
