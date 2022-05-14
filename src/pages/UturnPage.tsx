@@ -5,6 +5,7 @@ import { FactSummaryDialog } from "../components/dialogs/FactSummaryDialog";
 import { GuessFactOwnerDialog } from "../components/dialogs/GuessFactOwnerDialog";
 import { LoadingView } from "../components/LoadingView";
 import { PlayerScore } from "../components/PlayerScore";
+import { ScoreLegend } from "../components/ScoreLegend";
 import { FactPosition, UTurnCard } from "../components/UTurnCard";
 import { FactModelGetDTO } from "../services/FactService";
 import { getAllFactsNotFromCurrentPlayer } from "../services/FactService";
@@ -177,6 +178,7 @@ export const UturnPage = () => {
                         onCardItemSelectWhenTrue={handleFactSelectionForSubmission}
                         onCardItemSelectWhenFalse={handleFactSelectionForSummary}
                     />
+                    <ScoreLegend isScoreVisible={isScoreVisible}/>
                     <GuessFactOwnerDialog selectedFact={previewedFactDialogDetails.factItem}
                         open={openSubmitDialog} 
                         onClose={handleSubmitDialogClose} 

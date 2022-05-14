@@ -2,7 +2,6 @@ import { QuestionMark } from "@mui/icons-material";
 import { Avatar, Box, Grid, Paper, styled } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import { FactModelGetDTO } from "../services/FactService";
-import { ScoreLegend } from "./ScoreLegend";
 
 export interface FactPosition {
     rowIndex: number
@@ -181,7 +180,6 @@ export const UTurnCard = (props: UTurnCardProps) => {
                     />
                 ))}
             </Grid>
-            <ScoreLegend/>
         </>
     );
 }
