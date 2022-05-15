@@ -5,6 +5,7 @@ import { PlayerProfile } from "./pages/PlayerProfile";
 import { UturnPage } from "./pages/UturnPage";
 import { PlayerLinkPage } from "./pages/PlayerLinkPage";
 import { SettingsPage } from "./pages/SettingsPage";
+import { LeaderboardPage } from "./pages/LeaderboardPage";
 
 export const Router = () => {
     return (
@@ -15,6 +16,7 @@ export const Router = () => {
             <Route path="/player-links" element={<PlayerLinkPage/>} />
             <Route path="/settings" element={<SettingsPage/>} />
             <Route path="/uturn-page/:playerURL" element={<UturnPage/>} />
+            <Route path="/leaderboard" element={<LeaderboardPage/>} />
         </Routes>
     );
 }
