@@ -1,4 +1,4 @@
-import { Button, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"
 
@@ -37,11 +37,32 @@ export const NumberOfPlayerPage = () => {
 
         return (
             <>
+            <section className="home">
                 <h1>Number of players</h1>
-                <TextField value={numberOfPlayers} onChange={handlePlayerInputChange}></TextField>
-                <Button onClick={handleSubmit}>Submit</Button>
+                <Box
+                    component="form"
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        '& .MuiTextField-root': { m: 1, width: '25ch' , backgroundColor:'white'},
+                    }}
+                    noValidate
+                    autoComplete="off"
+                >
+                <TextField
+                    sx={{'& label.Mui-focused': {
+                        color: 'black',
+                        },
+                    }}
+                    id="player-number"
+                    label="Enter Number of Players"
+                    variant="filled"
+                    value={numberOfPlayers} onChange={handlePlayerInputChange}>
+                </TextField>
+                <Button   sx={{ color: 'white', marginTop: '8px' }} variant="contained" disableElevation onClick={handleSubmit}>Submit</Button>
+                </Box>
+            </section>
             </>
-    
         );
     }
-// }
