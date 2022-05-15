@@ -5,9 +5,11 @@ import { FactSummaryDialog } from "../components/dialogs/FactSummaryDialog";
 import { GuessFactOwnerDialog } from "../components/dialogs/GuessFactOwnerDialog";
 import { LoadingView } from "../components/LoadingView";
 import { PlayerScore } from "../components/PlayerScore";
+import { ScoreLegend } from "../components/ScoreLegend";
 import { FactPosition, UTurnCard } from "../components/UTurnCard";
 import { FactModelGetDTO } from "../services/FactService";
 import { getAllFactsNotFromCurrentPlayer } from "../services/FactService";
+import { getVisibleScoreState } from "../services/GameStatesService";
 import { getAllButCurrentPlayer, PlayerGetDTO } from "../services/PlayerProfileService";
 
 export interface DialogInformation {
@@ -23,6 +25,7 @@ export const UturnPage = () => {
 
     // Getting URL Parameters
     let params = useParams();
+    const [url, setUrl] = useState("")
 
     // Loading State
     const [isLoading, setIsloading] = useState(true)
@@ -40,6 +43,8 @@ export const UturnPage = () => {
     const handleFactSummaryDialogClose = () => setOpenFactSummary(false)
     const handleSubmitDialogClose = () => setOpenSubmitDialog(false)
 
+    // Game State for Score Visibility
+    const [isScoreVisible, setIsScoreVisible] = useState(false)
     function updateCardProgress() {
         const copyOfCardProgress: boolean[][] = cloneCardProgress(cardProgress)
         copyOfCardProgress[previewedFactDialogDetails.factPosition.rowIndex][previewedFactDialogDetails.factPosition.columnIndex] = true
@@ -143,9 +148,18 @@ export const UturnPage = () => {
             return initialIsGridItemSelected
         }
 
+        async function fetchScoreVisibleGameState() {
+            const fetchedIsScoreVisible = await getVisibleScoreState() 
+            if(fetchedIsScoreVisible) {
+                setIsScoreVisible(fetchedIsScoreVisible)
+            }
+        }
+
         if (params.playerURL) {
+            setUrl(params.playerURL)
             fetchAllPlayableFacts(params.playerURL)
             fetchAllPlayerDetailsButCurrentPlayer(params.playerURL)
+            fetchScoreVisibleGameState()
         }
     }, [params.playerURL])
 
@@ -158,12 +172,16 @@ export const UturnPage = () => {
         return (
             <Box className="home">
                 <Container>
-                    <PlayerScore cardProgress={cardProgress}/>
+                    <PlayerScore cardProgress={cardProgress}
+                        isScoreVisible={isScoreVisible}
+                        playerId={url}
+                    />
                     <UTurnCard facts={facts}
                         cardProgress={cardProgress}
                         onCardItemSelectWhenTrue={handleFactSelectionForSubmission}
                         onCardItemSelectWhenFalse={handleFactSelectionForSummary}
                     />
+                    <ScoreLegend isScoreVisible={isScoreVisible}/>
                     <GuessFactOwnerDialog selectedFact={previewedFactDialogDetails.factItem}
                         open={openSubmitDialog} 
                         onClose={handleSubmitDialogClose} 

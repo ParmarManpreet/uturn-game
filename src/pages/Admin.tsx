@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button";
 import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
-import { updateGameStartState } from "../services/GameStateService";
+import { updateGameStartState } from "../services/GameStatesService";
 import {NavigationLink} from '../services/PageNavigationService'
 import GameResetDialog from '../components/GameResetDialog'
 
