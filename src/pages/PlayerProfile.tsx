@@ -329,7 +329,7 @@ export const PlayerProfile = () => {
                     ))}
                     </Menu>
                 </label>
-                <Button  sx={{ color: '#333',}}     variant="contained" disableElevation onClick={() => handlePlayerDetailsSubmitButton()}>Submit</Button>
+                <Button  sx={{ color: 'white', marginTop: '8px' }} variant="contained" disableElevation onClick={() => handlePlayerDetailsSubmitButton()}>Submit</Button>
                 </Box>
             </section>
             </>
