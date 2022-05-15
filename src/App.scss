@@ -23,6 +23,30 @@ html, body, #root {
       text-align: center;
       color: $light-color;
     }
+    div{
+      text-align: center;
+      color: $light-color;
+    }
+
+    &__qrcode {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding-top: 30px;
+      padding-bottom: 120px;
+      
+  
+      h2{
+        text-align: center;
+        color: $light-color;
+      }
+  
+      img{
+        border-radius: 10%;
+        padding-left: 0px;
+      }
+    }
     
 }
 

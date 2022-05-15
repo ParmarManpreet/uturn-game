@@ -1,15 +1,51 @@
+import { Box } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import QRCode from 'qrcode';
 
 export const PlayerLinkPage = () => {
     const location =  useLocation();
     const factState: any = location.state
     const factNumber: number = factState.numberOfFacts
     console.log(factState.numberOfFacts)
+    const [imageUrl, setImageUrl] = useState('')
+
+    const generateQrCode = async () => {
+        try {
+            const response = await QRCode.toDataURL(`localhost:3000/player-profile/?factNumber=${factNumber}`);
+            setImageUrl(response);
+        }catch (error) {
+        console.log(error);
+        }
+    }
     
+    useEffect(() => {
+        console.log("here")
+        generateQrCode()
+    },[]);
+
     return (
         <>
-            <div>Player Link Page</div>
+        <section className="home">
+            <h1>Let's Start Playing!</h1>
+            <Box
+                    component="form"
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        '& .MuiTextField-root': { m: 1, width: '25ch' , backgroundColor:'white'},
+                    }}
+                    noValidate
+                    autoComplete="off"
+                >
             <div> {`localhost:3000/player-profile/?factNumber=${factNumber}`} </div>
+            <div className="home__qrcode">
+                <h2>{('Scan Me')}</h2>
+                <img src={imageUrl} alt="img"/>
+            </div>
+            </Box>
+        </section>
         </>
     );
 }
