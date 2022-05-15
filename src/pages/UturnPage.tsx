@@ -25,6 +25,7 @@ export const UturnPage = () => {
 
     // Getting URL Parameters
     let params = useParams();
+    const [url, setUrl] = useState("")
 
     // Loading State
     const [isLoading, setIsloading] = useState(true)
@@ -155,6 +156,7 @@ export const UturnPage = () => {
         }
 
         if (params.playerURL) {
+            setUrl(params.playerURL)
             fetchAllPlayableFacts(params.playerURL)
             fetchAllPlayerDetailsButCurrentPlayer(params.playerURL)
             fetchScoreVisibleGameState()
@@ -172,6 +174,7 @@ export const UturnPage = () => {
                 <Container>
                     <PlayerScore cardProgress={cardProgress}
                         isScoreVisible={isScoreVisible}
+                        playerId={url}
                     />
                     <UTurnCard facts={facts}
                         cardProgress={cardProgress}

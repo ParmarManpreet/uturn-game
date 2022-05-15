@@ -21,6 +21,7 @@ import manager from './defaultAvatarTemp/manager.png';
 import supportPerson from './defaultAvatarTemp/support-person.png';
 import userMale from './defaultAvatarTemp/user-male.png';
 import writeMale from './defaultAvatarTemp/writer-male.png';
+import { createScore, ScoreCreateDTO } from "../services/ScoreService";
 
 export const PlayerProfile = () => {
     const defaultAvatars = [
@@ -143,6 +144,15 @@ export const PlayerProfile = () => {
                 facts: facts,
             }
             await createFacts(factDetails)
+
+            const scoreDetails: ScoreCreateDTO = {
+                playerId: playerId,
+                playerName: name,
+                playerPicture: "",
+                score: 0
+            }
+            await createScore(scoreDetails)
+
             setUrlParameter(playerId)
             isSuccesful = true
         }

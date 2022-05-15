@@ -1,9 +1,11 @@
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react"
+import { updateScore } from "../services/ScoreService";
 
 interface PlayerScoreProps {
     cardProgress: boolean[][]
     isScoreVisible: boolean
+    playerId: string
 }
 
 export const PlayerScore = (props: PlayerScoreProps) => {
@@ -93,7 +95,10 @@ export const PlayerScore = (props: PlayerScoreProps) => {
                 totalScore = totalScore + 500
             }
 
-            setScore(totalScore)
+            if(totalScore !== score) {
+                updateScore(props.playerId, totalScore)
+                setScore(totalScore)
+            }
         }
 
         tallyScore()
