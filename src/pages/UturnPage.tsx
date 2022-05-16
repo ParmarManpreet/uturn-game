@@ -172,6 +172,7 @@ export const UturnPage = () => {
         return (
             <Box className="home">
                 <Container>
+                    <div className="home__card-container">
                     <PlayerScore cardProgress={cardProgress}
                         isScoreVisible={isScoreVisible}
                         playerId={url}
@@ -193,6 +194,7 @@ export const UturnPage = () => {
                         onClose={handleFactSummaryDialogClose}
                         selectedFact={previewedFactDialogDetails.factItem}
                     />
+                    </div>
                 </Container>
             </Box>
         )

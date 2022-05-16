@@ -36,7 +36,9 @@ export const PlayerProfile = () => {
        userMale,
        writeMale
       ];
-    
+    //const allInputs = {imgUrl: ''}
+    const [playerImage, setPlayerImage] = useState('')
+    //const [imageAsUrl, setImageAsUrl] = useState(allInputs)
     const emptyFacts: Array<string> = []
     const [isWaitingForStart, setIsWaitingForStart] = useState(false)
     const [isGameStarting, setIsGameStarting] = useState(false)
@@ -72,7 +74,9 @@ export const PlayerProfile = () => {
     const handleUploadPicture = (e: {target: { files: any; }; }) => {
     //e.preventDefault()
     const file = e.target.files[0]
+    setPlayerImage(imageFile => (file))
     console.log("change")
+
 
     if (!file) return;
     if(file && types.includes(file.type)){
@@ -92,6 +96,8 @@ export const PlayerProfile = () => {
             () => {
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                 console.log('File available at', downloadURL);
+                //setImageAsUrl(prevObject => ({...prevObject, imgUrl: downloadURL}))
+                setPlayerImage(downloadURL)
                 //setImgUrl(downloadURL);
             });
             }
@@ -130,7 +136,7 @@ export const PlayerProfile = () => {
         let isSuccesful = false 
         const playerDetails: PlayerCreateDTO = {
             name: name,
-            picture: "",
+            picture: playerImage,
         }
 
         const playerId = await createPlayerProfile(playerDetails)
@@ -140,7 +146,7 @@ export const PlayerProfile = () => {
             const factDetails: FactModelCreateDTO = {
                 playerId: playerId,
                 playerName: name,
-                playerPicture: "",
+                playerPicture: playerImage,
                 facts: facts,
             }
             await createFacts(factDetails)
@@ -148,7 +154,7 @@ export const PlayerProfile = () => {
             const scoreDetails: ScoreCreateDTO = {
                 playerId: playerId,
                 playerName: name,
-                playerPicture: "",
+                playerPicture: playerImage,
                 score: 0
             }
             await createScore(scoreDetails)
@@ -338,6 +344,7 @@ export const PlayerProfile = () => {
                         </MenuItem>
                     ))}
                     </Menu>
+
                 </label>
                 <Button  sx={{ color: 'white', marginTop: '8px' }} variant="contained" disableElevation onClick={() => handlePlayerDetailsSubmitButton()}>Submit</Button>
                 </Box>

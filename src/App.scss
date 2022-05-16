@@ -25,7 +25,7 @@ html, body, #root {
     }
     div{
       text-align: center;
-      //color: $light-color;
+      //color: $text-color;
     }
 
     span{
@@ -33,6 +33,10 @@ html, body, #root {
       justify-content: center;
       align-items: center;
       color: $light-color;
+    }
+
+    &__card-container {
+      color:$text-color
     }
 
     &__white_div {
