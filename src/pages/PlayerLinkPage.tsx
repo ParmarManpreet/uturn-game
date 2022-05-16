@@ -1,7 +1,8 @@
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import QRCode from 'qrcode';
+import { updateGameStartState } from "../services/GameStatesService";
 
 export const PlayerLinkPage = () => {
     const location =  useLocation();
@@ -9,6 +10,11 @@ export const PlayerLinkPage = () => {
     const factNumber: number = factState.numberOfFacts
     console.log(factState.numberOfFacts)
     const [imageUrl, setImageUrl] = useState('')
+
+    function startGame() {
+        updateGameStartState(true)
+    }
+    
 
     const generateQrCode = async () => {
         try {
@@ -26,7 +32,7 @@ export const PlayerLinkPage = () => {
 
     return (
         <>
-        <section className="home">
+        <section className="home"> 
             <h1>Let's Start Playing!</h1>
             <Box
                     component="form"
@@ -39,11 +45,12 @@ export const PlayerLinkPage = () => {
                     noValidate
                     autoComplete="off"
                 >
-            <div> {`localhost:3000/player-profile/?factNumber=${factNumber}`} </div>
+            <div className="home__white_div"> {`localhost:3000/player-profile/?factNumber=${factNumber}`} </div>
             <div className="home__qrcode">
                 <h2>{('Scan Me')}</h2>
                 <img src={imageUrl} alt="img"/>
             </div>
+            <Button variant="contained" onClick={() => startGame()}>Start UTurn!</Button>
             </Box>
         </section>
         </>

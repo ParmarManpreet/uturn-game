@@ -5,11 +5,6 @@ import { updateGameStartState } from "../services/GameStatesService";
 import {NavigationLink} from '../services/PageNavigationService'
 import GameResetDialog from '../components/GameResetDialog'
 
-function startGame() {
-    updateGameStartState(true)
-}
-
-
 export const Admin = () => {
     const [isStarted, setIsStarted] = useState(false)
     const [isModalShowing, setIsModalShowing] = useState(false)
@@ -22,15 +17,13 @@ export const Admin = () => {
     }
     return (
         <>
-            <Fragment>
-                <div>Admin Page</div>
+            <section className="home">
+                <h1>Admin Home Page</h1>
                     <div>
-                        <Button variant="contained" onClick={() => startGame()}>Start</Button>
                         <NavigationLink text={'Start Game'}path="/number-players" handleClick={handleStart}/>
                         <NavigationLink text={'Settings'} path="/settings" />
-                        {/* <GameResetDialog show={isModalShowing} handleSubmit={handleSubmit} onHide={() => setIsModalShowing(false)}/> */}
                     </div>
-            </Fragment>
+            </section>
         </>
 
     );

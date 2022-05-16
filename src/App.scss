@@ -25,6 +25,18 @@ html, body, #root {
     }
     div{
       text-align: center;
+      //color: $light-color;
+    }
+
+    span{
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: $light-color;
+    }
+
+    &__white_div {
+      text-align: center;
       color: $light-color;
     }
 
