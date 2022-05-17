@@ -48,6 +48,7 @@ export const UturnPage = () => {
     function updateCardProgress() {
         const copyOfCardProgress: boolean[][] = cloneCardProgress(cardProgress)
         copyOfCardProgress[previewedFactDialogDetails.factPosition.rowIndex][previewedFactDialogDetails.factPosition.columnIndex] = true
+        localStorage.setItem("cardProgress", JSON.stringify(copyOfCardProgress))
         setCardProgress(copyOfCardProgress)
     }
 
@@ -100,9 +101,17 @@ export const UturnPage = () => {
             if(playableFacts) {
                 const shuffledFacts = shufflePlayableFacts(playableFacts)
                 const shuffledFactsMatrix: FactModelGetDTO[][] = mapFactsListToMatrix(shuffledFacts)
+
+                // Initialize playable facts
+                localStorage.setItem("facts", JSON.stringify(shuffledFactsMatrix))
                 setFacts(shuffledFactsMatrix)
+
+                // Initialize card/ game progress
+                const emptyCardProgress: boolean[][] = initializeCardProgress(shuffledFactsMatrix)
+                localStorage.setItem("cardProgress", JSON.stringify(emptyCardProgress))
+                setCardProgress(emptyCardProgress)
+
                 setIsloading(false)
-                setCardProgress(initializeCardProgress(shuffledFactsMatrix))
             }
         }
 
@@ -155,14 +164,34 @@ export const UturnPage = () => {
             }
         }
 
-        if (params.playerURL) {
+        if (localStorage.getItem("url") !== params.playerURL && params.playerURL) {
+            localStorage.setItem("url", params.playerURL)
             setUrl(params.playerURL)
             fetchAllPlayableFacts(params.playerURL)
             fetchAllPlayerDetailsButCurrentPlayer(params.playerURL)
             fetchScoreVisibleGameState()
+        } else if (localStorage.getItem("url") && localStorage.getItem("facts") && localStorage.getItem("cardProgress")) {
+            const url: string = localStorage.getItem("url")!
+            const facts: FactModelGetDTO[][] = JSON.parse(localStorage.getItem("facts")!)
+            const cardProgress: boolean[][] = JSON.parse(localStorage.getItem("cardProgress")!)
+            setFacts(facts)
+            setCardProgress(cardProgress)
+
+            fetchAllPlayerDetailsButCurrentPlayer(url)
+            fetchScoreVisibleGameState()
+            setIsloading(false)
         }
     }, [params.playerURL])
 
+    window.onpopstate = function () {
+        window.history.go(1);
+    };
+
+    window.addEventListener("beforeunload", (ev) => {  
+        ev.preventDefault();
+        return ev.returnValue = 'Are you sure you want to close?';
+    });
+    
     // Possibly hide the fetching with an animation
     if (isLoading) {
         return (

@@ -60,7 +60,7 @@ export const NumberOfPlayerPage = () => {
                     variant="filled"
                     value={numberOfPlayers} onChange={handlePlayerInputChange}>
                 </TextField>
-                <Button   sx={{ color: 'white', marginTop: '8px' }} variant="contained" disableElevation onClick={handleSubmit}>Submit</Button>
+                <Button sx={{ color: 'white', marginTop: '8px' }} variant="contained" disableElevation onClick={handleSubmit}>Submit</Button>
                 </Box>
             </section>
             </>

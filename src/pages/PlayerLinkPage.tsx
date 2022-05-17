@@ -5,6 +5,7 @@ import QRCode from 'qrcode';
 import { updateGameStartState } from "../services/GameStatesService";
 
 export const PlayerLinkPage = () => {
+    const domain = 'https://u-turn-development.web.app'
     const location =  useLocation();
     const factState: any = location.state
     const factNumber: number = factState.numberOfFacts
@@ -18,7 +19,7 @@ export const PlayerLinkPage = () => {
 
     const generateQrCode = async () => {
         try {
-            const response = await QRCode.toDataURL(`localhost:3000/player-profile/?factNumber=${factNumber}`);
+            const response = await QRCode.toDataURL(`${domain}/player-profile/?factNumber=${factNumber}`);
             setImageUrl(response);
         }catch (error) {
         console.log(error);
@@ -45,7 +46,7 @@ export const PlayerLinkPage = () => {
                     noValidate
                     autoComplete="off"
                 >
-            <div className="home__white_div"> {`localhost:3000/player-profile/?factNumber=${factNumber}`} </div>
+            <div className="home__white_div"> {`${domain}/player-profile/?factNumber=${factNumber}`} </div>
             <div className="home__qrcode">
                 <h2>{('Scan Me')}</h2>
                 <img src={imageUrl} alt="img"/>

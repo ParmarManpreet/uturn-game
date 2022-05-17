@@ -1,7 +1,7 @@
 import { doc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "..";
-import { Avatar, Box, Button, IconButton, Menu, MenuItem, TextField, Tooltip } from "@mui/material";
+import { Avatar, Box, Button, Container, IconButton, Menu, MenuItem, TextField, Tooltip } from "@mui/material";
 import FolderIcon from '@mui/icons-material/Folder';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { styled } from '@mui/material/styles';
@@ -22,6 +22,7 @@ import supportPerson from './defaultAvatarTemp/support-person.png';
 import userMale from './defaultAvatarTemp/user-male.png';
 import writeMale from './defaultAvatarTemp/writer-male.png';
 import { createScore, ScoreCreateDTO } from "../services/ScoreService";
+import { LoadingView } from "../components/LoadingView";
 
 export const PlayerProfile = () => {
     const defaultAvatars = [
@@ -191,7 +192,12 @@ export const PlayerProfile = () => {
 
     if (isWaitingForStart) {
         return (
-            <div>Waiting...</div>
+            <>
+                <div className="home">
+                    <h1>Waiting...</h1>
+                    <LoadingView/>
+                </div>
+            </>
         )
     }
     
