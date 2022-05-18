@@ -128,3 +128,8 @@ html, body, #root {
     overflow: hidden;
   } 
 }
+
+#factButton:disabled {
+  color: white;
+  background-color: rgb(139, 139, 139);
+}
