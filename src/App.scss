@@ -62,6 +62,26 @@ html, body, #root {
     
 }
 
+.card {
+  height:100%;
+  overflow: auto;
+  background-color: $text-color;
+  background-repeat: no-repeat;
+
+    h1{
+      padding-top: 120px;
+      text-align: center;
+      color: $light-color;
+    }
+  
+      h2{
+        text-align: center;
+        color: $light-color;
+      }
+    }
+    
+
+
 @keyframes cardflip {
   from {
     transform: rotateY(180deg);

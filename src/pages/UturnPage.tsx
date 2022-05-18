@@ -223,7 +223,7 @@ export const UturnPage = () => {
     
     else {
         return (
-            <Box className="home">
+            <Box className="card">
                 <Container>
                     <PlayerScore cardProgress={cardProgress}
                         isScoreVisible={isScoreVisible}
