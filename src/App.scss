@@ -12,6 +12,24 @@ html, body, #root {
   height: 100%;
 }
 
+.card {
+  height:100%;
+  overflow: auto;
+  background-color: $text-color;
+  background-repeat: no-repeat;
+  // background-size: cover;
+    h1{
+      padding-top: 120px;
+      text-align: center;
+      color: $light-color;
+    }
+    div{
+      text-align: center;
+      //color: $text-color;
+    }
+
+    
+}
 .home {
   height:100%;
   overflow: auto;
