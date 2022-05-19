@@ -22,6 +22,7 @@ import supportPerson from './defaultAvatarTemp/support-person.png';
 import userMale from './defaultAvatarTemp/user-male.png';
 import writeMale from './defaultAvatarTemp/writer-male.png';
 import { createScore, ScoreCreateDTO } from "../services/ScoreService";
+import { LoadingView } from "../components/LoadingView";
 
 export const PlayerProfile = () => {
     const defaultAvatars = [
@@ -160,6 +161,22 @@ export const PlayerProfile = () => {
         return isSuccesful
     }
 
+    function areThereEmptyFields() {
+        let fieldEmpty = false
+
+        for(const fact of facts) {
+            if(!fact) {
+                fieldEmpty = true
+                break
+            }
+        }
+
+        if(!name) {
+            fieldEmpty = true
+        }
+        return fieldEmpty
+    }
+
 
     useEffect(() =>{
         function setupGameStartListeners() {
@@ -191,7 +208,11 @@ export const PlayerProfile = () => {
 
     if (isWaitingForStart) {
         return (
-            <div>Waiting...</div>
+            <>
+                <div className="home">
+                    <LoadingView/>
+                </div>
+            </>
         )
     }
     
@@ -339,7 +360,14 @@ export const PlayerProfile = () => {
                     ))}
                     </Menu>
                 </label>
-                <Button  sx={{ color: 'white', marginTop: '8px' }} variant="contained" disableElevation onClick={() => handlePlayerDetailsSubmitButton()}>Submit</Button>
+                <Button  sx={{ color: 'white', marginTop: '8px' }}
+                    id="factButton"
+                    variant="contained" 
+                    onClick={handlePlayerDetailsSubmitButton}
+                    disabled={areThereEmptyFields()}
+                >
+                    Submit
+                </Button>
                 </Box>
             </section>
             </>

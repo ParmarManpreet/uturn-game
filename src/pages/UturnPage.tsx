@@ -1,6 +1,8 @@
 import { Box, Container } from "@mui/material";
+import { doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { Navigate, useParams } from "react-router";
+import { db } from "..";
 import { FactSummaryDialog } from "../components/dialogs/FactSummaryDialog";
 import { GuessFactOwnerDialog } from "../components/dialogs/GuessFactOwnerDialog";
 import { LoadingView } from "../components/LoadingView";
@@ -29,6 +31,7 @@ export const UturnPage = () => {
 
     // Loading State
     const [isLoading, setIsloading] = useState(true)
+    const [isGameEnding, setIsGameEnding] = useState(false)
 
     // Common Information
     const [facts, setFacts] = useState(emptyFactList)
@@ -45,9 +48,13 @@ export const UturnPage = () => {
 
     // Game State for Score Visibility
     const [isScoreVisible, setIsScoreVisible] = useState(false)
+
+    
+
     function updateCardProgress() {
         const copyOfCardProgress: boolean[][] = cloneCardProgress(cardProgress)
         copyOfCardProgress[previewedFactDialogDetails.factPosition.rowIndex][previewedFactDialogDetails.factPosition.columnIndex] = true
+        localStorage.setItem("cardProgress", JSON.stringify(copyOfCardProgress))
         setCardProgress(copyOfCardProgress)
     }
 
@@ -100,9 +107,17 @@ export const UturnPage = () => {
             if(playableFacts) {
                 const shuffledFacts = shufflePlayableFacts(playableFacts)
                 const shuffledFactsMatrix: FactModelGetDTO[][] = mapFactsListToMatrix(shuffledFacts)
+
+                // Initialize playable facts
+                localStorage.setItem("facts", JSON.stringify(shuffledFactsMatrix))
                 setFacts(shuffledFactsMatrix)
+
+                // Initialize card/ game progress
+                const emptyCardProgress: boolean[][] = initializeCardProgress(shuffledFactsMatrix)
+                localStorage.setItem("cardProgress", JSON.stringify(emptyCardProgress))
+                setCardProgress(emptyCardProgress)
+
                 setIsloading(false)
-                setCardProgress(initializeCardProgress(shuffledFactsMatrix))
             }
         }
 
@@ -155,20 +170,58 @@ export const UturnPage = () => {
             }
         }
 
-        if (params.playerURL) {
+        function setupGameStartListeners() {
+            const unsub = onSnapshot(doc(db, "GameStates", "GameStart"), (doc) => {
+                if (doc.exists()) {
+                    setIsGameEnding(!doc.data().isGameStarted)
+                }
+            })
+            return unsub
+        }
+
+        setupGameStartListeners()
+
+        if (localStorage.getItem("url") !== params.playerURL && params.playerURL) {
+            localStorage.setItem("url", params.playerURL)
             setUrl(params.playerURL)
             fetchAllPlayableFacts(params.playerURL)
             fetchAllPlayerDetailsButCurrentPlayer(params.playerURL)
             fetchScoreVisibleGameState()
+        } else if (localStorage.getItem("url") && localStorage.getItem("facts") && localStorage.getItem("cardProgress")) {
+            const url: string = localStorage.getItem("url")!
+            const facts: FactModelGetDTO[][] = JSON.parse(localStorage.getItem("facts")!)
+            const cardProgress: boolean[][] = JSON.parse(localStorage.getItem("cardProgress")!)
+            setFacts(facts)
+            setCardProgress(cardProgress)
+
+            fetchAllPlayerDetailsButCurrentPlayer(url)
+            fetchScoreVisibleGameState()
+            setIsloading(false)
         }
     }, [params.playerURL])
 
-    // Possibly hide the fetching with an animation
+    window.onpopstate = function () {
+        window.history.go(1);
+    };
+
+    window.addEventListener("beforeunload", (ev) => {  
+        ev.preventDefault();
+        return ev.returnValue = 'Are you sure you want to close?';
+    });
+    
     if (isLoading) {
         return (
             <LoadingView/>
         )
-    } else {
+    } 
+    
+    else if(isGameEnding) {
+        return (
+            <Navigate to={`/leaderboard`} replace={true} />
+        )
+    }
+    
+    else {
         return (
             <Box className="card">
                 <Container>

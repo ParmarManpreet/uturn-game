@@ -25,14 +25,14 @@ html, body, #root {
     }
     div{
       text-align: center;
-      //color: $light-color;
+      // color: $light-color;
     }
 
     span{
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      color: $light-color;
+      // color: $light-color;
     }
 
     &__white_div {
@@ -147,4 +147,9 @@ html, body, #root {
     -webkit-box-orient: vertical;  
     overflow: hidden;
   } 
+}
+
+#factButton:disabled {
+  color: white;
+  background-color: rgb(139, 139, 139);
 }
