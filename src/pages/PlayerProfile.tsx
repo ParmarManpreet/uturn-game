@@ -1,5 +1,5 @@
 import { doc, onSnapshot } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { MouseEventHandler, useEffect, useState } from "react";
 import { db } from "..";
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, TextField, Tooltip } from "@mui/material";
 import FolderIcon from '@mui/icons-material/Folder';
@@ -37,14 +37,13 @@ export const PlayerProfile = () => {
        userMale,
        writeMale
       ];
-    
+    const [playerImage, setPlayerImage] = useState('')
     const emptyFacts: Array<string> = []
     const [isWaitingForStart, setIsWaitingForStart] = useState(false)
     const [isGameStarting, setIsGameStarting] = useState(false)
     const [name, setName] = useState("")
     const [facts, setFacts] = useState(emptyFacts)
     const [urlParameter, setUrlParameter] = useState("")
-    const [imgUrl, setImgUrl] = useState(null);
     const [progresspercent, setProgresspercent] = useState(0);
     const types = ['image/png', 'image/jpeg'];
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -63,6 +62,9 @@ export const PlayerProfile = () => {
     const Input = styled('input')({
         display: 'none',
       });
+    const Image = styled('image')({
+        display: 'none',
+      });
       
 
     const handleTakePicture = (e: { target: { files: any; }; }) => {
@@ -71,41 +73,43 @@ export const PlayerProfile = () => {
     }
     
     const handleUploadPicture = (e: {target: { files: any; }; }) => {
-    //e.preventDefault()
-    const file = e.target.files[0]
-    console.log("change")
+        const file = e.target.files[0]
+        setPlayerImage(imageFile => (file))
+        console.log("change")
 
-    if (!file) return;
-    if(file && types.includes(file.type)){
+        if (!file) return;
+        if(file && types.includes(file.type)){
 
-        const storageRef = ref(storage, `Profile_pictures/${file.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-    
-        uploadTask.on("state_changed",
-            (snapshot) => {
-            const progress =
-                Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-            setProgresspercent(progress);
-            },
-            (error) => {
-            alert(error);
-            },
-            () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                console.log('File available at', downloadURL);
-                //setImgUrl(downloadURL);
-            });
-            }
-        );
-    } else {
-        return;
-        //error
-    }
-    }
-    function handleSelectedIcon(){
-
+            const storageRef = ref(storage, `Profile_pictures/${file.name}`);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+        
+            uploadTask.on("state_changed",
+                (snapshot) => {
+                const progress =
+                    Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                setProgresspercent(progress);
+                },
+                (error) => {
+                alert(error);
+                },
+                () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    console.log('File available at', downloadURL);
+                    setPlayerImage(downloadURL)
+                });
+                }
+            );
+        } else {
+            return;
+            //error
+        }
     }
 
+    const handleSelectedIcon = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, value: string) => {
+        console.log("VALUE", value);
+        setPlayerImage(value)
+
+    }
     function handleOnChangeFactInput(index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const factValue = e.target.value
         const clonedFacts = [...facts]
@@ -131,7 +135,7 @@ export const PlayerProfile = () => {
         let isSuccesful = false 
         const playerDetails: PlayerCreateDTO = {
             name: name,
-            picture: "",
+            picture: playerImage,
         }
 
         const playerId = await createPlayerProfile(playerDetails)
@@ -141,7 +145,7 @@ export const PlayerProfile = () => {
             const factDetails: FactModelCreateDTO = {
                 playerId: playerId,
                 playerName: name,
-                playerPicture: "",
+                playerPicture: playerImage,
                 facts: facts,
             }
             await createFacts(factDetails)
@@ -149,7 +153,7 @@ export const PlayerProfile = () => {
             const scoreDetails: ScoreCreateDTO = {
                 playerId: playerId,
                 playerName: name,
-                playerPicture: "",
+                playerPicture: playerImage,
                 score: 0
             }
             await createScore(scoreDetails)
@@ -157,7 +161,6 @@ export const PlayerProfile = () => {
             setUrlParameter(playerId)
             isSuccesful = true
         }
-
         return isSuccesful
     }
 
@@ -190,6 +193,7 @@ export const PlayerProfile = () => {
         }
     
         function initializeFacts() {
+            setPlayerImage('/broken-image.jpg')
             const numberFactsQueryParam = searchParams.get('factNumber')
             let numberOfFacts: number = 0
             const factList: Array<string> = []
@@ -201,7 +205,6 @@ export const PlayerProfile = () => {
             }
             setFacts(factList)
         }
-
         initializeFacts()
         setupGameStartListeners()
     }, [])
@@ -273,9 +276,14 @@ export const PlayerProfile = () => {
                     }}
                 >
                 <label>
+                    <Avatar
+                        src={playerImage}
+                        sx={{ marginTop: '8px', marginLeft: '50px', width: 50, height: 50 , alignItems: 'center'}}
+                    />
                     <Input accept="image/*" id="icon-button-file" type="file" onChange={handleUploadPicture} />
                     <IconButton 
                         sx={{
+                            marginTop: '8px',
                             color: 'white',
                         }}
                         aria-label="upload picture" 
@@ -286,6 +294,7 @@ export const PlayerProfile = () => {
                     <Input accept="image/*" id="icon-button-file" type="file" onChange={handleTakePicture} />
                     <IconButton 
                         sx={{ 
+                            marginTop: '8px',
                             color: 'white',
                             ml: 2 
                         }}
@@ -298,6 +307,7 @@ export const PlayerProfile = () => {
                             onClick={handleClick}
                             size="small"
                             sx={{ 
+                                marginTop: '8px',
                                 ml: 2 
                             }}
                             aria-controls={open ? 'avatars-menu' : undefined}
@@ -321,7 +331,7 @@ export const PlayerProfile = () => {
                         }}
                         open={open}
                         onClose={handleClose}
-                        onClick={handleOpen}
+                        onChange={handleClose}
                         PaperProps={{
                             style: {
                                 maxHeight: ITEM_HEIGHT*4.5
@@ -352,13 +362,18 @@ export const PlayerProfile = () => {
                         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                     >
                     {defaultAvatars.map((avatar) => (
-                        <MenuItem key={avatar} onClick={handleSelectedIcon}>
+                        <MenuItem 
+                            key={avatar}
+                            onClick={(e) => handleSelectedIcon(e, avatar)}
+                        >
                             <Avatar
                                 src={avatar}>
+                                {/* // onChange={handleSelectedIcon}> */}
                             </Avatar>
                         </MenuItem>
                     ))}
                     </Menu>
+
                 </label>
                 <Button  sx={{ color: 'white', marginTop: '8px' }}
                     id="factButton"
