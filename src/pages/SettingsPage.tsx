@@ -23,7 +23,7 @@ export const SettingsPage = () => {
 
     return (
         <>
-        <section className="home">
+        <section className="card">
             <h1>Settings</h1>
             <Box 
                 sx={{

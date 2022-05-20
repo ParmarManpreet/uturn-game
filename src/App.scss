@@ -27,6 +27,10 @@ html, body, #root {
       text-align: center;
       //color: $text-color;
     }
+    span{
+      text-align: center;
+      color: $light-color;
+    }
 
     
 }
@@ -37,7 +41,7 @@ html, body, #root {
   background-repeat: no-repeat;
   // background-size: cover;
     h1{
-      padding-top: 120px;
+      padding-top: 100px;
       text-align: center;
       color: $light-color;
     }
