@@ -25,7 +25,7 @@ interface Props {
 const Footer = (props: Props) => {
 
   return (
-      <React.Fragment>
+    // <React.Fragment>
     <ElevationScroll {...props}>
     <AppBar sx={{ top: 'auto', bottom: 0 }}>
         <Toolbar>
@@ -33,7 +33,7 @@ const Footer = (props: Props) => {
         </Toolbar>
     </AppBar>
     </ElevationScroll>
-    </React.Fragment>
+    // </React.Fragment>
   );
 };
 

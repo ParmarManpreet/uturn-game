@@ -1,5 +1,6 @@
 import { Avatar, Box, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
 import { getAllScores, ScoreGetDTO } from "../services/ScoreService";
 
 export const LeaderboardPage = () => {
@@ -18,6 +19,8 @@ export const LeaderboardPage = () => {
     }, [])
 
     return (
+        <>
+        <Navbar isAdmin={true} ></Navbar>
         <section className="home">
             <Container>
                 <h1>Leaderboard</h1> 
@@ -45,5 +48,6 @@ export const LeaderboardPage = () => {
                 </TableContainer>
             </Container>    
         </section>
+        </>
     );
 }
