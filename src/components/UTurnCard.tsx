@@ -80,7 +80,7 @@ function FactItem(props: UTurnCardItem) {
                         alignItems: 'center',
                         justifyContent: 'space-around',
                     }}>
-                    <span className="card_text">
+                    <span id="card_text">
                         <strong>{props.factItem.playerName}</strong>
                     </span>
                 </Box>
@@ -102,7 +102,7 @@ function FactItem(props: UTurnCardItem) {
                         alignItems: 'center',
                         justifyContent: 'space-around',
                     }}>
-                    <span className="card_text">
+                    <span id="card_text">
                         {props.factItem.fact}
                     </span>
                 </Box>
@@ -140,7 +140,7 @@ function FactItem(props: UTurnCardItem) {
                     width: '100%',
                     height: '50%'
                 }}>
-                <span className="card_text">
+                <span id="card_text">
                     {props.factItem.fact}
                 </span>
             </Box>
