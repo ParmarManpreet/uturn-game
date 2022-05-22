@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import QRCode from 'qrcode';
 import { updateGameStartState } from "../services/GameStatesService";
+import Navbar from "../components/Navbar";
 
 export const PlayerLinkPage = () => {
     const domain = 'https://u-turn-development.web.app'
@@ -34,19 +35,20 @@ export const PlayerLinkPage = () => {
 
     return (
         <>
+        <Navbar isAdmin={true} ></Navbar>
         <section className="home"> 
             <h1>Let's Start Playing!</h1>
             <Box
-                    component="form"
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        '& .MuiTextField-root': { m: 1, width: '25ch' , backgroundColor:'white'},
-                    }}
-                    noValidate
-                    autoComplete="off"
-                >
+                component="form"
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    '& .MuiTextField-root': { m: 1, width: '25ch' , backgroundColor:'white'},
+                }}
+                noValidate
+                autoComplete="off"
+            >
                 <div className="home__white_div"> {`${domain}/player-profile/?factNumber=${factNumber}`} </div>
                 <div className="home__qrcode">
                     <h2>{('Scan Me')}</h2>

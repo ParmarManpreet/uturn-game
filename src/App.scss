@@ -36,7 +36,7 @@ html, body, #root {
 }
 .home {
   height:100%;
-  overflow: auto;
+  overflow: hidden;
   background-color: $text-color;
   background-repeat: no-repeat;
   // background-size: cover;
@@ -92,6 +92,7 @@ html, body, #root {
   overflow: auto;
   background-color: $text-color;
   background-repeat: no-repeat;
+  padding-bottom: 100px;
 
     h1{
       padding-top: 120px;

@@ -1,6 +1,7 @@
 import { Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"
+import Navbar from "../components/Navbar";
 
 
 export const NumberOfPlayerPage = () => {
@@ -37,6 +38,7 @@ export const NumberOfPlayerPage = () => {
 
         return (
             <>
+            <Navbar isAdmin={true} ></Navbar>
             <section className="home">
                 <h1>Number of players</h1>
                 <Box

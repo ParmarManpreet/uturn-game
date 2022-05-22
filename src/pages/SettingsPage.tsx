@@ -1,5 +1,6 @@
 import { Box, Switch } from "@mui/material";
 import { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
 import { getVisibleScoreState, updateVisibleScoreState } from "../services/GameStatesService";
 
 export const SettingsPage = () => {
@@ -23,6 +24,7 @@ export const SettingsPage = () => {
 
     return (
         <>
+        <Navbar isAdmin={true} ></Navbar>
         <section className="card">
             <h1>Settings</h1>
             <Box 
