@@ -193,6 +193,7 @@ export const UturnPage = () => {
             const cardProgress: boolean[][] = JSON.parse(localStorage.getItem("cardProgress")!)
             setFacts(facts)
             setCardProgress(cardProgress)
+            setUrl(url)
 
             fetchAllPlayerDetailsButCurrentPlayer(url)
             fetchScoreVisibleGameState()
@@ -223,7 +224,7 @@ export const UturnPage = () => {
     
     else {
         return (
-            <Box className="card">
+            <Box className="home">
                 <Container>
                     <PlayerScore cardProgress={cardProgress}
                         isScoreVisible={isScoreVisible}
