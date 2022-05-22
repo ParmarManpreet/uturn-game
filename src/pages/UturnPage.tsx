@@ -5,6 +5,7 @@ import { Navigate, useParams } from "react-router";
 import { db } from "..";
 import { FactSummaryDialog } from "../components/dialogs/FactSummaryDialog";
 import { GuessFactOwnerDialog } from "../components/dialogs/GuessFactOwnerDialog";
+import Footer from "../components/Footer";
 import { LoadingView } from "../components/LoadingView";
 import { PlayerScore } from "../components/PlayerScore";
 import { ScoreLegend } from "../components/ScoreLegend";
@@ -223,6 +224,7 @@ export const UturnPage = () => {
     
     else {
         return (
+        <>
             <Box className="card">
                 <Container>
                     <PlayerScore cardProgress={cardProgress}
@@ -248,6 +250,8 @@ export const UturnPage = () => {
                     />
                 </Container>
             </Box>
+            <Footer children={undefined!}></Footer>
+        </>
         )
     }
 }
