@@ -5,7 +5,9 @@ import { Navigate, useParams } from "react-router";
 import { db } from "..";
 import { FactSummaryDialog } from "../components/dialogs/FactSummaryDialog";
 import { GuessFactOwnerDialog } from "../components/dialogs/GuessFactOwnerDialog";
+import Footer from "../components/Footer";
 import { LoadingView } from "../components/LoadingView";
+import Navbar from "../components/Navbar";
 import { PlayerScore } from "../components/PlayerScore";
 import { ScoreLegend } from "../components/ScoreLegend";
 import { FactPosition, UTurnCard } from "../components/UTurnCard";
@@ -224,31 +226,35 @@ export const UturnPage = () => {
     
     else {
         return (
-            <Box className="home">
-                <Container>
-                    <PlayerScore cardProgress={cardProgress}
-                        isScoreVisible={isScoreVisible}
-                        playerId={url}
-                    />
-                    <UTurnCard facts={facts}
-                        cardProgress={cardProgress}
-                        onCardItemSelectWhenTrue={handleFactSelectionForSubmission}
-                        onCardItemSelectWhenFalse={handleFactSelectionForSummary}
-                    />
-                    <ScoreLegend isScoreVisible={isScoreVisible}/>
-                    <GuessFactOwnerDialog selectedFact={previewedFactDialogDetails.factItem}
-                        open={openSubmitDialog} 
-                        onClose={handleSubmitDialogClose} 
-                        factOwners={factOwnerDetails}
-                        onSubmitCorrectAnswer={updateCardProgress}
-                    />
-                    <FactSummaryDialog
-                        open={openFactSummaryDialog}
-                        onClose={handleFactSummaryDialogClose}
-                        selectedFact={previewedFactDialogDetails.factItem}
-                    />
-                </Container>
-            </Box>
+            <>
+                <Navbar isAdmin={false}/>
+                <Box className="home">
+                    <Container>
+                        <PlayerScore cardProgress={cardProgress}
+                            isScoreVisible={isScoreVisible}
+                            playerId={url}
+                        />
+                        <UTurnCard facts={facts}
+                            cardProgress={cardProgress}
+                            onCardItemSelectWhenTrue={handleFactSelectionForSubmission}
+                            onCardItemSelectWhenFalse={handleFactSelectionForSummary}
+                        />
+                        <ScoreLegend isScoreVisible={isScoreVisible}/>
+                        <GuessFactOwnerDialog selectedFact={previewedFactDialogDetails.factItem}
+                            open={openSubmitDialog} 
+                            onClose={handleSubmitDialogClose} 
+                            factOwners={factOwnerDetails}
+                            onSubmitCorrectAnswer={updateCardProgress}
+                        />
+                        <FactSummaryDialog
+                            open={openFactSummaryDialog}
+                            onClose={handleFactSummaryDialogClose}
+                            selectedFact={previewedFactDialogDetails.factItem}
+                        />
+                    </Container>
+                </Box>
+                <Footer children={undefined!}></Footer>
+            </>
         )
     }
 }

@@ -1,5 +1,6 @@
 import { Box, Switch } from "@mui/material";
 import { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
 import { getVisibleScoreState, updateVisibleScoreState } from "../services/GameStatesService";
 
 export const SettingsPage = () => {
@@ -22,19 +23,22 @@ export const SettingsPage = () => {
     }, [])
 
     return (
-        <section className="home">
-            <h1>Settings</h1>
-            <Box 
-                sx={{
-                    alignItems: 'center',
-                }}
-            >
-            <span>Make Score Visible</span>
-            <Switch aria-label= 'Switch for Score Visibility'
-                onChange={(e) => handleChangeVisibleScoreSwitch(e)}
-                checked={isScoreVisible}
-            />
-            </Box>
-        </section>
+        <>
+            <Navbar isAdmin={true} ></Navbar>
+            <section className="home">
+                <h1>Settings</h1>
+                <Box 
+                    sx={{
+                        alignItems: 'center',
+                    }}
+                >
+                <span>Make Score Visible</span>
+                <Switch aria-label= 'Switch for Score Visibility'
+                    onChange={(e) => handleChangeVisibleScoreSwitch(e)}
+                    checked={isScoreVisible}
+                />
+                </Box>
+            </section>
+        </>
     );
 }

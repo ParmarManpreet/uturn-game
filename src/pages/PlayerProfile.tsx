@@ -23,6 +23,7 @@ import userMale from './defaultAvatarTemp/user-male.png';
 import writeMale from './defaultAvatarTemp/writer-male.png';
 import { createScore, ScoreCreateDTO } from "../services/ScoreService";
 import { LoadingView } from "../components/LoadingView";
+import Navbar from "../components/Navbar";
 
 export const PlayerProfile = () => {
     const defaultAvatars = [
@@ -213,6 +214,7 @@ export const PlayerProfile = () => {
     if (isWaitingForStart) {
         return (
             <>
+            <Navbar isAdmin={false} ></Navbar>
                 <div className="home">
                     <LoadingView/>
                 </div>
@@ -222,13 +224,16 @@ export const PlayerProfile = () => {
     
     else if (isGameStarting) {
         return (
+            <>
+            <Navbar isAdmin={false} ></Navbar>
             <Navigate to={`/uturn-page/${urlParameter}`} replace={true} />
+            </>
         )
     } 
-    
     else {
         return (
             <>
+            <Navbar isAdmin={false} ></Navbar>
             <section className="home">
                 <h1>Create Profile</h1>
                 <Box

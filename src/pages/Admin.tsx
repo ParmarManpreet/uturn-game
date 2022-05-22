@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { updateGameStartState } from "../services/GameStatesService";
 import {NavigationLink} from '../services/PageNavigationService'
 import GameResetDialog from '../components/GameResetDialog'
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 export const Admin = () => {
     const [isStarted, setIsStarted] = useState(false)
@@ -17,6 +19,7 @@ export const Admin = () => {
     }
     return (
         <>
+        <Navbar isAdmin={true} ></Navbar>
             <section className="home">
                 <h1>Admin Home Page</h1>
                     <div>
@@ -24,8 +27,8 @@ export const Admin = () => {
                         <NavigationLink text={'Settings'} path="/settings" />
                     </div>
             </section>
+        {/* <Footer children={undefined} ></Footer> */}
         </>
-
     );
 }
 
