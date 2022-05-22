@@ -22,8 +22,7 @@ export const SettingsPage = () => {
     }, [])
 
     return (
-        <>
-        <section className="card">
+        <section className="home">
             <h1>Settings</h1>
             <Box 
                 sx={{
@@ -37,7 +36,5 @@ export const SettingsPage = () => {
             />
             </Box>
         </section>
-        </>
-
     );
 }
