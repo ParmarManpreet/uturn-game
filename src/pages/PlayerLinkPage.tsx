@@ -34,7 +34,8 @@ export const PlayerLinkPage = () => {
     },[factNumber]);
 
     return (
-        <section className="home"> 
+        <section className="home">
+            <Navbar isAdmin={false}/>
             <h1>Let's Start Playing!</h1>
             <Box
                     component="form"
