@@ -17,16 +17,19 @@ import SettingService from '../services/SettingService';
 import UTurnLogoWhite from "./logos/UTURN2.png"
 import { NavigationLink } from '../services/PageNavigationService';
 
+interface NavbarProps {
+  isAdmin: boolean
+}
+
 const pages = ['Home Page', 'Settings', 'GameLink'];
 const settings = ['Home Page', 'Settings', 'GameLink'];
 
-const Navbar = () => {
+const Navbar = (props: NavbarProps) => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [companyLogoURL, setCompanyLogoURL] = useState("")
   const [teamBuildLogoURL, setTeamBuildLogoURL] = useState("")
   const [hasRetreivedLogo, setHasRetreivedLogo] = useState(false)
-
   useEffect(() => {
     initializeTeamBuildLogo()
     initializeCompanyLogo()
@@ -69,6 +72,7 @@ async function initializeCompanyLogo() {
   };
 
   const handleSelection = ( e: React.MouseEvent<HTMLLIElement, MouseEvent>,value: string) => {
+    //Write code to make page route to the selected page
       if(value == "Settings") {
         <NavigationLink text={'Settings'} path="/settings" />
         console.log("settings")
@@ -85,7 +89,7 @@ async function initializeCompanyLogo() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
+          
           <Typography
             variant="h6"
             noWrap
@@ -100,15 +104,24 @@ async function initializeCompanyLogo() {
               textDecoration: 'none',
             }}
           >
-            {/* {hasRetreivedLogo? <img src={UTurnLogoWhite} height="50" alt="Logo"/>: null} */}
+            {
+            //Will put this in a seperate class after
+            props.isAdmin?
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              {hasRetreivedLogo? <img src={UTurnLogoWhite} height="42" alt="Logo"/>: null}
-                {/* <Avatar src={companyLogoURL}/> */}
+                {hasRetreivedLogo? <img src={UTurnLogoWhite} height="42" alt="Logo"/>: null}
               </IconButton>
             </Tooltip>
+            :  
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+              {hasRetreivedLogo? <img src={UTurnLogoWhite} height="42" alt="Logo"/>: null}
+            </Box>
+            }
           </Typography>
 
+          {
+          //Will put this in a seperate class after
+          props.isAdmin?
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -140,18 +153,21 @@ async function initializeCompanyLogo() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={(e) => handleSelection(e,page)}>
-                {/* // <MenuItem key={page} onClick={handleCloseNavMenu}> */}
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
+          :
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            {hasRetreivedLogo? <img src={teamBuildLogoURL} height="42" alt="Logo"/>: null}
+          </Box>
+          }
+
           <Typography
             variant="h5"
             noWrap
             component="a"
-            href="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -165,13 +181,28 @@ async function initializeCompanyLogo() {
           >
             {hasRetreivedLogo? <img src={UTurnLogoWhite} height="50" alt="Logo"/>: null}
           </Typography >
-          <Box sx={{ my:2, alignItems: "center" , flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {hasRetreivedLogo? <img src={teamBuildLogoURL} height="42" alt="Logo"/>: null}
-          </Box>
+
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            // href="/"
+            sx={{
+              mr: 2,
+              display: { xs: 'none', md: 'flex' },
+              flexGrow: 1,
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            {hasRetreivedLogo? <img src={teamBuildLogoURL} height="42" alt="Logo"/>: null}
+          </Typography >
 
           <Box sx={{ flexGrow: 0 }}>
-              {hasRetreivedLogo? <img src={companyLogoURL} height="42" alt="Logo"/>: null}
-
+            {hasRetreivedLogo? <img src={companyLogoURL} height="42" alt="Logo"/>: null}
             <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"
@@ -189,9 +220,9 @@ async function initializeCompanyLogo() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+              <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <Typography textAlign="center">{setting}</Typography>
+              </MenuItem>
               ))}
             </Menu>
           </Box>

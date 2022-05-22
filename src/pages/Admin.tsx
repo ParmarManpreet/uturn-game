@@ -19,7 +19,7 @@ export const Admin = () => {
     }
     return (
         <>
-        <Navbar></Navbar>
+        <Navbar isAdmin={true} ></Navbar>
             <section className="home">
                 <h1>Admin Home Page</h1>
                     <div>
