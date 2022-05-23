@@ -8,6 +8,7 @@ import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
+import LangState from './context/lang';
 
 const firebaseConfig = {
   apiKey: "AIzaSyB7DLyA410nmu5iwSKAaaYffa_qhAuw_Yo",
@@ -31,7 +32,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <LangState>
+        <App />
+      </LangState>
     </BrowserRouter>
   </React.StrictMode>
 );

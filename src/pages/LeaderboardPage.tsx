@@ -1,9 +1,14 @@
 import { Avatar, Box, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useEffect, useState } from "react";
+import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { getAllScores, ScoreGetDTO } from "../services/ScoreService";
 
-export const LeaderboardPage = () => {
+interface LeaderboardPage {
+    translate : (key: string) => string
+}
+
+export const LeaderboardPage = (props : LeaderboardPage) => {
     const emptyScoreDetails: Array<ScoreGetDTO> = []
     const [scoreDetails, setScoreDetails] = useState<Array<ScoreGetDTO>>(emptyScoreDetails)
 
@@ -22,15 +27,15 @@ export const LeaderboardPage = () => {
         <>
         <Navbar isAdmin={true} ></Navbar>
         <section className="home">
-            <Container>
-                <h1>Leaderboard</h1> 
+            <Container >
+                <h1>{props.translate('leaderboard-title')}</h1> 
                 <TableContainer component={Paper}>
-                <Table aria-label="simple table">
+                <Table aria-label="simple table" sx={{marginBottom:'500px'}}>
                     <TableHead>
                     <TableRow>
-                        <TableCell><strong>Rank</strong></TableCell>
-                        <TableCell align="left"><strong>Name</strong></TableCell>
-                        <TableCell align="left"><strong>Score</strong></TableCell>
+                        <TableCell><strong>{props.translate('leaderboard-rank')}</strong></TableCell>
+                        <TableCell align="left"><strong>{props.translate('leaderboard-name')}</strong></TableCell>
+                        <TableCell align="left"><strong>{props.translate('leaderboard-score')}</strong></TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
@@ -48,6 +53,7 @@ export const LeaderboardPage = () => {
                 </TableContainer>
             </Container>    
         </section>
+        <Footer children={undefined!} ></Footer>
         </>
     );
 }

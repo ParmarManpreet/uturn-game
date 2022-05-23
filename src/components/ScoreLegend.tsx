@@ -2,17 +2,19 @@ import { Box } from "@mui/material";
 
 interface ScoreLegendProps {
     isScoreVisible: boolean
+    translate : (key: string) => string
+
 }
 
 export const ScoreLegend = (props: ScoreLegendProps) => {
     return (
         <>
             {props.isScoreVisible === true ? 
-                <Box sx={{color:'white', display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'flex-start', justifyContent:'space-evenly'}}>
-                    <span>Full Row: 100 Points</span>
-                    <span>Full Column: 100 Points</span>
-                    <span>Full Diagonal: 500 Points</span>
-                    <span>Entire Card: 2000 Points</span>
+                <Box sx={{marginBottom: '100px', color:'white', display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'flex-start', justifyContent:'space-evenly'}}>
+                    <span>{props.translate('uturn-legend-row')}</span>
+                    <span>{props.translate('uturn-legend-column')}</span>
+                    <span>{props.translate('uturn-legend-diagonal')}</span>
+                    <span>{props.translate('uturn-legend-entire-card')}</span>
                 </Box> : null
             }
         </>
