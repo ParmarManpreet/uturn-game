@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, query, where} from "firebase/firestore";
+import { addDoc, collection, deleteDoc, getDocs, query, where} from "firebase/firestore";
 import { db } from "..";
 import { prettyPrintFactDetailsArray } from "../utils/PrettyPrintService";
 
@@ -62,5 +62,20 @@ export async function getAllFactsNotFromCurrentPlayer(playerId: string) {
         return factsFromOtherPlayers
     } catch(error) {
         console.log(`Firestore could not Filter Facts Not Belonging to player with id: ${playerId}`)
+    }
+}
+
+export async function deleteAllFacts() {
+    try {
+        const factsRef = collection(db, "Facts")
+        const queryOfFacts = query(factsRef)
+
+        const querySnapshot = await getDocs(queryOfFacts)
+        for(const document of querySnapshot.docs) {
+            deleteDoc(document.ref)
+        }
+        console.log(`Firestore Successfully Deleted All of the Facts`)
+    } catch(error) {
+        console.log(`Firestore could not Delete All of the Facts\n ${error}`)
     }
 }

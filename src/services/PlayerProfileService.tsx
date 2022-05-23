@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore"
+import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore"
 import { db } from ".."
 import { prettyPrintCreateDTO } from "../utils/PrettyPrintService"
 
@@ -78,5 +78,19 @@ export async function getAllButCurrentPlayer(playerId: string) {
         return playerProfiles
     } catch (error) {
         console.log(`Firebase was not able to get player that do not have the id: ${playerId}\n ${error}`)
+    }
+}
+
+export async function deleteAllPlayerProfiles() {
+    try {
+        const profiles = collection(db, "Profiles")
+        const queryOfProfiles = query(profiles)
+        const querySnapshot = await getDocs(queryOfProfiles)
+        for(const document of querySnapshot.docs) {
+            deleteDoc(document.ref)
+        }
+        console.log(`Firebase Succesfully Deleted All the Player Profiles`)
+    } catch (error) {
+        console.log(`Firebase Was Not Able to Delete All the Player Profiles\n ${error}`)
     }
 }
