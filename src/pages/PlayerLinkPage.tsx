@@ -6,7 +6,7 @@ import { updateGameStartState } from "../services/GameStatesService";
 import Navbar from "../components/Navbar";
 
 export const PlayerLinkPage = () => {
-    const domain = 'https://uturn-78fe1.web.app'
+    const domain = 'https://u-turn-development.web.app'
     const location =  useLocation();
     const factState: any = location.state
     const factNumber: number = factState.numberOfFacts
