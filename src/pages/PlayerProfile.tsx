@@ -1,5 +1,5 @@
 import { doc, onSnapshot } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { db } from "..";
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, TextField, Tooltip } from "@mui/material";
 import FolderIcon from '@mui/icons-material/Folder';
@@ -25,8 +25,15 @@ import { createScore, ScoreCreateDTO } from "../services/ScoreService";
 import { LoadingView } from "../components/LoadingView";
 import Navbar from "../components/Navbar";
 import { GameInProgressView } from "../components/GameInProgressView";
+import Footer from "../components/Footer";
+import { LangContext } from "../context/lang";
 
-export const PlayerProfile = () => {
+interface PlayerProfileProps {
+    translate : (key: string) => string
+}
+
+
+export const PlayerProfile = (props : PlayerProfileProps) => {
     const defaultAvatars = [
        actress,
        female,
@@ -39,7 +46,7 @@ export const PlayerProfile = () => {
        userMale,
        writeMale
     ];
-    
+    const {dispatch: { translate }} = useContext(LangContext);
     // Facts Constants
     const emptyFacts: Array<string> = []
 
@@ -233,7 +240,7 @@ export const PlayerProfile = () => {
             <>
             <Navbar isAdmin={false} ></Navbar>
                 <div className="home">
-                    <LoadingView isWaitingForHost={true}/>
+                    <LoadingView isWaitingForHost={true} translate={translate}/>
                 </div>
             </>
         )
@@ -260,7 +267,7 @@ export const PlayerProfile = () => {
             <>
             <Navbar isAdmin={false} ></Navbar>
             <section className="home">
-                <h1>Create Profile</h1>
+                <h1>{props.translate('create-profile-title')}</h1>
                 <Box
                     component="form"
                     sx={{
@@ -278,7 +285,7 @@ export const PlayerProfile = () => {
                         },
                     }}
                     id="player-name"
-                    label="Enter your name"
+                    label={props.translate('create-profile-name')}
                     type="string" 
                     variant="filled"
                     onChange={(e) => handleOnChangeNameInput(e)} value={name}
@@ -410,10 +417,11 @@ export const PlayerProfile = () => {
                     onClick={handlePlayerDetailsSubmitButton}
                     disabled={areThereEmptyFields()}
                 >
-                    Submit
+                    {props.translate('create-prfile-submit')}
                 </Button>
                 </Box>
             </section>
+            <Footer children={undefined!} ></Footer>
             </>
         );
     }    

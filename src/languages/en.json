@@ -20,10 +20,19 @@
     "create-profile-fact": "Enter Fact #",
     "create-prfile-submit": "Submit",
 
+    "loading-message": "Please Wait for Host to Start the Game",
+
+
     "uturn-title": "Here is your UTurn Card",
     "uturn-legend-row": "Full Row: 100 Points",
     "uturn-legend-column": "Full Column: 100 Points",
     "uturn-legend-diagonal": "Full Diagonal: 500 Points",
-    "uturn-legend-entire-card": "Entire Card: 2000 Points" 
+    "uturn-legend-entire-card": "Entire Card: 2000 Points",
+
+    "leaderboard-title": "Leaderboard",
+    "leaderboard-rank": "Rank",
+    "leaderboard-name": "Name",
+    "leaderboard-score": "Score"
+
     
 }

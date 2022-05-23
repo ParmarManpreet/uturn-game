@@ -1,6 +1,6 @@
 import { Box, Container } from "@mui/material";
 import { doc, onSnapshot } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router";
 import { db } from "..";
 import { FactSummaryDialog } from "../components/dialogs/FactSummaryDialog";
@@ -11,6 +11,7 @@ import Navbar from "../components/Navbar";
 import { PlayerScore } from "../components/PlayerScore";
 import { ScoreLegend } from "../components/ScoreLegend";
 import { FactPosition, UTurnCard } from "../components/UTurnCard";
+import { LangContext } from "../context/lang";
 import { FactModelGetDTO } from "../services/FactService";
 import { getAllFactsNotFromCurrentPlayer } from "../services/FactService";
 import { getGameId, getVisibleScoreState } from "../services/GameStatesService";
@@ -21,12 +22,15 @@ export interface DialogInformation {
     factPosition: FactPosition
 }
 
-export const UturnPage = () => {
+interface UTurnPage {
+    translate : (key: string) => string
+}
+export const UturnPage = (props : UTurnPage) => {
     const emptyFactList: FactModelGetDTO[][] = []
     const emptyFactOwnerList: Array<PlayerGetDTO> = []
     const emptyCardProgress: boolean[][] = []
     const emptyDialogInformation: DialogInformation = {factItem: {playerName: "", fact: "", playerPicture: "" }, factPosition: {rowIndex: -1, columnIndex: -1}}
-
+    const {dispatch: { translate }} = useContext(LangContext);
     // Getting URL Parameters
     let params = useParams();
     const [url, setUrl] = useState("")
@@ -247,7 +251,7 @@ export const UturnPage = () => {
     if (isLoading) {
         return (
             <Box className="home">
-                <LoadingView isWaitingForHost={false}/>
+                <LoadingView isWaitingForHost={false} translate={translate}/>
             </Box>
         )
     } 
@@ -263,6 +267,7 @@ export const UturnPage = () => {
             <>
                 <Navbar isAdmin={false}/>
                 <Box className="home">
+                    <h1>{props.translate('uturn-title')}</h1>
                     <Container>
                         <PlayerScore cardProgress={cardProgress}
                             isScoreVisible={isScoreVisible}
@@ -273,7 +278,7 @@ export const UturnPage = () => {
                             onCardItemSelectWhenTrue={handleFactSelectionForSubmission}
                             onCardItemSelectWhenFalse={handleFactSelectionForSummary}
                         />
-                        <ScoreLegend isScoreVisible={isScoreVisible}/>
+                        <ScoreLegend isScoreVisible={isScoreVisible} translate={translate}/>
                         <GuessFactOwnerDialog selectedFact={previewedFactDialogDetails.factItem}
                             open={openSubmitDialog} 
                             onClose={handleSubmitDialogClose} 

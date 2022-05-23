@@ -44,6 +44,7 @@ export const SettingsPage = (props : SettingsProp) => {
                 />
                 </Box>
             </section>
+            <Footer children={undefined!} ></Footer>
         </>
     );
 }

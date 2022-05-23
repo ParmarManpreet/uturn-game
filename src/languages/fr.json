@@ -1,6 +1,6 @@
 {
     "admin-title" : "Page d'accueil de l'administrateur",
-    "admin-start-game" : "Start Gacommencer le jeu",
+    "admin-start-game" : "Commencez le jeu",
     "admin-settings" : "Paramètres",
 
     "settings-title" : "Paramètres du jeu",
@@ -20,10 +20,17 @@
     "create-profile-fact" : "Entrez votre fait #",
     "create-prfile-submit" : "Soumettre",
 
+    "loading-message": "Veuillez attendre que l'hôte commence le jeu",
+
     "uturn-title" : "Voici votre carte UTurn",
     "uturn-legend-row" : "Rangée complète : 100 points",
     "uturn-legend-column" : "Colonne complète : 100 points",
     "uturn-legend-diagonal" : "Diagonale complète : 500 points",
-    "uturn-legend-entire-card" : "Carte entière : 2000 points" 
+    "uturn-legend-entire-card" : "Carte entière : 2000 points",
+
+    "leaderboard-title": "Tableau des leaders",
+    "leaderboard-rank": "Classement",
+    "leaderboard-name": "Nom",
+    "leaderboard-score": "Pointage"
     
 }

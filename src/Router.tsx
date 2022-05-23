@@ -17,13 +17,13 @@ export const Router = () => {
             {/* <Route path="/"  element={<Admin translate={function (key: string): string {
                 throw new Error("Function not implemented.");
             } }/>} /> */}
-            <Route path="/player-profile" element={<PlayerProfile/>} />
-            <Route path="/number-players" element={<NumberOfPlayerPage/>} />
-            <Route path="/player-links" element={<PlayerLinkPage/>} />
+            <Route path="/player-profile" element={<PlayerProfile translate={translate}/>} />
+            <Route path="/number-players" element={<NumberOfPlayerPage translate={translate}/>} />
+            <Route path="/player-links" element={<PlayerLinkPage translate={translate}/>} />
             <Route path="/settings" element={<SettingsPage translate={translate}/>} />
-            <Route path="/uturn-page/:playerURL" element={<UturnPage/>} />
-            <Route path="/uturn-page/" element={<UturnPage/>} />
-            <Route path="/leaderboard" element={<LeaderboardPage/>} />
+            <Route path="/uturn-page/:playerURL" element={<UturnPage translate={translate}/>} />
+            <Route path="/uturn-page/" element={<UturnPage translate={translate}/>} />
+            <Route path="/leaderboard" element={<LeaderboardPage translate={translate}/>} />
         </Routes>
     );
 }
