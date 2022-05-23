@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "u-turn-development"
-  }
+    "default": "u-turn-development",
+    "prod": "uturn-78fe1"
+  },
+  "targets": {}
 }
