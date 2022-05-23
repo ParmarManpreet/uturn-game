@@ -1,37 +1,69 @@
-import React, { useState } from "react";
-import {NavigationLink} from '../services/PageNavigationService'
+import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { deleteAllScores } from "../services/ScoreService";
+import { deleteAllPlayerProfiles } from "../services/PlayerProfileService";
+import { deleteAllFacts } from "../services/FactService";
+import { GameResetDialog } from "../components/dialogs/GameResetDialog";
+import { useNavigate } from "react-router-dom";
+import { updateGameStartState } from "../services/GameStatesService";
+import { Button } from "@mui/material";
 
 interface AdminProps {
     translate : (key: string) => string
 }
 
 export const Admin = (props: AdminProps) => {
-    // export const Admin = () => {
-    const [isStarted, setIsStarted] = useState(false)
-    const [isModalShowing, setIsModalShowing] = useState(false)
-    
-    function handleStart(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
-        if (isStarted) {
-            e.preventDefault()
-            setIsModalShowing(true)
-        }  
+    let navigate = useNavigate();
+
+    const [isGameResetDialogShowing, setIsGameResetDialogShowing] = useState(false)
+
+    const handleGameResetDialogOpen = () => {
+        setIsGameResetDialogShowing(true)
     }
+
+    const handleGameResetDialogClose = () => {
+        setIsGameResetDialogShowing(false)
+    }
+
+    function handleResetGame() {
+        deleteAllScores()
+        deleteAllPlayerProfiles()
+        deleteAllFacts()
+        setIsGameResetDialogShowing(false)
+        updateGameStartState(false)
+        navigate('/number-players')
+    }
+
+    function handleSettingsClick() {
+        navigate('/settings')
+    }
+
+
     return (
         <>
-        <Navbar isAdmin={true} ></Navbar>
+            <Navbar isAdmin={true} ></Navbar>
             <section className="home">
-                {/* <h1>Admin Home Page</h1> */}
                 <h1>{props.translate('admin-title')}</h1>
                     <div>
-                        {/* <NavigationLink text={'Start Game'}path="/number-players" handleClick={handleStart}/>
-                        <NavigationLink text={'Settings'} path="/settings" /> */}
-                        <NavigationLink text={props.translate('admin-start-game')}path="/number-players" handleClick={handleStart}/>
-                        <NavigationLink text={props.translate('admin-settings')} path="/settings" />
+                        <Button sx={{marginRight:2}} 
+                            variant="contained"
+                            onClick={handleGameResetDialogOpen}
+                        >
+                            {props.translate('admin-start-game')}
+                        </Button>
+                        <Button variant="contained" 
+                            onClick={handleSettingsClick}
+                        >
+                            {props.translate('admin-settings')}
+                        </Button>
                     </div>
+                    <GameResetDialog open={isGameResetDialogShowing} 
+                        onClose={handleGameResetDialogClose}
+                        onReset={handleResetGame}
+                    />
             </section>
-        <Footer children={undefined!} ></Footer>
+            <Footer children={undefined!} ></Footer>
         </>
     );
 }

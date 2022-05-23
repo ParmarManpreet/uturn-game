@@ -179,7 +179,7 @@ export const PlayerProfile = (props : PlayerProfileProps) => {
             const scoreDetails: ScoreCreateDTO = {
                 playerId: playerId,
                 playerName: name,
-                playerPicture: imagePreview,
+                playerPicture: savedImage,
                 score: 0
             }
             await createScore(scoreDetails)
@@ -301,6 +301,7 @@ export const PlayerProfile = (props : PlayerProfileProps) => {
                             label={`Enter Fact #${index + 1}`}
                             type="string"
                             variant="filled"
+                            value={value}
                             onChange={(e) => handleOnChangeFactInput(index, e)}
                         />
                     </div>

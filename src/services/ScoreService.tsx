@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore"
+import { addDoc, collection, deleteDoc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore"
 import { db } from ".."
 import { prettyPrintScoreDetailsDTO } from "../utils/PrettyPrintService"
 
@@ -68,5 +68,18 @@ export async function getAllScores() {
         return scores
     } catch (error) {
         console.log(`Firestore could not Get All Score Details\n ${error}`)
+    }
+}
+
+export async function deleteAllScores() {
+    try {
+        const scoresRef = collection(db, "Scores")
+        const querySnapshot = await getDocs(scoresRef)
+        for(const document of querySnapshot.docs) {
+            deleteDoc(document.ref);
+        }
+        console.log(`Successfully Deleted all Score Details`)
+    } catch(error) {
+        console.log(`Firestore failed to retrieve all the documents\n ${error}`)
     }
 }
