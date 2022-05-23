@@ -26,7 +26,7 @@ export const PlayerLinkPage = () => {
                 const response = await QRCode.toDataURL(`${domain}/player-profile/?factNumber=${factNumber}`);
                 setImageUrl(response);
             }catch (error) {
-            console.log(error);
+                console.log(error);
             }
         }
         

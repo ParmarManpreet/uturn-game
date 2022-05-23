@@ -182,14 +182,16 @@ export const UturnPage = () => {
         }
 
         setupGameStartListeners()
-
-        if (localStorage.getItem("url") !== params.playerURL && params.playerURL) {
+        
+        if (localStorage.getItem("url") === null && params.playerURL) {
+            console.log("url")
             localStorage.setItem("url", params.playerURL)
             setUrl(params.playerURL)
             fetchAllPlayableFacts(params.playerURL)
             fetchAllPlayerDetailsButCurrentPlayer(params.playerURL)
             fetchScoreVisibleGameState()
-        } else if (localStorage.getItem("url") && localStorage.getItem("facts") && localStorage.getItem("cardProgress")) {
+        }
+        else if (localStorage.getItem("url") && localStorage.getItem("facts") && localStorage.getItem("cardProgress")) {
             const url: string = localStorage.getItem("url")!
             const facts: FactModelGetDTO[][] = JSON.parse(localStorage.getItem("facts")!)
             const cardProgress: boolean[][] = JSON.parse(localStorage.getItem("cardProgress")!)
@@ -214,7 +216,9 @@ export const UturnPage = () => {
     
     if (isLoading) {
         return (
-            <LoadingView/>
+            <Box className="home">
+                <LoadingView/>
+            </Box>
         )
     } 
     
