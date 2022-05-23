@@ -157,12 +157,12 @@ async function initializeCompanyLogo() {
           </Box>
           :
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            {hasRetreivedLogo? <img src={teamBuildLogoURL} height="42" alt="Logo"/>: null}
+            {hasRetreivedLogo? <img src={teamBuildLogoURL} height="32" alt="Logo"/>: null}
           </Box>
           }
 
           <Typography
-            variant="h5"
+            variant="h6"
             noWrap
             component="a"
             sx={{
@@ -195,11 +195,11 @@ async function initializeCompanyLogo() {
               textDecoration: 'none',
             }}
           >
-            {hasRetreivedLogo? <img src={teamBuildLogoURL} height="42" alt="Logo"/>: null}
+            {hasRetreivedLogo? <img src={teamBuildLogoURL} height="40" alt="Logo"/>: null}
           </Typography >
 
           <Box sx={{ flexGrow: 0 }}>
-            {hasRetreivedLogo? <img src={companyLogoURL} height="42" alt="Logo"/>: null}
+            {hasRetreivedLogo? <img src={companyLogoURL} height="40" alt="Logo"/>: null}
             <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"
