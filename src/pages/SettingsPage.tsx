@@ -24,22 +24,21 @@ export const SettingsPage = () => {
 
     return (
         <>
-        <Navbar isAdmin={true} ></Navbar>
-        <section className="card">
-            <h1>Settings</h1>
-            <Box 
-                sx={{
-                    alignItems: 'center',
-                }}
-            >
-            <span>Make Score Visible</span>
-            <Switch aria-label= 'Switch for Score Visibility'
-                onChange={(e) => handleChangeVisibleScoreSwitch(e)}
-                checked={isScoreVisible}
-            />
-            </Box>
-        </section>
+            <Navbar isAdmin={true} ></Navbar>
+            <section className="home">
+                <h1>Settings</h1>
+                <Box 
+                    sx={{
+                        alignItems: 'center',
+                    }}
+                >
+                <span>Make Score Visible</span>
+                <Switch aria-label= 'Switch for Score Visibility'
+                    onChange={(e) => handleChangeVisibleScoreSwitch(e)}
+                    checked={isScoreVisible}
+                />
+                </Box>
+            </section>
         </>
-
     );
 }

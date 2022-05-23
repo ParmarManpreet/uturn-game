@@ -195,6 +195,7 @@ export const UturnPage = () => {
             const cardProgress: boolean[][] = JSON.parse(localStorage.getItem("cardProgress")!)
             setFacts(facts)
             setCardProgress(cardProgress)
+            setUrl(url)
 
             fetchAllPlayerDetailsButCurrentPlayer(url)
             fetchScoreVisibleGameState()
@@ -226,34 +227,34 @@ export const UturnPage = () => {
     else {
         return (
             <>
-            <Navbar isAdmin={false} ></Navbar>
-            <Box className="card">
-                <Container>
-                    <PlayerScore cardProgress={cardProgress}
-                        isScoreVisible={isScoreVisible}
-                        playerId={url}
-                    />
-                    <UTurnCard facts={facts}
-                        cardProgress={cardProgress}
-                        onCardItemSelectWhenTrue={handleFactSelectionForSubmission}
-                        onCardItemSelectWhenFalse={handleFactSelectionForSummary}
-                    />
-                    <ScoreLegend isScoreVisible={isScoreVisible}/>
-                    <GuessFactOwnerDialog selectedFact={previewedFactDialogDetails.factItem}
-                        open={openSubmitDialog} 
-                        onClose={handleSubmitDialogClose} 
-                        factOwners={factOwnerDetails}
-                        onSubmitCorrectAnswer={updateCardProgress}
-                    />
-                    <FactSummaryDialog
-                        open={openFactSummaryDialog}
-                        onClose={handleFactSummaryDialogClose}
-                        selectedFact={previewedFactDialogDetails.factItem}
-                    />
-                </Container>
-            </Box>
-            <Footer children={undefined!}></Footer>
-        </>
+                <Navbar isAdmin={false}/>
+                <Box className="home">
+                    <Container>
+                        <PlayerScore cardProgress={cardProgress}
+                            isScoreVisible={isScoreVisible}
+                            playerId={url}
+                        />
+                        <UTurnCard facts={facts}
+                            cardProgress={cardProgress}
+                            onCardItemSelectWhenTrue={handleFactSelectionForSubmission}
+                            onCardItemSelectWhenFalse={handleFactSelectionForSummary}
+                        />
+                        <ScoreLegend isScoreVisible={isScoreVisible}/>
+                        <GuessFactOwnerDialog selectedFact={previewedFactDialogDetails.factItem}
+                            open={openSubmitDialog} 
+                            onClose={handleSubmitDialogClose} 
+                            factOwners={factOwnerDetails}
+                            onSubmitCorrectAnswer={updateCardProgress}
+                        />
+                        <FactSummaryDialog
+                            open={openFactSummaryDialog}
+                            onClose={handleFactSummaryDialogClose}
+                            selectedFact={previewedFactDialogDetails.factItem}
+                        />
+                    </Container>
+                </Box>
+                <Footer children={undefined!}></Footer>
+            </>
         )
     }
 }

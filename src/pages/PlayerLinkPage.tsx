@@ -34,21 +34,20 @@ export const PlayerLinkPage = () => {
     },[factNumber]);
 
     return (
-        <>
-        <Navbar isAdmin={true} ></Navbar>
-        <section className="home"> 
+        <section className="home">
+            <Navbar isAdmin={false}/>
             <h1>Let's Start Playing!</h1>
             <Box
-                component="form"
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    '& .MuiTextField-root': { m: 1, width: '25ch' , backgroundColor:'white'},
-                }}
-                noValidate
-                autoComplete="off"
-            >
+                    component="form"
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        '& .MuiTextField-root': { m: 1, width: '25ch' , backgroundColor:'white'},
+                    }}
+                    noValidate
+                    autoComplete="off"
+                >
                 <div className="home__white_div"> {`${domain}/player-profile/?factNumber=${factNumber}`} </div>
                 <div className="home__qrcode">
                     <h2>{('Scan Me')}</h2>
@@ -58,6 +57,5 @@ export const PlayerLinkPage = () => {
                 <Button sx={{marginTop:2, marginBottom:5}} variant="contained" onClick={() => endGame()}>End UTurn!</Button>
             </Box>
         </section>
-        </>
     );
 }

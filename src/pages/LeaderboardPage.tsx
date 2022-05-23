@@ -39,7 +39,7 @@ export const LeaderboardPage = () => {
                         <TableCell>
                             {index + 1}
                         </TableCell>
-                        <TableCell align="left"> <Box sx={{display: 'flex', alignItems: 'center'}}><Avatar sx={{marginRight: 2}} src={scoreDetail.playerPicture}></Avatar><span>{scoreDetail.playerName}</span></Box></TableCell>
+                        <TableCell align="left"> <Box sx={{display: 'flex', alignItems: 'center'}}><Avatar sx={{marginRight: 2}} src={scoreDetail.playerPicture}></Avatar><span id="leaderboard_text">{scoreDetail.playerName}</span></Box></TableCell>
                         <TableCell align="left">{scoreDetail.score}</TableCell>
                         </TableRow>
                     ))}
