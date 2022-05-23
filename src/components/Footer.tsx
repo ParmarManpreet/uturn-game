@@ -1,6 +1,6 @@
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import { cloneElement, JSXElementConstructor, ReactElement, useContext, useReducer, useState} from 'react';
+import { cloneElement, JSXElementConstructor, ReactElement, useContext, useState} from 'react';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import { LangContext } from '../context/lang';
 import { Button, Menu, MenuItem, Typography } from '@mui/material';
@@ -29,8 +29,8 @@ interface Props {
 
 
 const Footer = (props: Props) => {
-    const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-    const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null); 
+    const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+    const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null); 
     const { state: { language }, dispatch: { setLanguage, translate } } = useContext(LangContext);
 
     
@@ -81,10 +81,10 @@ const Footer = (props: Props) => {
               onClose={handleCloseUserMenu}
             >
             {/* {language.map((language) => ( */}
-            <MenuItem key={'EN'} onClick={handleSelectLanguage('EN')}>
+            <MenuItem key={'EN'} onClick={() => handleSelectLanguage('EN')}>
                 <Typography textAlign="center">EN</Typography>
             </MenuItem>
-            <MenuItem key='FR' onClick={handleSelectLanguage('FR')}>
+            <MenuItem key='FR' onClick={() => handleSelectLanguage('FR')}>
                 <Typography textAlign="center">FR</Typography>
             </MenuItem>
             {/* //   ))} */}
