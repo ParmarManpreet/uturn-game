@@ -25,7 +25,6 @@ import { createScore, ScoreCreateDTO } from "../services/ScoreService";
 import { LoadingView } from "../components/LoadingView";
 import Navbar from "../components/Navbar";
 import { GameInProgressView } from "../components/GameInProgressView";
-import { getGameId } from "../services/GameStatesService";
 
 export const PlayerProfile = () => {
     const defaultAvatars = [
@@ -196,17 +195,9 @@ export const PlayerProfile = () => {
 
 
     useEffect(() =>{
-        async function initializeGameId() {
-            const gameId: string = await getGameId()
-            if (gameId) {
-                localStorage.setItem("gameId", gameId)
-            }
-        } 
-
         function setupGameStartListeners() {
             const unsub = onSnapshot(doc(db, "GameStates", "GameStart"), (doc) => {
                 if (doc.exists()) {
-                    setIsWaitingForStart(false)
                     setIsGameStarting(doc.data().isGameStarted)
                 }
             })
@@ -227,17 +218,16 @@ export const PlayerProfile = () => {
             setFacts(factList)
         }
 
-        initializeGameId()
         initializeFacts()
         setupGameStartListeners()
     }, [searchParams])
 
-    if (isGameStarting && isWaitingForStart) {
+    if (!isGameStarting && isWaitingForStart) {
         return (
             <>
             <Navbar isAdmin={false} ></Navbar>
                 <div className="home">
-                    <LoadingView/>
+                    <LoadingView isWaitingForHost={true}/>
                 </div>
             </>
         )
@@ -251,7 +241,7 @@ export const PlayerProfile = () => {
         )
     }
     
-    else if (isGameStarting) {
+    else if (isGameStarting && isWaitingForStart) {
         return (
             <>
             <Navbar isAdmin={false} ></Navbar>

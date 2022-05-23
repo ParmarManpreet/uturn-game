@@ -16,6 +16,7 @@ export const Router = () => {
             <Route path="/player-links" element={<PlayerLinkPage/>} />
             <Route path="/settings" element={<SettingsPage/>} />
             <Route path="/uturn-page/:playerURL" element={<UturnPage/>} />
+            <Route path="/uturn-page/" element={<UturnPage/>} />
             <Route path="/leaderboard" element={<LeaderboardPage/>} />
         </Routes>
     );
