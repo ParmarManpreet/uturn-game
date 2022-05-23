@@ -63,8 +63,8 @@ const ResizableAvatarCorrect = styled(Avatar)(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
         marginLeft: 'auto',
         marginRight: 'auto',
-        width:'45px', 
-        height:'45px',
+        width:'55px', 
+        height:'55px',
     },
     [theme.breakpoints.up('md')]: {
         marginLeft: 'auto',
