@@ -24,6 +24,7 @@ import writeMale from './defaultAvatarTemp/writer-male.png';
 import { createScore, ScoreCreateDTO } from "../services/ScoreService";
 import { LoadingView } from "../components/LoadingView";
 import Navbar from "../components/Navbar";
+import { GameInProgressView } from "../components/GameInProgressView";
 
 export const PlayerProfile = () => {
     const defaultAvatars = [
@@ -211,7 +212,7 @@ export const PlayerProfile = () => {
         setupGameStartListeners()
     }, [searchParams])
 
-    if (isWaitingForStart) {
+    if (isGameStarting && isWaitingForStart) {
         return (
             <>
             <Navbar isAdmin={false} ></Navbar>
@@ -219,6 +220,14 @@ export const PlayerProfile = () => {
                     <LoadingView/>
                 </div>
             </>
+        )
+    }
+
+    else if(isGameStarting && !isWaitingForStart) {
+        return (
+            <Box className="home">
+                <GameInProgressView/>
+            </Box>
         )
     }
     
