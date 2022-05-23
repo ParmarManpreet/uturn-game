@@ -25,12 +25,12 @@ export const LeaderboardPage = (props : LeaderboardPage) => {
 
     return (
         <>
-        <Navbar isAdmin={true} ></Navbar>
         <section className="home">
-            <Container >
+            <Navbar isAdmin={true} ></Navbar>
+            <Container sx={{marginBottom:'200px'}}>
                 <h1>{props.translate('leaderboard-title')}</h1> 
                 <TableContainer component={Paper}>
-                <Table aria-label="simple table" sx={{marginBottom:'500px'}}>
+                <Table aria-label="simple table">
                     <TableHead>
                     <TableRow>
                         <TableCell><strong>{props.translate('leaderboard-rank')}</strong></TableCell>
@@ -51,13 +51,14 @@ export const LeaderboardPage = (props : LeaderboardPage) => {
                     </TableBody>
                 </Table>
                 </TableContainer>
-            </Container>    
-        </section>
-        <Footer cardProgress={null}
+            </Container>
+            <Footer cardProgress={null}
                 isScoreVisible={null}
                 playerId={null}
                 children={undefined!} 
                 isScore={false}
-            />        </>
+            />
+        </section>
+        </>
     );
 }
