@@ -265,8 +265,8 @@ export const UturnPage = (props : UTurnPage) => {
     else {
         return (
             <>
-                <Navbar isAdmin={false}/>
                 <Box className="home">
+                <Navbar isAdmin={false}/>
                     <h1>{props.translate('uturn-title')}</h1>
                     <Container>
                         <PlayerScore cardProgress={cardProgress}
@@ -291,8 +291,8 @@ export const UturnPage = (props : UTurnPage) => {
                             selectedFact={previewedFactDialogDetails.factItem}
                         />
                     </Container>
-                </Box>
                 <Footer children={undefined!}></Footer>
+                </Box>
             </>
         )
     }
