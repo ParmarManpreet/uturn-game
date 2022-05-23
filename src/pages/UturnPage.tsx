@@ -266,19 +266,14 @@ export const UturnPage = (props : UTurnPage) => {
         return (
             <>
                 <Box className="home">
-                <Navbar isAdmin={false}/>
+                    <Navbar isAdmin={false}/>
                     <h1>{props.translate('uturn-title')}</h1>
-                    <Container>
-                        <PlayerScore cardProgress={cardProgress}
-                            isScoreVisible={isScoreVisible}
-                            playerId={url}
-                        />
+                    <Container sx={{marginBottom:12}}>
                         <UTurnCard facts={facts}
                             cardProgress={cardProgress}
                             onCardItemSelectWhenTrue={handleFactSelectionForSubmission}
                             onCardItemSelectWhenFalse={handleFactSelectionForSummary}
                         />
-                        <ScoreLegend isScoreVisible={isScoreVisible} translate={translate}/>
                         <GuessFactOwnerDialog selectedFact={previewedFactDialogDetails.factItem}
                             open={openSubmitDialog} 
                             onClose={handleSubmitDialogClose} 
@@ -291,7 +286,12 @@ export const UturnPage = (props : UTurnPage) => {
                             selectedFact={previewedFactDialogDetails.factItem}
                         />
                     </Container>
-                <Footer children={undefined!}></Footer>
+                    <Footer cardProgress={cardProgress}
+                        isScoreVisible={isScoreVisible}
+                        playerId={url}
+                        children={undefined!}
+                        isScore={isScoreVisible}
+                    />
                 </Box>
             </>
         )

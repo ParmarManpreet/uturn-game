@@ -107,7 +107,7 @@ export const PlayerScore = (props: PlayerScoreProps) => {
 
     return (
         <>
-            {props.isScoreVisible === true ? <Box sx={{color: 'white', width: '100%', textAlign: 'center'}}> <h1>Score: {score}</h1> </Box>: null}
+            {props.isScoreVisible === true ? <Box sx={{color: 'white', width: '100%', textAlign: 'center'}}> <h2>Score: {score}</h2> </Box>: null}
         </>        
     );
 }
