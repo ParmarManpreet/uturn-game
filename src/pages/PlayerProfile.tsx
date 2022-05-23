@@ -40,19 +40,29 @@ export const PlayerProfile = () => {
        writeMale
     ];
     
+    // Facts Constants
+    const emptyFacts: Array<string> = []
+
+    // Image Constants
     const types = ['image/png', 'image/jpeg'];
     const ITEM_HEIGHT = 50;
     let [searchParams] = useSearchParams();
 
-    const emptyFacts: Array<string> = []
-    const [imagePreview, setImagePreview] = useState('')
+    // Rendering States
     const [isWaitingForStart, setIsWaitingForStart] = useState(false)
     const [isGameStarting, setIsGameStarting] = useState(false)
+
+    // Form Submit States
     const [name, setName] = useState("")
     const [facts, setFacts] = useState(emptyFacts)
     const [urlParameter, setUrlParameter] = useState("")
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+
+    // Image States 
     const [file, setFile] = useState<File>()
+    const [imagePreview, setImagePreview] = useState('')
+
+    // Dropdown States 
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl);
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -188,7 +198,6 @@ export const PlayerProfile = () => {
         function setupGameStartListeners() {
             const unsub = onSnapshot(doc(db, "GameStates", "GameStart"), (doc) => {
                 if (doc.exists()) {
-                    setIsWaitingForStart(false)
                     setIsGameStarting(doc.data().isGameStarted)
                 }
             })
@@ -208,16 +217,17 @@ export const PlayerProfile = () => {
             }
             setFacts(factList)
         }
+
         initializeFacts()
         setupGameStartListeners()
     }, [searchParams])
 
-    if (isGameStarting && isWaitingForStart) {
+    if (!isGameStarting && isWaitingForStart) {
         return (
             <>
             <Navbar isAdmin={false} ></Navbar>
                 <div className="home">
-                    <LoadingView/>
+                    <LoadingView isWaitingForHost={true}/>
                 </div>
             </>
         )
@@ -231,7 +241,7 @@ export const PlayerProfile = () => {
         )
     }
     
-    else if (isGameStarting) {
+    else if (isGameStarting && isWaitingForStart) {
         return (
             <>
             <Navbar isAdmin={false} ></Navbar>

@@ -13,7 +13,7 @@ import { ScoreLegend } from "../components/ScoreLegend";
 import { FactPosition, UTurnCard } from "../components/UTurnCard";
 import { FactModelGetDTO } from "../services/FactService";
 import { getAllFactsNotFromCurrentPlayer } from "../services/FactService";
-import { getVisibleScoreState } from "../services/GameStatesService";
+import { getGameId, getVisibleScoreState } from "../services/GameStatesService";
 import { getAllButCurrentPlayer, PlayerGetDTO } from "../services/PlayerProfileService";
 
 export interface DialogInformation {
@@ -181,28 +181,58 @@ export const UturnPage = () => {
             return unsub
         }
 
-        setupGameStartListeners()
-        
-        if (localStorage.getItem("url") === null && params.playerURL) {
-            console.log("url")
-            localStorage.setItem("url", params.playerURL)
-            setUrl(params.playerURL)
-            fetchAllPlayableFacts(params.playerURL)
-            fetchAllPlayerDetailsButCurrentPlayer(params.playerURL)
-            fetchScoreVisibleGameState()
-        }
-        else if (localStorage.getItem("url") && localStorage.getItem("facts") && localStorage.getItem("cardProgress")) {
-            const url: string = localStorage.getItem("url")!
-            const facts: FactModelGetDTO[][] = JSON.parse(localStorage.getItem("facts")!)
-            const cardProgress: boolean[][] = JSON.parse(localStorage.getItem("cardProgress")!)
-            setFacts(facts)
-            setCardProgress(cardProgress)
-            setUrl(url)
+        async function isNewGame() {
+            const gameId: string = await getGameId()
+            const cacheGameId = localStorage.getItem("gameId")
 
-            fetchAllPlayerDetailsButCurrentPlayer(url)
-            fetchScoreVisibleGameState()
-            setIsloading(false)
+            if (cacheGameId === null || gameId !== cacheGameId) {
+                return true
+            } else {
+                return false
+            }
         }
+
+        async function setGameIdCache() {
+            const gameId: string = await getGameId()
+            localStorage.setItem("gameId", gameId)
+        }
+
+        async function initializeGame() {
+            const playerHasCachedValues = localStorage.getItem("url") && localStorage.getItem("facts") && localStorage.getItem("cardProgress")
+            const isCacheReloadRequired = await isNewGame()
+
+            if (isCacheReloadRequired && params.playerURL) {
+                setGameIdCache()
+                localStorage.setItem("url", params.playerURL)
+                setUrl(params.playerURL)
+                fetchAllPlayableFacts(params.playerURL)
+                fetchAllPlayerDetailsButCurrentPlayer(params.playerURL)
+                fetchScoreVisibleGameState()
+            }
+            else {
+                if (playerHasCachedValues) {
+                    const url: string = localStorage.getItem("url")!
+                    const facts: FactModelGetDTO[][] = JSON.parse(localStorage.getItem("facts")!)
+                    const cardProgress: boolean[][] = JSON.parse(localStorage.getItem("cardProgress")!)
+                    setFacts(facts)
+                    setCardProgress(cardProgress)
+                    setUrl(url)
+
+                    fetchAllPlayerDetailsButCurrentPlayer(url)
+                    fetchScoreVisibleGameState()
+                    setIsloading(false)
+                }
+
+                // Not sure how to handle when someone has no playerURL and has no cached data. Currently they are stuck on the Loading Screen
+                /*
+                    Option 1: 
+                */
+            }
+        }
+
+        setupGameStartListeners()
+        initializeGame()
+        
     }, [params.playerURL])
 
     window.onpopstate = function () {
@@ -217,7 +247,7 @@ export const UturnPage = () => {
     if (isLoading) {
         return (
             <Box className="home">
-                <LoadingView/>
+                <LoadingView isWaitingForHost={false}/>
             </Box>
         )
     } 
