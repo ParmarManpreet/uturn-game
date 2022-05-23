@@ -1,0 +1,29 @@
+{
+    "admin-title" : "Page d'accueil de l'administrateur",
+    "admin-start-game" : "Start Gacommencer le jeu",
+    "admin-settings" : "Paramètres",
+
+    "settings-title" : "Paramètres du jeu",
+    "settings-score" : "Rendre le score visible",
+
+    "number-players-title" : "Nombre de joueurs",
+    "number-players-entry-text" : "Entrez le nombre de joueurs",
+    "number-players-submit" : "Soumettre",
+
+    "player-links-title" : "Commençons à jouer !",
+    "player-links-qr" : "Scannez-moi pour créer un profil",
+    "player-links-start" : "Départ UTurn",
+    "player-links-end" : "Fin UTurn",
+
+    "create-profile-title" : "Créer un profil",
+    "create-profile-name" : "Entrez votre nom",
+    "create-profile-fact" : "Entrez votre fait #",
+    "create-prfile-submit" : "Soumettre",
+
+    "uturn-title" : "Voici votre carte UTurn",
+    "uturn-legend-row" : "Rangée complète : 100 points",
+    "uturn-legend-column" : "Colonne complète : 100 points",
+    "uturn-legend-diagonal" : "Diagonale complète : 500 points",
+    "uturn-legend-entire-card" : "Carte entière : 2000 points" 
+    
+}

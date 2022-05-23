@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { getVisibleScoreState, updateVisibleScoreState } from "../services/GameStatesService";
 
-export const SettingsPage = () => {
+interface SettingsProp {
+    translate : (key: string) => string
+}
+
+export const SettingsPage = (props : SettingsProp) => {
     const [isScoreVisible, setIsScoreVisible] = useState(false);
 
     const handleChangeVisibleScoreSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,7 +30,8 @@ export const SettingsPage = () => {
         <>
         <Navbar isAdmin={true} ></Navbar>
         <section className="card">
-            <h1>Settings</h1>
+            {/* <h1>Settings</h1> */}
+            <h1>{props.translate('settings-title')}</h1>
             <Box 
                 sx={{
                     alignItems: 'center',

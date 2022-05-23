@@ -55,7 +55,7 @@ export const PlayerLinkPage = () => {
                     <img src={imageUrl} alt="img"/>
                 </div>
                 <Button variant="contained" onClick={() => startGame()}>Start UTurn!</Button>
-                <Button sx={{marginTop:2, marginBottom:5}} variant="contained" onClick={() => endGame()}>End UTurn!</Button>
+                <Button sx={{marginTop:"8px", marginBottom:"10px"}} variant="contained" disableElevation onClick={() => endGame()}>End UTurn!</Button>
             </Box>
         </section>
         </>

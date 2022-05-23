@@ -1,0 +1,29 @@
+{
+    "admin-title": "Admin Home Page",
+    "admin-start-game": "Start Game",
+    "admin-settings": "Settings",
+
+    "settings-title": "Game Settings",
+    "settings-score": "Make Score Visible",
+
+    "number-players-title": "Number of Players",
+    "number-players-entry-text": "Enter Number of Players",
+    "number-players-submit": "Submit",
+
+    "player-links-title": "Let's Start Playing!",
+    "player-links-qr": "Scan Me to Create Profile",
+    "player-links-start": "Start UTurn",
+    "player-links-end": "End UTurn",
+
+    "create-profile-title": "Create Profile",
+    "create-profile-name": "Enter your Name",
+    "create-profile-fact": "Enter Fact #",
+    "create-prfile-submit": "Submit",
+
+    "uturn-title": "Here is your UTurn Card",
+    "uturn-legend-row": "Full Row: 100 Points",
+    "uturn-legend-column": "Full Column: 100 Points",
+    "uturn-legend-diagonal": "Full Diagonal: 500 Points",
+    "uturn-legend-entire-card": "Entire Card: 2000 Points" 
+    
+}
