@@ -7,20 +7,33 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function GameResetDialog() {
-  const [open, setOpen] = useState(false);
+interface GameResetDialogProps {
+  open: boolean,
+  onClose: () => void
+  onReset: () => void
+}
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+export const GameResetDialog = (props: GameResetDialogProps) => {
+  const [resetText, setResetText] = useState("")
+
+  function handleTextInput(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) {
+    let currentText = e.target.value
+    setResetText(currentText)
+  }
+
+  function handleGameReset() {
+    if(resetText === 'Reset Game') {
+      props.onReset()
+    }
+  }
 
   return (
-    <div>
-      <Dialog open={open} onClose={handleClose}>
+    <>
+      <Dialog open={props.open} onClose={props.onClose}>
         <DialogTitle>Game Already in Session!</DialogTitle>
         <DialogContent>
           <DialogContentText>
-                Start a New Game?
+            To Reset the Game Please Type <strong>Reset Game</strong>
           </DialogContentText>
           <TextField
             autoFocus
@@ -30,13 +43,15 @@ export default function GameResetDialog() {
             type="text"
             fullWidth
             variant="standard"
+            onChange={(e) => handleTextInput(e)}
+            value={resetText}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Reset Game</Button>
+          <Button onClick={props.onClose}>Cancel</Button>
+          <Button onClick={handleGameReset}>Reset Game</Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }
