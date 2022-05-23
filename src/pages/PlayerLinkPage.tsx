@@ -4,8 +4,13 @@ import { useLocation } from "react-router-dom";
 import QRCode from 'qrcode';
 import { updateGameStartState } from "../services/GameStatesService";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
-export const PlayerLinkPage = () => {
+interface PlayerLinkProp {
+    translate : (key: string) => string
+}
+
+export const PlayerLinkPage = (props : PlayerLinkProp) => {
     const domain = 'https://u-turn-development.web.app'
     const location =  useLocation();
     const factState: any = location.state
@@ -35,7 +40,7 @@ export const PlayerLinkPage = () => {
     return (
         <section className="home">
             <Navbar isAdmin={false}/>
-            <h1>Let's Start Playing!</h1>
+            <h1>{props.translate('player-links-title')}</h1>
             <Box
                     component="form"
                     sx={{
@@ -49,12 +54,14 @@ export const PlayerLinkPage = () => {
                 >
                 <div className="home__white_div"> {`${domain}/player-profile/?factNumber=${factNumber}`} </div>
                 <div className="home__qrcode">
-                    <h2>{('Scan Me')}</h2>
+                    <h2>{props.translate('player-links-qr')}</h2>
                     <img src={imageUrl} alt="img"/>
                 </div>
-                <Button variant="contained" onClick={() => startGame()}>Start UTurn!</Button>
-                <Button sx={{marginTop:2, marginBottom:5}} variant="contained" onClick={() => endGame()}>End UTurn!</Button>
+                <Button variant="contained" onClick={() => startGame()}>{props.translate('player-links-start')}</Button>
+                <Button sx={{marginTop:"8px", marginBottom:"100px"}} variant="contained" disableElevation onClick={() => endGame()}>{props.translate('player-links-end')}</Button>
             </Box>
+            <Footer children={undefined!} ></Footer>
         </section>
+        
     );
 }

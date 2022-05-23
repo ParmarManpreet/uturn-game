@@ -1,16 +1,19 @@
-import Button from "@mui/material/Button";
-import React, { Fragment, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { updateGameStartState } from "../services/GameStatesService";
-import {NavigationLink} from '../services/PageNavigationService'
+import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { deleteAllScores } from "../services/ScoreService";
 import { deleteAllPlayerProfiles } from "../services/PlayerProfileService";
 import { deleteAllFacts } from "../services/FactService";
 import { GameResetDialog } from "../components/dialogs/GameResetDialog";
+import { useNavigate } from "react-router-dom";
+import { updateGameStartState } from "../services/GameStatesService";
+import { Button } from "@mui/material";
 
-export const Admin = () => {
+interface AdminProps {
+    translate : (key: string) => string
+}
+
+export const Admin = (props: AdminProps) => {
     let navigate = useNavigate();
 
     const [isGameResetDialogShowing, setIsGameResetDialogShowing] = useState(false)
@@ -35,21 +38,32 @@ export const Admin = () => {
     function handleSettingsClick() {
         navigate('/settings')
     }
+
+
     return (
         <>
             <Navbar isAdmin={true} ></Navbar>
             <section className="home">
-                <h1>Admin Home Page</h1>
+                <h1>{props.translate('admin-title')}</h1>
                     <div>
-                        <Button sx={{marginRight:2}} variant="contained" onClick={handleGameResetDialogOpen}>Start</Button>
-                        <Button variant="contained" onClick={handleSettingsClick}>Settings</Button>
+                        <Button sx={{marginRight:2}} 
+                            variant="contained"
+                            onClick={handleGameResetDialogOpen}
+                        >
+                            {props.translate('admin-start-game')}
+                        </Button>
+                        <Button variant="contained" 
+                            onClick={handleSettingsClick}
+                        >
+                            {props.translate('admin-settings')}
+                        </Button>
                     </div>
                     <GameResetDialog open={isGameResetDialogShowing} 
                         onClose={handleGameResetDialogClose}
                         onReset={handleResetGame}
                     />
             </section>
-        {/* <Footer children={undefined} ></Footer> */}
+            <Footer children={undefined!} ></Footer>
         </>
     );
 }

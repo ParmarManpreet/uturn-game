@@ -1,9 +1,14 @@
 import { Box, Switch } from "@mui/material";
 import { useEffect, useState } from "react";
+import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { getVisibleScoreState, updateVisibleScoreState } from "../services/GameStatesService";
 
-export const SettingsPage = () => {
+interface SettingsProp {
+    translate : (key: string) => string
+}
+
+export const SettingsPage = (props : SettingsProp) => {
     const [isScoreVisible, setIsScoreVisible] = useState(false);
 
     const handleChangeVisibleScoreSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,9 +29,9 @@ export const SettingsPage = () => {
 
     return (
         <>
-            <Navbar isAdmin={true} ></Navbar>
+            <Navbar isAdmin={true} />
             <section className="home">
-                <h1>Settings</h1>
+                <h1>{props.translate('settings-title')}</h1>
                 <Box 
                     sx={{
                         alignItems: 'center',
@@ -39,6 +44,7 @@ export const SettingsPage = () => {
                 />
                 </Box>
             </section>
+            <Footer children={undefined!} ></Footer>
         </>
     );
 }
