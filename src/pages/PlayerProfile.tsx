@@ -103,7 +103,7 @@ export const PlayerProfile = () => {
             try {
                 const uploadResult = await uploadBytes(storageRef, file)
                 const downloadURL = await getDownloadURL(uploadResult.ref)
-                setImagePreview(downloadURL)
+                return downloadURL
             } 
             catch(error) {
                 console.log(`Unable to upload picture for file: ${file}`)
@@ -142,13 +142,19 @@ export const PlayerProfile = () => {
 
     async function saveProfileInformation() {
         let isSuccesful = false
+        let savedImage = imagePreview
 
         if(file) {
-            uploadPicture()
+            const newImage = await uploadPicture()
+            if(newImage) {
+                savedImage = newImage
+            }
         }
+
+        console.log(savedImage)
         const playerDetails: PlayerCreateDTO = {
             name: name,
-            picture: imagePreview,
+            picture: savedImage,
         }
 
         const playerId = await createPlayerProfile(playerDetails)
@@ -158,7 +164,7 @@ export const PlayerProfile = () => {
             const factDetails: FactModelCreateDTO = {
                 playerId: playerId,
                 playerName: name,
-                playerPicture: imagePreview,
+                playerPicture: savedImage,
                 facts: facts,
             }
             await createFacts(factDetails)
