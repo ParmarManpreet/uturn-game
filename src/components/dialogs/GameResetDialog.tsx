@@ -38,11 +38,10 @@ export const GameResetDialog = (props: GameResetDialogProps) => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
-            label="Reset Password"
+            label="Reset Game"
             type="text"
             fullWidth
-            variant="standard"
+            variant="outlined"
             onChange={(e) => handleTextInput(e)}
             value={resetText}
           />

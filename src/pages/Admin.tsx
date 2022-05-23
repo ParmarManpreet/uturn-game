@@ -41,7 +41,7 @@ export const Admin = () => {
             <section className="home">
                 <h1>Admin Home Page</h1>
                     <div>
-                        <Button variant="contained" onClick={handleGameResetDialogOpen}>Start</Button>
+                        <Button sx={{marginRight:2}} variant="contained" onClick={handleGameResetDialogOpen}>Start</Button>
                         <Button variant="contained" onClick={handleSettingsClick}>Settings</Button>
                     </div>
                     <GameResetDialog open={isGameResetDialogShowing} 
