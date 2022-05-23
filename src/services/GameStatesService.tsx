@@ -1,4 +1,4 @@
-import { doc, getDoc, updateDoc,  } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc,  } from "firebase/firestore";
 import { db } from "..";
 
 export async function updateGameStartState(isGameStarted: boolean) {
@@ -23,6 +23,31 @@ export async function getGameStartState() {
         }
     } catch (error) {
         console.log(`Firestore could not get GameState\n ${error}`)
+    }
+}
+
+export async function setGameId(gameId: string) {
+    try {
+        const gameIdDocRef = doc(db, "GameStates", "GameId") 
+        await setDoc(gameIdDocRef, {
+            gameId: gameId
+        })
+        console.log(`Successfully updated Game Id Game State to ${gameId}`)
+    } catch (error) {
+        console.log(`Firestore could not set Game Id Game State to ${gameId}\n ${error}`)
+    }
+}
+
+export async function getGameId() {
+    try {
+        const gameIdDocRef = doc(db, "GameStates", "GameId") 
+        const gameIdDocSnapshot = await getDoc(gameIdDocRef)
+
+        if(gameIdDocSnapshot.exists()) {
+            return gameIdDocSnapshot.data().gameId
+        }
+    } catch (error) {
+        console.log(`Firestore could not get Game Id Game State\n ${error}`)
     }
 }
 

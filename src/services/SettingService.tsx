@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, updateDoc, where } from "firebase/firestore"
+import { doc, getDoc, setDoc } from "firebase/firestore"
 import { db } from ".."
 
 class SettingService {

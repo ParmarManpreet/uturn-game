@@ -3,7 +3,6 @@ import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import { updateGameStartState } from "../services/GameStatesService";
 import {NavigationLink} from '../services/PageNavigationService'
-import GameResetDialog from '../components/GameResetDialog'
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 

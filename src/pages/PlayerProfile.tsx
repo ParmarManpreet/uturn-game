@@ -1,5 +1,5 @@
 import { doc, onSnapshot } from "firebase/firestore";
-import React, { MouseEventHandler, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { db } from "..";
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, TextField, Tooltip } from "@mui/material";
 import FolderIcon from '@mui/icons-material/Folder';
@@ -9,7 +9,7 @@ import { createPlayerProfile, PlayerCreateDTO, updatePlayerURLToId } from "../se
 import { createFacts, FactModelCreateDTO } from "../services/FactService";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { storage } from '../index';
-import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import FaceIcon from '@mui/icons-material/Face';
 import actress from './defaultAvatarTemp/actress.png';
 import female from './defaultAvatarTemp/female.png';
@@ -24,6 +24,7 @@ import writeMale from './defaultAvatarTemp/writer-male.png';
 import { createScore, ScoreCreateDTO } from "../services/ScoreService";
 import { LoadingView } from "../components/LoadingView";
 import Navbar from "../components/Navbar";
+import { GameInProgressView } from "../components/GameInProgressView";
 
 export const PlayerProfile = () => {
     const defaultAvatars = [
@@ -37,78 +38,85 @@ export const PlayerProfile = () => {
        supportPerson,
        userMale,
        writeMale
-      ];
-    const [playerImage, setPlayerImage] = useState('')
+    ];
+    
+    // Facts Constants
     const emptyFacts: Array<string> = []
+
+    // Image Constants
+    const types = ['image/png', 'image/jpeg'];
+    const ITEM_HEIGHT = 50;
+    let [searchParams] = useSearchParams();
+
+    // Rendering States
     const [isWaitingForStart, setIsWaitingForStart] = useState(false)
     const [isGameStarting, setIsGameStarting] = useState(false)
+
+    // Form Submit States
     const [name, setName] = useState("")
     const [facts, setFacts] = useState(emptyFacts)
     const [urlParameter, setUrlParameter] = useState("")
-    const [progresspercent, setProgresspercent] = useState(0);
-    const types = ['image/png', 'image/jpeg'];
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+    // Image States 
+    const [file, setFile] = useState<File>()
+    const [imagePreview, setImagePreview] = useState('')
+
+    // Dropdown States 
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl);
-    const ITEM_HEIGHT = 50;
-    let [searchParams] = useSearchParams();
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
-      };
-      const handleClose = () => {
+    };
+
+    const handleClose = () => {
         setAnchorEl(null);
-      };
-      const handleOpen = () => {
-        console.log("on open clicked")
-      };
+    };
+    
     const Input = styled('input')({
         display: 'none',
-      });
-    const Image = styled('image')({
-        display: 'none',
-      });
-      
+    });
 
     const handleTakePicture = (e: { target: { files: any; }; }) => {
         let selected = e.target.files[0];
         console.log(selected);
     }
     
-    const handleUploadPicture = (e: {target: { files: any; }; }) => {
+    const handlePictureSelection = (e: {target: { files: any; }; }) => {
         const file = e.target.files[0]
-        setPlayerImage(imageFile => (file))
-        console.log("change")
 
-        if (!file) return;
-        if(file && types.includes(file.type)){
-
-            const storageRef = ref(storage, `Profile_pictures/${file.name}`);
-            const uploadTask = uploadBytesResumable(storageRef, file);
-        
-            uploadTask.on("state_changed",
-                (snapshot) => {
-                const progress =
-                    Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                setProgresspercent(progress);
-                },
-                (error) => {
-                alert(error);
-                },
-                () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    console.log('File available at', downloadURL);
-                    setPlayerImage(downloadURL)
-                });
-                }
-            );
+        if (file && types.includes(file.type)) {
+            const fileURL = URL.createObjectURL(file)
+            setImagePreview(fileURL)
+            setFile(file)
         } else {
             return;
-            //error
         }
     }
 
-    const handleSelectedIcon = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, value: string) => {
+    async function uploadPicture() {
+        if(file){
+            const fileType = file.type as string
+            const splitFileType = fileType.split('/')
+            const fileExtension = splitFileType[splitFileType.length - 1]
+            const storageRef = ref(storage, `Profile_pictures/${name}.${fileExtension}`)
+            try {
+                const uploadResult = await uploadBytes(storageRef, file)
+                const downloadURL = await getDownloadURL(uploadResult.ref)
+                return downloadURL
+            } 
+            catch(error) {
+                console.log(`Unable to upload picture for file: ${file}`)
+            }
+        } else {
+            //error did not submit a picture
+            return;
+        }
+    }
+
+    const handleSelectedIcon = (value: string) => {
         console.log("VALUE", value);
-        setPlayerImage(value)
+        setImagePreview(value)
 
     }
     function handleOnChangeFactInput(index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -133,10 +141,20 @@ export const PlayerProfile = () => {
     }
 
     async function saveProfileInformation() {
-        let isSuccesful = false 
+        let isSuccesful = false
+        let savedImage = imagePreview
+
+        if(file) {
+            const newImage = await uploadPicture()
+            if(newImage) {
+                savedImage = newImage
+            }
+        }
+
+        console.log(savedImage)
         const playerDetails: PlayerCreateDTO = {
             name: name,
-            picture: playerImage,
+            picture: savedImage,
         }
 
         const playerId = await createPlayerProfile(playerDetails)
@@ -146,7 +164,7 @@ export const PlayerProfile = () => {
             const factDetails: FactModelCreateDTO = {
                 playerId: playerId,
                 playerName: name,
-                playerPicture: playerImage,
+                playerPicture: savedImage,
                 facts: facts,
             }
             await createFacts(factDetails)
@@ -154,7 +172,7 @@ export const PlayerProfile = () => {
             const scoreDetails: ScoreCreateDTO = {
                 playerId: playerId,
                 playerName: name,
-                playerPicture: playerImage,
+                playerPicture: imagePreview,
                 score: 0
             }
             await createScore(scoreDetails)
@@ -186,7 +204,6 @@ export const PlayerProfile = () => {
         function setupGameStartListeners() {
             const unsub = onSnapshot(doc(db, "GameStates", "GameStart"), (doc) => {
                 if (doc.exists()) {
-                    setIsWaitingForStart(false)
                     setIsGameStarting(doc.data().isGameStarted)
                 }
             })
@@ -194,7 +211,7 @@ export const PlayerProfile = () => {
         }
     
         function initializeFacts() {
-            setPlayerImage('/broken-image.jpg')
+            setImagePreview('/broken-image.jpg')
             const numberFactsQueryParam = searchParams.get('factNumber')
             let numberOfFacts: number = 0
             const factList: Array<string> = []
@@ -206,22 +223,31 @@ export const PlayerProfile = () => {
             }
             setFacts(factList)
         }
+
         initializeFacts()
         setupGameStartListeners()
-    }, [])
+    }, [searchParams])
 
-    if (isWaitingForStart) {
+    if (!isGameStarting && isWaitingForStart) {
         return (
             <>
             <Navbar isAdmin={false} ></Navbar>
                 <div className="home">
-                    <LoadingView/>
+                    <LoadingView isWaitingForHost={true}/>
                 </div>
             </>
         )
     }
+
+    else if(isGameStarting && !isWaitingForStart) {
+        return (
+            <Box className="home">
+                <GameInProgressView/>
+            </Box>
+        )
+    }
     
-    else if (isGameStarting) {
+    else if (isGameStarting && isWaitingForStart) {
         return (
             <>
             <Navbar isAdmin={false} ></Navbar>
@@ -282,10 +308,10 @@ export const PlayerProfile = () => {
                 >
                 <label>
                     <Avatar
-                        src={playerImage}
+                        src={imagePreview}
                         sx={{ marginTop: '8px', marginLeft: '50px', width: 50, height: 50 , alignItems: 'center'}}
                     />
-                    <Input accept="image/*" id="icon-button-file" type="file" onChange={handleUploadPicture} />
+                    <Input accept="image/*" id="icon-button-file" type="file" onChange={handlePictureSelection} />
                     <IconButton 
                         sx={{
                             marginTop: '8px',
@@ -295,7 +321,6 @@ export const PlayerProfile = () => {
                         component="span">
                         <FolderIcon />
                     </IconButton>
-                    {/* <input type="file" onChange={handleUploadPicture} /> */}
                     <Input accept="image/*" id="icon-button-file" type="file" onChange={handleTakePicture} />
                     <IconButton 
                         sx={{ 
@@ -369,11 +394,10 @@ export const PlayerProfile = () => {
                     {defaultAvatars.map((avatar) => (
                         <MenuItem 
                             key={avatar}
-                            onClick={(e) => handleSelectedIcon(e, avatar)}
+                            onClick={() => handleSelectedIcon(avatar)}
                         >
                             <Avatar
                                 src={avatar}>
-                                {/* // onChange={handleSelectedIcon}> */}
                             </Avatar>
                         </MenuItem>
                     ))}
