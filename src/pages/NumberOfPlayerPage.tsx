@@ -2,7 +2,19 @@ import { Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"
 import Navbar from "../components/Navbar";
+import { setGameId } from "../services/GameStatesService";
 
+const alphaNumeric: string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz"
+
+function createGameId(): string {
+    let hash = ""
+    for(let i = 0; i < 6; i++) {
+        const index: number = Math.floor(alphaNumeric.length * Math.random())
+        hash = hash + alphaNumeric.charAt(index)
+    }
+    console.log(hash)
+    return hash
+}
 
 export const NumberOfPlayerPage = () => {
     const [numberOfPlayers, setNumberOfPlayers] = useState("")
@@ -23,7 +35,9 @@ export const NumberOfPlayerPage = () => {
             while(factsPerPerson * (playerCount - 1) < 25) {
                 factsPerPerson++
             }
-            console.log(factsPerPerson)
+
+            const gameId = createGameId() 
+            setGameId(gameId)
             redirectToPlayerLinkPage(factsPerPerson)
         }
     }

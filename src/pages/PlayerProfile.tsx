@@ -25,6 +25,7 @@ import { createScore, ScoreCreateDTO } from "../services/ScoreService";
 import { LoadingView } from "../components/LoadingView";
 import Navbar from "../components/Navbar";
 import { GameInProgressView } from "../components/GameInProgressView";
+import { getGameId } from "../services/GameStatesService";
 
 export const PlayerProfile = () => {
     const defaultAvatars = [
@@ -40,19 +41,29 @@ export const PlayerProfile = () => {
        writeMale
     ];
     
+    // Facts Constants
+    const emptyFacts: Array<string> = []
+
+    // Image Constants
     const types = ['image/png', 'image/jpeg'];
     const ITEM_HEIGHT = 50;
     let [searchParams] = useSearchParams();
 
-    const emptyFacts: Array<string> = []
-    const [imagePreview, setImagePreview] = useState('')
+    // Rendering States
     const [isWaitingForStart, setIsWaitingForStart] = useState(false)
     const [isGameStarting, setIsGameStarting] = useState(false)
+
+    // Form Submit States
     const [name, setName] = useState("")
     const [facts, setFacts] = useState(emptyFacts)
     const [urlParameter, setUrlParameter] = useState("")
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+
+    // Image States 
     const [file, setFile] = useState<File>()
+    const [imagePreview, setImagePreview] = useState('')
+
+    // Dropdown States 
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl);
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -185,6 +196,13 @@ export const PlayerProfile = () => {
 
 
     useEffect(() =>{
+        async function initializeGameId() {
+            const gameId: string = await getGameId()
+            if (gameId) {
+                localStorage.setItem("gameId", gameId)
+            }
+        } 
+
         function setupGameStartListeners() {
             const unsub = onSnapshot(doc(db, "GameStates", "GameStart"), (doc) => {
                 if (doc.exists()) {
@@ -208,6 +226,8 @@ export const PlayerProfile = () => {
             }
             setFacts(factList)
         }
+
+        initializeGameId()
         initializeFacts()
         setupGameStartListeners()
     }, [searchParams])

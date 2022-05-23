@@ -29,7 +29,6 @@ export const PlayerLinkPage = () => {
                 console.log(error);
             }
         }
-        
         generateQrCode()
     },[factNumber]);
 
