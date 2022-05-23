@@ -5,7 +5,6 @@ import useScrollTrigger from '@mui/material/useScrollTrigger';
 import { LangContext } from '../context/lang';
 import { Button, Menu, MenuItem, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import { PlayerScore } from './PlayerScore';
 import { ScoreLegend } from './ScoreLegend';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 

@@ -266,9 +266,9 @@ export const UturnPage = (props : UTurnPage) => {
         return (
             <>
                 <Box className="home">
-                <Navbar isAdmin={false}/>
+                    <Navbar isAdmin={false}/>
                     <h1>{props.translate('uturn-title')}</h1>
-                    <Container>
+                    <Container sx={{marginBottom:12}}>
                         <PlayerScore cardProgress={cardProgress}
                             isScoreVisible={isScoreVisible}
                             playerId={url}
@@ -290,8 +290,8 @@ export const UturnPage = (props : UTurnPage) => {
                             selectedFact={previewedFactDialogDetails.factItem}
                         />
                     </Container>
+                    <Footer children={undefined!} isScore={isScoreVisible}></Footer>
                 </Box>
-                <Footer children={undefined!} isScore={isScoreVisible}></Footer>
             </>
         )
     }
