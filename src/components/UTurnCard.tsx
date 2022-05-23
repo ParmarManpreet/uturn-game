@@ -59,6 +59,21 @@ const ResizableAvatar = styled(Avatar)(({ theme }) => ({
     }
 }));
 
+const ResizableAvatarCorrect = styled(Avatar)(({ theme }) => ({
+    [theme.breakpoints.down('md')]: {
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        width:'45px', 
+        height:'45px',
+    },
+    [theme.breakpoints.up('md')]: {
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        width:'90px', 
+        height:'90px',
+    }
+}));
+
 function FactItem(props: UTurnCardItem) {
     const itemPosition: FactPosition = {rowIndex: props.rowIndex, columnIndex: props.columnIndex}
 
@@ -66,7 +81,7 @@ function FactItem(props: UTurnCardItem) {
         return (
             <ResizablePaper 
                 sx={{
-                    backgroundColor: 'white',
+                    backgroundColor: '#C1E1C1',
                     textAlign: 'center',
                     overflow: 'hidden'
                 }}
@@ -87,24 +102,12 @@ function FactItem(props: UTurnCardItem) {
                 <Box
                     sx={{
                         width:'100%', 
-                        height:'30%',
+                        height:'70%',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-around',
                     }}>
-                    <ResizableAvatar src={props.factItem.playerPicture}>
-                    </ResizableAvatar>
-                </Box>
-                <Box 
-                    sx={{
-                        height:'40%', 
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-around',
-                    }}>
-                    <span id="card_text">
-                        {props.factItem.fact}
-                    </span>
+                    <ResizableAvatarCorrect src={props.factItem.playerPicture}/>
                 </Box>
             </ResizablePaper>
         )
