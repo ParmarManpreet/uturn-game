@@ -53,7 +53,7 @@ export const LeaderboardPage = (props : LeaderboardPage) => {
                 </TableContainer>
             </Container>    
         </section>
-        <Footer children={undefined!} ></Footer>
+        <Footer children={undefined!} isScore={false}></Footer>
         </>
     );
 }

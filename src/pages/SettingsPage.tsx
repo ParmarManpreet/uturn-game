@@ -44,7 +44,7 @@ export const SettingsPage = (props : SettingsProp) => {
                 />
                 </Box>
             </section>
-            <Footer children={undefined!} ></Footer>
+            <Footer children={undefined!} isScore={false}></Footer>
         </>
     );
 }

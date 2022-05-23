@@ -60,7 +60,7 @@ export const PlayerLinkPage = (props : PlayerLinkProp) => {
                 <Button variant="contained" onClick={() => startGame()}>{props.translate('player-links-start')}</Button>
                 <Button sx={{marginTop:"8px", marginBottom:"100px"}} variant="contained" disableElevation onClick={() => endGame()}>{props.translate('player-links-end')}</Button>
             </Box>
-            <Footer children={undefined!} ></Footer>
+            <Footer children={undefined!} isScore={false}></Footer>
         </section>
         
     );

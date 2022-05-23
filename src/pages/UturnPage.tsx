@@ -278,7 +278,6 @@ export const UturnPage = (props : UTurnPage) => {
                             onCardItemSelectWhenTrue={handleFactSelectionForSubmission}
                             onCardItemSelectWhenFalse={handleFactSelectionForSummary}
                         />
-                        <ScoreLegend isScoreVisible={isScoreVisible} translate={translate}/>
                         <GuessFactOwnerDialog selectedFact={previewedFactDialogDetails.factItem}
                             open={openSubmitDialog} 
                             onClose={handleSubmitDialogClose} 
@@ -292,7 +291,7 @@ export const UturnPage = (props : UTurnPage) => {
                         />
                     </Container>
                 </Box>
-                <Footer children={undefined!}></Footer>
+                <Footer children={undefined!} isScore={isScoreVisible}></Footer>
             </>
         )
     }

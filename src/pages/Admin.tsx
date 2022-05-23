@@ -31,7 +31,7 @@ export const Admin = (props: AdminProps) => {
                         <NavigationLink text={props.translate('admin-settings')} path="/settings" />
                     </div>
             </section>
-        <Footer children={undefined!} ></Footer>
+        <Footer children={undefined!} isScore={false}></Footer>
         </>
     );
 }

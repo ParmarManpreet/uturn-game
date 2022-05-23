@@ -5,11 +5,15 @@ import useScrollTrigger from '@mui/material/useScrollTrigger';
 import { LangContext } from '../context/lang';
 import { Button, Menu, MenuItem, Typography } from '@mui/material';
 import { Box } from '@mui/system';
+import { PlayerScore } from './PlayerScore';
+import { ScoreLegend } from './ScoreLegend';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 
 
 interface Props {
     window?: () => Window;
     children: ReactElement<any, string | JSXElementConstructor<any>>;
+    isScore: boolean
   }
 //   const language = ['EN', 'FR'];
 
@@ -32,6 +36,11 @@ const Footer = (props: Props) => {
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null); 
     const { state: { language }, dispatch: { setLanguage, translate } } = useContext(LangContext);
+    const emptyCardProgress: boolean[][] = []
+    const [cardProgress, setCardProgress] = useState(emptyCardProgress)
+        // Game State for Score Visibility
+    const [isScoreVisible, setIsScoreVisible] = useState(false)
+    const [url, setUrl] = useState("")
 
     
     function handleSelectLanguage(language: string): React.MouseEventHandler<HTMLLIElement> | undefined {
@@ -80,7 +89,6 @@ const Footer = (props: Props) => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-            {/* {language.map((language) => ( */}
             <MenuItem key={'EN'} onClick={() => handleSelectLanguage('EN')}>
                 <Typography textAlign="center">EN</Typography>
             </MenuItem>
@@ -90,6 +98,34 @@ const Footer = (props: Props) => {
             {/* //   ))} */}
             </Menu>
         </Box>
+        {
+          props.isScore?
+          <Box sx={{ flexGrow: 0 }}>
+          <Button color="inherit" onClick={handleOpenNavMenu} sx={{ alignItems:'right', p:0}}>
+            <WorkspacePremiumIcon/>
+          </Button>
+          <Menu
+              sx={{ mt: '0px' }}
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+            >
+              <ScoreLegend isScoreVisible={true} translate={translate}/>
+            </Menu>
+        </Box>
+          :
+          null
+        }
         </Toolbar>
     </AppBar>
     </ElevationScroll>

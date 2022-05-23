@@ -421,7 +421,7 @@ export const PlayerProfile = (props : PlayerProfileProps) => {
                 </Button>
                 </Box>
             </section>
-            <Footer children={undefined!} ></Footer>
+            <Footer children={undefined!} isScore={false}></Footer>
             </>
         );
     }    
