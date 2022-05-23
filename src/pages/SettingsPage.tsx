@@ -44,7 +44,12 @@ export const SettingsPage = (props : SettingsProp) => {
                 />
                 </Box>
             </section>
-            <Footer children={undefined!} isScore={false}></Footer>
+            <Footer cardProgress={null}
+                isScoreVisible={null}
+                playerId={null}
+                children={undefined!} 
+                isScore={false}
+            />
         </>
     );
 }

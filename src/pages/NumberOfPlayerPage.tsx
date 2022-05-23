@@ -85,7 +85,11 @@ export const NumberOfPlayerPage = (props : NumberofPlayerProps) => {
                 <Button sx={{ color: 'white', marginTop: '8px' }} variant="contained" disableElevation onClick={handleSubmit}>{props.translate('number-players-submit')}</Button>
                 </Box>
             </section>
-            <Footer children={undefined!} isScore={false} ></Footer>
-            </>
+            <Footer cardProgress={null}
+                isScoreVisible={null}
+                playerId={null}
+                children={undefined!} 
+                isScore={false}
+            />            </>
         );
     }

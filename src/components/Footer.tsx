@@ -7,13 +7,17 @@ import { Button, Menu, MenuItem, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { ScoreLegend } from './ScoreLegend';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import { PlayerScore } from './PlayerScore';
 
 
 interface Props {
-    window?: () => Window;
-    children: ReactElement<any, string | JSXElementConstructor<any>>;
-    isScore: boolean
-  }
+  window?: () => Window;
+  children: ReactElement<any, string | JSXElementConstructor<any>>;
+  isScore: boolean
+  cardProgress: boolean[][] | null
+  isScoreVisible: boolean | null
+  playerId: string | null
+}
 //   const language = ['EN', 'FR'];
 
 
@@ -99,29 +103,32 @@ const Footer = (props: Props) => {
         </Box>
         {
           props.isScore?
-          <Box sx={{ flexGrow: 0 }}>
-          <Button color="inherit" onClick={handleOpenNavMenu} sx={{ alignItems:'right', p:0}}>
-            <WorkspacePremiumIcon/>
-          </Button>
-          <Menu
-              sx={{ mt: '0px' }}
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-            >
-              <ScoreLegend isScoreVisible={true} translate={translate}/>
-            </Menu>
-        </Box>
+          <>
+            <PlayerScore cardProgress={props.cardProgress!} playerId={props.playerId!} isScoreVisible={props.isScoreVisible!}/>
+            <Box sx={{ flexGrow: 0 }}>
+              <Button color="inherit" onClick={handleOpenNavMenu} sx={{ alignItems:'right', p:0}}>
+                <WorkspacePremiumIcon/>
+              </Button>
+              <Menu
+                sx={{ mt: '0px' }}
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+              >
+                <ScoreLegend isScoreVisible={true} translate={translate}/>
+              </Menu>
+            </Box>
+          </>
           :
           null
         }

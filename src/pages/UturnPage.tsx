@@ -269,10 +269,6 @@ export const UturnPage = (props : UTurnPage) => {
                     <Navbar isAdmin={false}/>
                     <h1>{props.translate('uturn-title')}</h1>
                     <Container sx={{marginBottom:12}}>
-                        <PlayerScore cardProgress={cardProgress}
-                            isScoreVisible={isScoreVisible}
-                            playerId={url}
-                        />
                         <UTurnCard facts={facts}
                             cardProgress={cardProgress}
                             onCardItemSelectWhenTrue={handleFactSelectionForSubmission}
@@ -290,7 +286,12 @@ export const UturnPage = (props : UTurnPage) => {
                             selectedFact={previewedFactDialogDetails.factItem}
                         />
                     </Container>
-                    <Footer children={undefined!} isScore={isScoreVisible}></Footer>
+                    <Footer cardProgress={cardProgress}
+                        isScoreVisible={isScoreVisible}
+                        playerId={url}
+                        children={undefined!}
+                        isScore={isScoreVisible}
+                    />
                 </Box>
             </>
         )

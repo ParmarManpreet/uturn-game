@@ -53,7 +53,11 @@ export const LeaderboardPage = (props : LeaderboardPage) => {
                 </TableContainer>
             </Container>    
         </section>
-        <Footer children={undefined!} isScore={false}></Footer>
-        </>
+        <Footer cardProgress={null}
+                isScoreVisible={null}
+                playerId={null}
+                children={undefined!} 
+                isScore={false}
+            />        </>
     );
 }
