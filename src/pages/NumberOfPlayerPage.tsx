@@ -1,9 +1,28 @@
 import { Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
+import { setGameId } from "../services/GameStatesService";
+
+interface NumberofPlayerProps {
+    translate : (key: string) => string
+}
 
 
-export const NumberOfPlayerPage = () => {
+const alphaNumeric: string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz"
+
+function createGameId(): string {
+    let hash = ""
+    for(let i = 0; i < 6; i++) {
+        const index: number = Math.floor(alphaNumeric.length * Math.random())
+        hash = hash + alphaNumeric.charAt(index)
+    }
+    console.log(hash)
+    return hash
+}
+
+export const NumberOfPlayerPage = (props : NumberofPlayerProps) => {
     const [numberOfPlayers, setNumberOfPlayers] = useState("")
     const regex = /^[0-9\b]+$/
 
@@ -22,7 +41,9 @@ export const NumberOfPlayerPage = () => {
             while(factsPerPerson * (playerCount - 1) < 25) {
                 factsPerPerson++
             }
-            console.log(factsPerPerson)
+
+            const gameId = createGameId() 
+            setGameId(gameId)
             redirectToPlayerLinkPage(factsPerPerson)
         }
     }
@@ -37,8 +58,9 @@ export const NumberOfPlayerPage = () => {
 
         return (
             <>
+            <Navbar isAdmin={true} ></Navbar>
             <section className="home">
-                <h1>Number of players</h1>
+                <h1>{props.translate('number-players-title')}</h1>
                 <Box
                     component="form"
                     sx={{
@@ -56,13 +78,18 @@ export const NumberOfPlayerPage = () => {
                         },
                     }}
                     id="player-number"
-                    label="Enter Number of Players"
+                    label={props.translate('number-players-entry-text')}
                     variant="filled"
                     value={numberOfPlayers} onChange={handlePlayerInputChange}>
                 </TextField>
-                <Button   sx={{ color: 'white', marginTop: '8px' }} variant="contained" disableElevation onClick={handleSubmit}>Submit</Button>
+                <Button sx={{ color: 'white', marginTop: '8px' }} variant="contained" disableElevation onClick={handleSubmit}>{props.translate('number-players-submit')}</Button>
                 </Box>
             </section>
-            </>
+            <Footer cardProgress={null}
+                isScoreVisible={null}
+                playerId={null}
+                children={undefined!} 
+                isScore={false}
+            />            </>
         );
     }

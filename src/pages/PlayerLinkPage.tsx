@@ -1,15 +1,71 @@
+import { Box, Button } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import QRCode from 'qrcode';
+import { updateGameStartState } from "../services/GameStatesService";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
-export const PlayerLinkPage = () => {
+interface PlayerLinkProp {
+    translate : (key: string) => string
+}
+
+export const PlayerLinkPage = (props : PlayerLinkProp) => {
+    const domain = 'https://u-turn-development.web.app'
     const location =  useLocation();
     const factState: any = location.state
     const factNumber: number = factState.numberOfFacts
-    console.log(factState.numberOfFacts)
+    const [imageUrl, setImageUrl] = useState('')
+
+    function startGame() {
+        updateGameStartState(true)
+    }
+
+    function endGame() {
+        updateGameStartState(false)
+    }
     
+    useEffect(() => {
+        const generateQrCode = async () => {
+            try {
+                const response = await QRCode.toDataURL(`${domain}/player-profile/?factNumber=${factNumber}`);
+                setImageUrl(response);
+            }catch (error) {
+                console.log(error);
+            }
+        }
+        generateQrCode()
+    },[factNumber]);
+
     return (
-        <>
-            <div>Player Link Page</div>
-            <div> {`localhost:3000/player-profile/?factNumber=${factNumber}`} </div>
-        </>
+        <section className="home">
+            <Navbar isAdmin={false}/>
+            <h1>{props.translate('player-links-title')}</h1>
+            <Box
+                    component="form"
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        '& .MuiTextField-root': { m: 1, width: '25ch' , backgroundColor:'white'},
+                    }}
+                    noValidate
+                    autoComplete="off"
+                >
+                <div className="home__white_div"> {`${domain}/player-profile/?factNumber=${factNumber}`} </div>
+                <div className="home__qrcode">
+                    <h2>{props.translate('player-links-qr')}</h2>
+                    <img src={imageUrl} alt="img"/>
+                </div>
+                <Button variant="contained" onClick={() => startGame()}>{props.translate('player-links-start')}</Button>
+                <Button sx={{marginTop:"8px", marginBottom:"100px"}} variant="contained" disableElevation onClick={() => endGame()}>{props.translate('player-links-end')}</Button>
+            </Box>
+            <Footer cardProgress={null}
+                isScoreVisible={null}
+                playerId={null}
+                children={undefined!} 
+                isScore={false}
+            />        </section>
+        
     );
 }

@@ -2,7 +2,6 @@ import { QuestionMark } from "@mui/icons-material";
 import { Avatar, Box, Grid, Paper, styled } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import { FactModelGetDTO } from "../services/FactService";
-import { ScoreLegend } from "./ScoreLegend";
 
 export interface FactPosition {
     rowIndex: number
@@ -60,6 +59,21 @@ const ResizableAvatar = styled(Avatar)(({ theme }) => ({
     }
 }));
 
+const ResizableAvatarCorrect = styled(Avatar)(({ theme }) => ({
+    [theme.breakpoints.down('md')]: {
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        width:'55px', 
+        height:'55px',
+    },
+    [theme.breakpoints.up('md')]: {
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        width:'90px', 
+        height:'90px',
+    }
+}));
+
 function FactItem(props: UTurnCardItem) {
     const itemPosition: FactPosition = {rowIndex: props.rowIndex, columnIndex: props.columnIndex}
 
@@ -67,7 +81,7 @@ function FactItem(props: UTurnCardItem) {
         return (
             <ResizablePaper 
                 sx={{
-                    backgroundColor: 'white',
+                    backgroundColor: '#C1E1C1',
                     textAlign: 'center',
                     overflow: 'hidden'
                 }}
@@ -81,31 +95,19 @@ function FactItem(props: UTurnCardItem) {
                         alignItems: 'center',
                         justifyContent: 'space-around',
                     }}>
-                    <span className="card_text">
+                    <span id="card_text">
                         <strong>{props.factItem.playerName}</strong>
                     </span>
                 </Box>
                 <Box
                     sx={{
                         width:'100%', 
-                        height:'30%',
+                        height:'70%',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-around',
                     }}>
-                    <ResizableAvatar src={props.factItem.playerPicture}>
-                    </ResizableAvatar>
-                </Box>
-                <Box 
-                    sx={{
-                        height:'40%', 
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-around',
-                    }}>
-                    <span className="card_text">
-                        {props.factItem.fact}
-                    </span>
+                    <ResizableAvatarCorrect src={props.factItem.playerPicture}/>
                 </Box>
             </ResizablePaper>
         )
@@ -141,7 +143,7 @@ function FactItem(props: UTurnCardItem) {
                     width: '100%',
                     height: '50%'
                 }}>
-                <span className="card_text">
+                <span id="card_text">
                     {props.factItem.fact}
                 </span>
             </Box>
@@ -181,7 +183,6 @@ export const UTurnCard = (props: UTurnCardProps) => {
                     />
                 ))}
             </Grid>
-            <ScoreLegend/>
         </>
     );
 }

@@ -18,13 +18,13 @@ export const NavigationLink = (props: LinkDetails) => {
     if(event) {
         return (
             <Link to={props.path} onClick={(e) => event(e)}>
-                 <Button variant="contained" style={linkstyle}>{props.text}</Button>{' '}
+                 <Button variant="contained" style={linkstyle}>{props.text}</Button>
             </Link> 
         );   
     } else {
         return (
             <Link to={props.path}>
-                 <Button variant="contained" style={linkstyle}>{props.text}</Button>{' '}
+                 <Button variant="contained" style={linkstyle}>{props.text}</Button>
             </Link> 
         ); 
     }

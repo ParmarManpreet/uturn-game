@@ -1,5 +1,5 @@
 import { doc, onSnapshot } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { db } from "..";
 import { Avatar, Box, Button, IconButton, Menu, MenuItem, TextField, Tooltip } from "@mui/material";
 import FolderIcon from '@mui/icons-material/Folder';
@@ -9,7 +9,7 @@ import { createPlayerProfile, PlayerCreateDTO, updatePlayerURLToId } from "../se
 import { createFacts, FactModelCreateDTO } from "../services/FactService";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { storage } from '../index';
-import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import FaceIcon from '@mui/icons-material/Face';
 import actress from './defaultAvatarTemp/actress.png';
 import female from './defaultAvatarTemp/female.png';
@@ -21,8 +21,19 @@ import manager from './defaultAvatarTemp/manager.png';
 import supportPerson from './defaultAvatarTemp/support-person.png';
 import userMale from './defaultAvatarTemp/user-male.png';
 import writeMale from './defaultAvatarTemp/writer-male.png';
+import { createScore, ScoreCreateDTO } from "../services/ScoreService";
+import { LoadingView } from "../components/LoadingView";
+import Navbar from "../components/Navbar";
+import { GameInProgressView } from "../components/GameInProgressView";
+import Footer from "../components/Footer";
+import { LangContext } from "../context/lang";
 
-export const PlayerProfile = () => {
+interface PlayerProfileProps {
+    translate : (key: string) => string
+}
+
+
+export const PlayerProfile = (props : PlayerProfileProps) => {
     const defaultAvatars = [
        actress,
        female,
@@ -34,76 +45,87 @@ export const PlayerProfile = () => {
        supportPerson,
        userMale,
        writeMale
-      ];
-    
+    ];
+    const {dispatch: { translate }} = useContext(LangContext);
+    // Facts Constants
     const emptyFacts: Array<string> = []
+
+    // Image Constants
+    const types = ['image/png', 'image/jpeg'];
+    const ITEM_HEIGHT = 50;
+    let [searchParams] = useSearchParams();
+
+    // Rendering States
     const [isWaitingForStart, setIsWaitingForStart] = useState(false)
     const [isGameStarting, setIsGameStarting] = useState(false)
+
+    // Form Submit States
     const [name, setName] = useState("")
     const [facts, setFacts] = useState(emptyFacts)
     const [urlParameter, setUrlParameter] = useState("")
-    const [imgUrl, setImgUrl] = useState(null);
-    const [progresspercent, setProgresspercent] = useState(0);
-    const types = ['image/png', 'image/jpeg'];
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+    // Image States 
+    const [file, setFile] = useState<File>()
+    const [imagePreview, setImagePreview] = useState('')
+
+    // Dropdown States 
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl);
-    const ITEM_HEIGHT = 50;
-    let [searchParams] = useSearchParams();
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
-      };
-      const handleClose = () => {
+    };
+
+    const handleClose = () => {
         setAnchorEl(null);
-      };
-      const handleOpen = () => {
-        console.log("on open clicked")
-      };
+    };
+    
     const Input = styled('input')({
         display: 'none',
-      });
-      
+    });
 
     const handleTakePicture = (e: { target: { files: any; }; }) => {
         let selected = e.target.files[0];
         console.log(selected);
     }
     
-    const handleUploadPicture = (e: {target: { files: any; }; }) => {
-    //e.preventDefault()
-    const file = e.target.files[0]
-    console.log("change")
+    const handlePictureSelection = (e: {target: { files: any; }; }) => {
+        const file = e.target.files[0]
 
-    if (!file) return;
-    if(file && types.includes(file.type)){
+        if (file && types.includes(file.type)) {
+            const fileURL = URL.createObjectURL(file)
+            setImagePreview(fileURL)
+            setFile(file)
+        } else {
+            return;
+        }
+    }
 
-        const storageRef = ref(storage, `Profile_pictures/${file.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-    
-        uploadTask.on("state_changed",
-            (snapshot) => {
-            const progress =
-                Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-            setProgresspercent(progress);
-            },
-            (error) => {
-            alert(error);
-            },
-            () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                console.log('File available at', downloadURL);
-                //setImgUrl(downloadURL);
-            });
+    async function uploadPicture() {
+        if(file){
+            const fileType = file.type as string
+            const splitFileType = fileType.split('/')
+            const fileExtension = splitFileType[splitFileType.length - 1]
+            const storageRef = ref(storage, `Profile_pictures/${name}.${fileExtension}`)
+            try {
+                const uploadResult = await uploadBytes(storageRef, file)
+                const downloadURL = await getDownloadURL(uploadResult.ref)
+                return downloadURL
+            } 
+            catch(error) {
+                console.log(`Unable to upload picture for file: ${file}`)
             }
-        );
-    } else {
-        return;
-        //error
-    }
-    }
-    function handleSelectedIcon(){
-
+        } else {
+            //error did not submit a picture
+            return;
+        }
     }
 
+    const handleSelectedIcon = (value: string) => {
+        console.log("VALUE", value);
+        setImagePreview(value)
+
+    }
     function handleOnChangeFactInput(index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const factValue = e.target.value
         const clonedFacts = [...facts]
@@ -126,10 +148,20 @@ export const PlayerProfile = () => {
     }
 
     async function saveProfileInformation() {
-        let isSuccesful = false 
+        let isSuccesful = false
+        let savedImage = imagePreview
+
+        if(file) {
+            const newImage = await uploadPicture()
+            if(newImage) {
+                savedImage = newImage
+            }
+        }
+
+        console.log(savedImage)
         const playerDetails: PlayerCreateDTO = {
             name: name,
-            picture: "",
+            picture: savedImage,
         }
 
         const playerId = await createPlayerProfile(playerDetails)
@@ -139,15 +171,39 @@ export const PlayerProfile = () => {
             const factDetails: FactModelCreateDTO = {
                 playerId: playerId,
                 playerName: name,
-                playerPicture: "",
+                playerPicture: savedImage,
                 facts: facts,
             }
             await createFacts(factDetails)
+
+            const scoreDetails: ScoreCreateDTO = {
+                playerId: playerId,
+                playerName: name,
+                playerPicture: savedImage,
+                score: 0
+            }
+            await createScore(scoreDetails)
+
             setUrlParameter(playerId)
             isSuccesful = true
         }
-
         return isSuccesful
+    }
+
+    function areThereEmptyFields() {
+        let fieldEmpty = false
+
+        for(const fact of facts) {
+            if(!fact) {
+                fieldEmpty = true
+                break
+            }
+        }
+
+        if(!name) {
+            fieldEmpty = true
+        }
+        return fieldEmpty
     }
 
 
@@ -155,7 +211,6 @@ export const PlayerProfile = () => {
         function setupGameStartListeners() {
             const unsub = onSnapshot(doc(db, "GameStates", "GameStart"), (doc) => {
                 if (doc.exists()) {
-                    setIsWaitingForStart(false)
                     setIsGameStarting(doc.data().isGameStarted)
                 }
             })
@@ -163,6 +218,7 @@ export const PlayerProfile = () => {
         }
     
         function initializeFacts() {
+            setImagePreview('/broken-image.jpg')
             const numberFactsQueryParam = searchParams.get('factNumber')
             let numberOfFacts: number = 0
             const factList: Array<string> = []
@@ -177,25 +233,41 @@ export const PlayerProfile = () => {
 
         initializeFacts()
         setupGameStartListeners()
-    }, [])
+    }, [searchParams])
 
-    if (isWaitingForStart) {
+    if (!isGameStarting && isWaitingForStart) {
         return (
-            <div>Waiting...</div>
+            <>
+            <Navbar isAdmin={false} ></Navbar>
+                <div className="home">
+                    <LoadingView isWaitingForHost={true} translate={translate}/>
+                </div>
+            </>
+        )
+    }
+
+    else if(isGameStarting && !isWaitingForStart) {
+        return (
+            <Box className="home">
+                <GameInProgressView/>
+            </Box>
         )
     }
     
-    else if (isGameStarting) {
+    else if (isGameStarting && isWaitingForStart) {
         return (
+            <>
+            <Navbar isAdmin={false} ></Navbar>
             <Navigate to={`/uturn-page/${urlParameter}`} replace={true} />
+            </>
         )
     } 
-    
     else {
         return (
             <>
+            <Navbar isAdmin={false} ></Navbar>
             <section className="home">
-                <h1>Create Profile</h1>
+                <h1>{props.translate('create-profile-title')}</h1>
                 <Box
                     component="form"
                     sx={{
@@ -213,7 +285,7 @@ export const PlayerProfile = () => {
                         },
                     }}
                     id="player-name"
-                    label="Enter your name"
+                    label={props.translate('create-profile-name')}
                     type="string" 
                     variant="filled"
                     onChange={(e) => handleOnChangeNameInput(e)} value={name}
@@ -229,6 +301,7 @@ export const PlayerProfile = () => {
                             label={`Enter Fact #${index + 1}`}
                             type="string"
                             variant="filled"
+                            value={value}
                             onChange={(e) => handleOnChangeFactInput(index, e)}
                         />
                     </div>
@@ -242,19 +315,24 @@ export const PlayerProfile = () => {
                     }}
                 >
                 <label>
-                    <Input accept="image/*" id="icon-button-file" type="file" onChange={handleUploadPicture} />
+                    <Avatar
+                        src={imagePreview}
+                        sx={{ marginTop: '8px', marginLeft: '50px', width: 50, height: 50 , alignItems: 'center'}}
+                    />
+                    <Input accept="image/*" id="icon-button-file" type="file" onChange={handlePictureSelection} />
                     <IconButton 
                         sx={{
+                            marginTop: '8px',
                             color: 'white',
                         }}
                         aria-label="upload picture" 
                         component="span">
                         <FolderIcon />
                     </IconButton>
-                    {/* <input type="file" onChange={handleUploadPicture} /> */}
                     <Input accept="image/*" id="icon-button-file" type="file" onChange={handleTakePicture} />
                     <IconButton 
                         sx={{ 
+                            marginTop: '8px',
                             color: 'white',
                             ml: 2 
                         }}
@@ -267,6 +345,7 @@ export const PlayerProfile = () => {
                             onClick={handleClick}
                             size="small"
                             sx={{ 
+                                marginTop: '8px',
                                 ml: 2 
                             }}
                             aria-controls={open ? 'avatars-menu' : undefined}
@@ -290,7 +369,7 @@ export const PlayerProfile = () => {
                         }}
                         open={open}
                         onClose={handleClose}
-                        onClick={handleOpen}
+                        onChange={handleClose}
                         PaperProps={{
                             style: {
                                 maxHeight: ITEM_HEIGHT*4.5
@@ -321,18 +400,34 @@ export const PlayerProfile = () => {
                         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                     >
                     {defaultAvatars.map((avatar) => (
-                        <MenuItem key={avatar} onClick={handleSelectedIcon}>
+                        <MenuItem 
+                            key={avatar}
+                            onClick={() => handleSelectedIcon(avatar)}
+                        >
                             <Avatar
                                 src={avatar}>
                             </Avatar>
                         </MenuItem>
                     ))}
                     </Menu>
+
                 </label>
-                <Button  sx={{ color: 'white', marginTop: '8px' }} variant="contained" disableElevation onClick={() => handlePlayerDetailsSubmitButton()}>Submit</Button>
+                <Button  sx={{ color: 'white', marginTop: '8px' }}
+                    id="factButton"
+                    variant="contained" 
+                    onClick={handlePlayerDetailsSubmitButton}
+                    disabled={areThereEmptyFields()}
+                >
+                    {props.translate('create-prfile-submit')}
+                </Button>
                 </Box>
             </section>
-            </>
+            <Footer cardProgress={null}
+                isScoreVisible={null}
+                playerId={null}
+                children={undefined!} 
+                isScore={false}
+            />            </>
         );
     }    
 }

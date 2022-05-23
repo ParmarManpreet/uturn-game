@@ -1,38 +1,74 @@
-import Button from "@mui/material/Button";
-import React, { Fragment, useState } from "react";
-import { Link } from "react-router-dom";
-import { updateGameStartState } from "../services/GameStateService";
-import {NavigationLink} from '../services/PageNavigationService'
-import GameResetDialog from '../components/GameResetDialog'
+import { useState } from "react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { deleteAllScores } from "../services/ScoreService";
+import { deleteAllPlayerProfiles } from "../services/PlayerProfileService";
+import { deleteAllFacts } from "../services/FactService";
+import { GameResetDialog } from "../components/dialogs/GameResetDialog";
+import { useNavigate } from "react-router-dom";
+import { updateGameStartState } from "../services/GameStatesService";
+import { Button } from "@mui/material";
 
-function startGame() {
-    updateGameStartState(true)
+interface AdminProps {
+    translate : (key: string) => string
 }
 
+export const Admin = (props: AdminProps) => {
+    let navigate = useNavigate();
 
-export const Admin = () => {
-    const [isStarted, setIsStarted] = useState(false)
-    const [isModalShowing, setIsModalShowing] = useState(false)
-    
-    function handleStart(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
-        if (isStarted) {
-            e.preventDefault()
-            setIsModalShowing(true)
-        }  
+    const [isGameResetDialogShowing, setIsGameResetDialogShowing] = useState(false)
+
+    const handleGameResetDialogOpen = () => {
+        setIsGameResetDialogShowing(true)
     }
+
+    const handleGameResetDialogClose = () => {
+        setIsGameResetDialogShowing(false)
+    }
+
+    function handleResetGame() {
+        deleteAllScores()
+        deleteAllPlayerProfiles()
+        deleteAllFacts()
+        setIsGameResetDialogShowing(false)
+        updateGameStartState(false)
+        navigate('/number-players')
+    }
+
+    function handleSettingsClick() {
+        navigate('/settings')
+    }
+
+
     return (
         <>
-            <Fragment>
-                <div>Admin Page</div>
+            <Navbar isAdmin={true} ></Navbar>
+            <section className="home">
+                <h1>{props.translate('admin-title')}</h1>
                     <div>
-                        <Button variant="contained" onClick={() => startGame()}>Start</Button>
-                        <NavigationLink text={'Start Game'}path="/number-players" handleClick={handleStart}/>
-                        <NavigationLink text={'Settings'} path="/settings" />
-                        {/* <GameResetDialog show={isModalShowing} handleSubmit={handleSubmit} onHide={() => setIsModalShowing(false)}/> */}
+                        <Button sx={{marginRight:2}} 
+                            variant="contained"
+                            onClick={handleGameResetDialogOpen}
+                        >
+                            {props.translate('admin-start-game')}
+                        </Button>
+                        <Button variant="contained" 
+                            onClick={handleSettingsClick}
+                        >
+                            {props.translate('admin-settings')}
+                        </Button>
                     </div>
-            </Fragment>
-        </>
-
+                    <GameResetDialog open={isGameResetDialogShowing} 
+                        onClose={handleGameResetDialogClose}
+                        onReset={handleResetGame}
+                    />
+            </section>
+            <Footer cardProgress={null}
+                isScoreVisible={null}
+                playerId={null}
+                children={undefined!} 
+                isScore={false}
+            />        </>
     );
 }
 

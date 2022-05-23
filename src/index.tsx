@@ -7,7 +7,8 @@ import reportWebVitals from './reportWebVitals';
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
-import { getStorage, ref } from 'firebase/storage'
+import { getStorage } from 'firebase/storage'
+import LangState from './context/lang';
 
 const firebaseConfig = {
   apiKey: "AIzaSyB7DLyA410nmu5iwSKAaaYffa_qhAuw_Yo",
@@ -24,7 +25,6 @@ const firebaseApp = initializeApp(firebaseConfig);
 export const auth = getAuth(firebaseApp);
 export const db = getFirestore(firebaseApp)
 export const storage = getStorage(firebaseApp)
-//export const storageRef = ref(storage)
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -32,7 +32,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <LangState>
+        <App />
+      </LangState>
     </BrowserRouter>
   </React.StrictMode>
 );

@@ -1,13 +1,20 @@
 import { Box, Container } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { doc, onSnapshot } from "firebase/firestore";
+import { useContext, useEffect, useState } from "react";
+import { Navigate, useParams } from "react-router";
+import { db } from "..";
 import { FactSummaryDialog } from "../components/dialogs/FactSummaryDialog";
 import { GuessFactOwnerDialog } from "../components/dialogs/GuessFactOwnerDialog";
+import Footer from "../components/Footer";
 import { LoadingView } from "../components/LoadingView";
+import Navbar from "../components/Navbar";
 import { PlayerScore } from "../components/PlayerScore";
+import { ScoreLegend } from "../components/ScoreLegend";
 import { FactPosition, UTurnCard } from "../components/UTurnCard";
+import { LangContext } from "../context/lang";
 import { FactModelGetDTO } from "../services/FactService";
 import { getAllFactsNotFromCurrentPlayer } from "../services/FactService";
+import { getGameId, getVisibleScoreState } from "../services/GameStatesService";
 import { getAllButCurrentPlayer, PlayerGetDTO } from "../services/PlayerProfileService";
 
 export interface DialogInformation {
@@ -15,17 +22,22 @@ export interface DialogInformation {
     factPosition: FactPosition
 }
 
-export const UturnPage = () => {
+interface UTurnPage {
+    translate : (key: string) => string
+}
+export const UturnPage = (props : UTurnPage) => {
     const emptyFactList: FactModelGetDTO[][] = []
     const emptyFactOwnerList: Array<PlayerGetDTO> = []
     const emptyCardProgress: boolean[][] = []
     const emptyDialogInformation: DialogInformation = {factItem: {playerName: "", fact: "", playerPicture: "" }, factPosition: {rowIndex: -1, columnIndex: -1}}
-
+    const {dispatch: { translate }} = useContext(LangContext);
     // Getting URL Parameters
     let params = useParams();
+    const [url, setUrl] = useState("")
 
     // Loading State
     const [isLoading, setIsloading] = useState(true)
+    const [isGameEnding, setIsGameEnding] = useState(false)
 
     // Common Information
     const [facts, setFacts] = useState(emptyFactList)
@@ -40,9 +52,15 @@ export const UturnPage = () => {
     const handleFactSummaryDialogClose = () => setOpenFactSummary(false)
     const handleSubmitDialogClose = () => setOpenSubmitDialog(false)
 
+    // Game State for Score Visibility
+    const [isScoreVisible, setIsScoreVisible] = useState(false)
+
+    
+
     function updateCardProgress() {
         const copyOfCardProgress: boolean[][] = cloneCardProgress(cardProgress)
         copyOfCardProgress[previewedFactDialogDetails.factPosition.rowIndex][previewedFactDialogDetails.factPosition.columnIndex] = true
+        localStorage.setItem("cardProgress", JSON.stringify(copyOfCardProgress))
         setCardProgress(copyOfCardProgress)
     }
 
@@ -95,9 +113,17 @@ export const UturnPage = () => {
             if(playableFacts) {
                 const shuffledFacts = shufflePlayableFacts(playableFacts)
                 const shuffledFactsMatrix: FactModelGetDTO[][] = mapFactsListToMatrix(shuffledFacts)
+
+                // Initialize playable facts
+                localStorage.setItem("facts", JSON.stringify(shuffledFactsMatrix))
                 setFacts(shuffledFactsMatrix)
+
+                // Initialize card/ game progress
+                const emptyCardProgress: boolean[][] = initializeCardProgress(shuffledFactsMatrix)
+                localStorage.setItem("cardProgress", JSON.stringify(emptyCardProgress))
+                setCardProgress(emptyCardProgress)
+
                 setIsloading(false)
-                setCardProgress(initializeCardProgress(shuffledFactsMatrix))
             }
         }
 
@@ -143,40 +169,131 @@ export const UturnPage = () => {
             return initialIsGridItemSelected
         }
 
-        if (params.playerURL) {
-            fetchAllPlayableFacts(params.playerURL)
-            fetchAllPlayerDetailsButCurrentPlayer(params.playerURL)
+        async function fetchScoreVisibleGameState() {
+            const fetchedIsScoreVisible = await getVisibleScoreState() 
+            if(fetchedIsScoreVisible) {
+                setIsScoreVisible(fetchedIsScoreVisible)
+            }
         }
+
+        function setupGameStartListeners() {
+            const unsub = onSnapshot(doc(db, "GameStates", "GameStart"), (doc) => {
+                if (doc.exists()) {
+                    setIsGameEnding(!doc.data().isGameStarted)
+                }
+            })
+            return unsub
+        }
+
+        async function isNewGame() {
+            const gameId: string = await getGameId()
+            const cacheGameId = localStorage.getItem("gameId")
+
+            if (cacheGameId === null || gameId !== cacheGameId) {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        async function setGameIdCache() {
+            const gameId: string = await getGameId()
+            localStorage.setItem("gameId", gameId)
+        }
+
+        async function initializeGame() {
+            const playerHasCachedValues = localStorage.getItem("url") && localStorage.getItem("facts") && localStorage.getItem("cardProgress")
+            const isCacheReloadRequired = await isNewGame()
+
+            if (isCacheReloadRequired && params.playerURL) {
+                setGameIdCache()
+                localStorage.setItem("url", params.playerURL)
+                setUrl(params.playerURL)
+                fetchAllPlayableFacts(params.playerURL)
+                fetchAllPlayerDetailsButCurrentPlayer(params.playerURL)
+                fetchScoreVisibleGameState()
+            }
+            else {
+                if (playerHasCachedValues) {
+                    const url: string = localStorage.getItem("url")!
+                    const facts: FactModelGetDTO[][] = JSON.parse(localStorage.getItem("facts")!)
+                    const cardProgress: boolean[][] = JSON.parse(localStorage.getItem("cardProgress")!)
+                    setFacts(facts)
+                    setCardProgress(cardProgress)
+                    setUrl(url)
+
+                    fetchAllPlayerDetailsButCurrentPlayer(url)
+                    fetchScoreVisibleGameState()
+                    setIsloading(false)
+                }
+
+                // Not sure how to handle when someone has no playerURL and has no cached data. Currently they are stuck on the Loading Screen
+                /*
+                    Option 1: 
+                */
+            }
+        }
+
+        setupGameStartListeners()
+        initializeGame()
+        
     }, [params.playerURL])
 
-    // Possibly hide the fetching with an animation
+    window.onpopstate = function () {
+        window.history.go(1);
+    };
+
+    window.addEventListener("beforeunload", (ev) => {  
+        ev.preventDefault();
+        return ev.returnValue = 'Are you sure you want to close?';
+    });
+    
     if (isLoading) {
         return (
-            <LoadingView/>
-        )
-    } else {
-        return (
             <Box className="home">
-                <Container>
-                    <PlayerScore cardProgress={cardProgress}/>
-                    <UTurnCard facts={facts}
-                        cardProgress={cardProgress}
-                        onCardItemSelectWhenTrue={handleFactSelectionForSubmission}
-                        onCardItemSelectWhenFalse={handleFactSelectionForSummary}
-                    />
-                    <GuessFactOwnerDialog selectedFact={previewedFactDialogDetails.factItem}
-                        open={openSubmitDialog} 
-                        onClose={handleSubmitDialogClose} 
-                        factOwners={factOwnerDetails}
-                        onSubmitCorrectAnswer={updateCardProgress}
-                    />
-                    <FactSummaryDialog
-                        open={openFactSummaryDialog}
-                        onClose={handleFactSummaryDialogClose}
-                        selectedFact={previewedFactDialogDetails.factItem}
-                    />
-                </Container>
+                <LoadingView isWaitingForHost={false} translate={translate}/>
             </Box>
+        )
+    } 
+    
+    else if(isGameEnding) {
+        return (
+            <Navigate to={`/leaderboard`} replace={true} />
+        )
+    }
+    
+    else {
+        return (
+            <>
+                <Box className="home">
+                    <Navbar isAdmin={false}/>
+                    <h1>{props.translate('uturn-title')}</h1>
+                    <Container sx={{marginBottom:12}}>
+                        <UTurnCard facts={facts}
+                            cardProgress={cardProgress}
+                            onCardItemSelectWhenTrue={handleFactSelectionForSubmission}
+                            onCardItemSelectWhenFalse={handleFactSelectionForSummary}
+                        />
+                        <GuessFactOwnerDialog selectedFact={previewedFactDialogDetails.factItem}
+                            open={openSubmitDialog} 
+                            onClose={handleSubmitDialogClose} 
+                            factOwners={factOwnerDetails}
+                            onSubmitCorrectAnswer={updateCardProgress}
+                        />
+                        <FactSummaryDialog
+                            open={openFactSummaryDialog}
+                            onClose={handleFactSummaryDialogClose}
+                            selectedFact={previewedFactDialogDetails.factItem}
+                        />
+                    </Container>
+                    <Footer cardProgress={cardProgress}
+                        isScoreVisible={isScoreVisible}
+                        playerId={url}
+                        children={undefined!}
+                        isScore={isScoreVisible}
+                    />
+                </Box>
+            </>
         )
     }
 }
