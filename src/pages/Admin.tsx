@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { deleteAllScores } from "../services/ScoreService";
@@ -8,6 +8,7 @@ import { GameResetDialog } from "../components/dialogs/GameResetDialog";
 import { useNavigate } from "react-router-dom";
 import { updateGameStartState } from "../services/GameStatesService";
 import { Button } from "@mui/material";
+import { LangContext } from "../context/lang";
 
 interface AdminProps {
     translate : (key: string) => string
@@ -15,7 +16,7 @@ interface AdminProps {
 
 export const Admin = (props: AdminProps) => {
     let navigate = useNavigate();
-
+    const {dispatch: { translate }} = useContext(LangContext);
     const [isGameResetDialogShowing, setIsGameResetDialogShowing] = useState(false)
 
     const handleGameResetDialogOpen = () => {
@@ -61,6 +62,7 @@ export const Admin = (props: AdminProps) => {
                     <GameResetDialog open={isGameResetDialogShowing} 
                         onClose={handleGameResetDialogClose}
                         onReset={handleResetGame}
+                        translate={translate}
                     />
             </section>
             <Footer cardProgress={null}

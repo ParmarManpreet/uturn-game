@@ -249,7 +249,7 @@ export const PlayerProfile = (props : PlayerProfileProps) => {
     else if(isGameStarting && !isWaitingForStart) {
         return (
             <Box className="home">
-                <GameInProgressView/>
+                <GameInProgressView translate={translate}/>
             </Box>
         )
     }
