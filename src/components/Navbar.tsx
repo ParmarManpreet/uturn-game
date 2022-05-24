@@ -18,8 +18,7 @@ interface NavbarProps {
   isAdmin: boolean
 }
 
-const pages = ['Home Page', 'Settings', 'GameLink'];
-const settings = ['Home Page', 'Settings', 'GameLink'];
+const pages = ['Home Page', 'Settings'];
 
 const Navbar = (props: NavbarProps) => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
