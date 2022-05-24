@@ -21,6 +21,7 @@
     "create-prfile-submit": "Submit",
 
     "loading-message": "Please Wait for Host to Start the Game",
+    "loading-game-progress": "Sorry a Game is In Progress",
 
 
     "uturn-title": "Here is your UTurn Card",
@@ -32,7 +33,24 @@
     "leaderboard-title": "Leaderboard",
     "leaderboard-rank": "Rank",
     "leaderboard-name": "Name",
-    "leaderboard-score": "Score"
+    "leaderboard-score": "Score",
+
+    "fact-dialog-title": "Fact Summary",
+    "fact-dialog-close": "Close",
+
+    "game-dialog-title": "Game Already in Session!",
+    "game-dialog-reset-text": "To Reset the Game Please Type",
+    "game-dialog-reset": "Reset Game",
+    "game-dialog-cancel": "Cancel",
+
+    "guessfact-dialog-correct": "Correct",
+    "guessfact-dialog-close": "Close",
+    "guessfact-dialog-incorrect": "Incorrect",
+    "guessfact-dialog-tryagain": "Try Again",
+    "guessfact-dialog-submit": "Submit",
+    "guessfact-dialog-who": "Who wrote this fact?",
+    "guessfact-dialog-congrats": "Congratulations!"
+
 
     
 }

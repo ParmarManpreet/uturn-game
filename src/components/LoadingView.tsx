@@ -6,16 +6,17 @@ interface LoadingViewProps {
     translate : (key: string) => string
 }
 
-window.onpopstate = function () {
-    window.history.go(1);
-};
-
-window.addEventListener("beforeunload", (ev) => {  
-    ev.preventDefault();
-    return ev.returnValue = 'Are you sure you want to close?';
-});
-
 export const LoadingView = (props: LoadingViewProps) => {
+
+    window.onpopstate = function () {
+        window.history.go(1);
+    };
+    
+    window.addEventListener("beforeunload", (ev) => {  
+        ev.preventDefault();
+        return ev.returnValue = 'Are you sure you want to close?';
+    });
+    
     return (
         <Box sx={{ display:'flex', alignItems:'center', justifyContent:'center', height: '100%' }}>
             <Box>

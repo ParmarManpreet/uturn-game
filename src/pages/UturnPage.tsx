@@ -279,11 +279,13 @@ export const UturnPage = (props : UTurnPage) => {
                             onClose={handleSubmitDialogClose} 
                             factOwners={factOwnerDetails}
                             onSubmitCorrectAnswer={updateCardProgress}
+                            translate={translate}
                         />
                         <FactSummaryDialog
                             open={openFactSummaryDialog}
                             onClose={handleFactSummaryDialogClose}
                             selectedFact={previewedFactDialogDetails.factItem}
+                            translate={translate}
                         />
                     </Container>
                     <Footer cardProgress={cardProgress}

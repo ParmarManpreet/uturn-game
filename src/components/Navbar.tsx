@@ -18,8 +18,7 @@ interface NavbarProps {
   isAdmin: boolean
 }
 
-const pages = ['Home Page', 'Settings', 'GameLink'];
-const settings = ['Home Page', 'Settings', 'GameLink'];
+const pages = ['Home Page', 'Settings'];
 
 const Navbar = (props: NavbarProps) => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -68,7 +67,7 @@ async function initializeCompanyLogo() {
     setAnchorElNav(null);
   };
 
-  const handleSelection = ( e: React.MouseEvent<HTMLLIElement, MouseEvent>,value: string) => {
+  const handleSelection = ( value: string) => {
     //Write code to make page route to the selected page
       if(value === "Settings") {
         <NavigationLink text={'Settings'} path="/settings" />
@@ -149,7 +148,7 @@ async function initializeCompanyLogo() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={(e) => handleSelection(e,page)}>
+                <MenuItem key={page} onClick={() => handleSelection(page)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -216,9 +215,9 @@ async function initializeCompanyLogo() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">{setting}</Typography>
+              {pages.map((pages) => (
+              <MenuItem key={pages} onClick={handleCloseUserMenu}>
+                <Typography textAlign="center">{pages}</Typography>
               </MenuItem>
               ))}
             </Menu>
