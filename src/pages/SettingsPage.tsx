@@ -37,7 +37,7 @@ export const SettingsPage = (props : SettingsProp) => {
                         alignItems: 'center',
                     }}
                 >
-                <span>Make Score Visible</span>
+                <span>{props.translate('settings-score')}</span>
                 <Switch aria-label= 'Switch for Score Visibility'
                     onChange={(e) => handleChangeVisibleScoreSwitch(e)}
                     checked={isScoreVisible}
