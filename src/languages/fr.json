@@ -21,6 +21,7 @@
     "create-prfile-submit" : "Soumettre",
 
     "loading-message": "Veuillez attendre que l'hôte commence le jeu",
+    "loading-game-progress": "Désolé, un jeu est en cours",
 
     "uturn-title" : "Voici votre carte UTurn",
     "uturn-legend-row" : "Rangée complète : 100 points",
@@ -31,6 +32,22 @@
     "leaderboard-title": "Tableau des leaders",
     "leaderboard-rank": "Classement",
     "leaderboard-name": "Nom",
-    "leaderboard-score": "Pointage"
+    "leaderboard-score": "Pointage",
+
+    "fact-dialog-title": "Résumé des faits",
+    "fact-dialog-close": "Fermé",
+
+    "game-dialog-title": "Jeu déjà en session !",
+    "game-dialog-reset-text": "Pour réinitialiser le jeu, veuillez taper",
+    "game-dialog-reset": "Réinitialiser le jeu",
+    "game-dialog-cancel": "Annuler",
+
+    "guessfact-dialog-correct": "Correct",
+    "guessfact-dialog-close": "Annuler",
+    "guessfact-dialog-incorrect": "Incorrect",
+    "guessfact-dialog-tryagain": "Essayez à nouveau",
+    "guessfact-dialog-submit": "Soumettre",
+    "guessfact-dialog-who": "Qui a écrit ce fait ?",
+    "guessfact-dialog-congrats": "Félicitations!"
     
 }

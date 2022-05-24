@@ -5,13 +5,14 @@ interface FactSummaryDialogProps {
     open: boolean
     onClose: () => void
     selectedFact: FactModelGetDTO
+    translate : (key: string) => string
 }
 
 export const FactSummaryDialog = (props: FactSummaryDialogProps) => {
     return (
         <Dialog open={props.open} onClose={props.onClose} fullWidth={true}
         maxWidth={'sm'}>
-            <DialogTitle>Fact Summary</DialogTitle>
+            <DialogTitle>{props.translate('fact-dialog-title')}</DialogTitle>
             <DialogContent>
                 <DialogContentText sx={{textAlign: 'center', marginBottom:2}}>
                     <strong>{props.selectedFact.playerName}</strong>
@@ -24,7 +25,7 @@ export const FactSummaryDialog = (props: FactSummaryDialogProps) => {
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={props.onClose}>Close</Button>
+                <Button onClick={props.onClose}>{props.translate('fact-dialog-close')}</Button>
             </DialogActions>
         </Dialog>
     );

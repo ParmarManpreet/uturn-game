@@ -11,6 +11,7 @@ interface GameResetDialogProps {
   open: boolean,
   onClose: () => void
   onReset: () => void
+  translate : (key: string) => string
 }
 
 export const GameResetDialog = (props: GameResetDialogProps) => {
@@ -30,10 +31,10 @@ export const GameResetDialog = (props: GameResetDialogProps) => {
   return (
     <>
       <Dialog open={props.open} onClose={props.onClose}>
-        <DialogTitle>Game Already in Session!</DialogTitle>
+        <DialogTitle>{props.translate('game-dialog-title')}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To Reset the Game Please Type <strong>Reset Game</strong>
+          {props.translate('game-dialog-reset-text')} <strong>Reset Game</strong>
           </DialogContentText>
           <TextField
             autoFocus
@@ -47,8 +48,8 @@ export const GameResetDialog = (props: GameResetDialogProps) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={props.onClose}>Cancel</Button>
-          <Button onClick={handleGameReset}>Reset Game</Button>
+          <Button onClick={props.onClose}>{props.translate('game-dialog-cancel')}</Button>
+          <Button onClick={handleGameReset}>{props.translate('game-dialog-reset')}</Button>
         </DialogActions>
       </Dialog>
     </>
