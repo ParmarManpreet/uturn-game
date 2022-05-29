@@ -71,9 +71,17 @@ export const PlayerScore = (props: PlayerScoreProps) => {
             return isRightDownDiagonalComplete
         }
 
-
         function tallyScore() {
             let totalScore = 0
+
+            for(let rowIndex = 0; rowIndex < props.cardProgress.length; rowIndex++) {
+                for (let columnIndex = 0; columnIndex < props.cardProgress.length; columnIndex++) {
+                    if (props.cardProgress[rowIndex][columnIndex] === true) {
+                        totalScore = totalScore + 20
+                    }
+                }
+            }
+
             for(const isRowComplete of areRowsComplete()) {
                 if(isRowComplete) {
                     totalScore = totalScore + 100
