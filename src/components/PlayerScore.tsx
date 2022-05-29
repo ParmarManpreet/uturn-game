@@ -111,7 +111,7 @@ export const PlayerScore = (props: PlayerScoreProps) => {
 
         tallyScore()
         
-    }, [props.cardProgress])
+    }, [props.cardProgress, props.playerId, score])
 
     return (
         <>
