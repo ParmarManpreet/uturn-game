@@ -32,7 +32,6 @@ interface PlayerProfileProps {
     translate : (key: string) => string
 }
 
-
 export const PlayerProfile = (props : PlayerProfileProps) => {
     const defaultAvatars = [
        actress,
@@ -46,7 +45,9 @@ export const PlayerProfile = (props : PlayerProfileProps) => {
        userMale,
        writeMale
     ];
+
     const {dispatch: { translate }} = useContext(LangContext);
+
     // Facts Constants
     const emptyFacts: Array<string> = []
 
@@ -63,6 +64,7 @@ export const PlayerProfile = (props : PlayerProfileProps) => {
     const [name, setName] = useState("")
     const [facts, setFacts] = useState(emptyFacts)
     const [urlParameter, setUrlParameter] = useState("")
+    const [hasSubmittedFact, setHasSubmittedFact] = useState(false)
 
     // Image States 
     const [file, setFile] = useState<File>()
@@ -140,6 +142,7 @@ export const PlayerProfile = (props : PlayerProfileProps) => {
 
     async function handlePlayerDetailsSubmitButton() {
         try {
+            setHasSubmittedFact(true)
             const isSucessful = await saveProfileInformation()
             setIsWaitingForStart(isSucessful)
         } catch(error) {
@@ -417,7 +420,7 @@ export const PlayerProfile = (props : PlayerProfileProps) => {
                     id="factButton"
                     variant="contained" 
                     onClick={handlePlayerDetailsSubmitButton}
-                    disabled={areThereEmptyFields()}
+                    disabled={areThereEmptyFields() || hasSubmittedFact}
                 >
                     {props.translate('create-prfile-submit')}
                 </Button>
