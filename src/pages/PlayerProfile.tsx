@@ -312,6 +312,7 @@ export const PlayerProfile = (props : PlayerProfileProps) => {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
+                        marginBottom:'200px'
                     }}
                 >
                 <label>
