@@ -32,6 +32,12 @@ export const NumberOfPlayerPage = (props : NumberofPlayerProps) => {
         navigate('/player-links', { state: {numberOfFacts: factsPerPerson} })
     }
 
+    const preventRefresh = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if(e.key === "Enter") {
+            e.preventDefault()
+        }
+    }
+
     function handleSubmit () {
         let factsPerPerson = 1
         let playerCount = parseInt(numberOfPlayers)
@@ -56,8 +62,8 @@ export const NumberOfPlayerPage = (props : NumberofPlayerProps) => {
         }
     }
 
-        return (
-            <>
+    return (
+        <>
             <Navbar isAdmin={true} ></Navbar>
             <section className="home">
                 <h1>{props.translate('number-players-title')}</h1>
@@ -72,17 +78,19 @@ export const NumberOfPlayerPage = (props : NumberofPlayerProps) => {
                     noValidate
                     autoComplete="off"
                 >
-                <TextField
-                    sx={{'& label.Mui-focused': {
-                        color: 'black',
-                        },
-                    }}
-                    id="player-number"
-                    label={props.translate('number-players-entry-text')}
-                    variant="filled"
-                    value={numberOfPlayers} onChange={handlePlayerInputChange}>
-                </TextField>
-                <Button sx={{ color: 'white', marginTop: '8px' }} variant="contained" disableElevation onClick={handleSubmit}>{props.translate('number-players-submit')}</Button>
+                    <TextField
+                        sx={{'& label.Mui-focused': {
+                            color: 'black',
+                            },
+                        }}
+                        id="player-number"
+                        label={props.translate('number-players-entry-text')}
+                        variant="filled"
+                        value={numberOfPlayers} 
+                        onChange={handlePlayerInputChange}
+                        onKeyDown={(e) => preventRefresh(e)}
+                    />
+                    <Button sx={{ color: 'white', marginTop: '8px' }} variant="contained" disableElevation onClick={handleSubmit}>{props.translate('number-players-submit')}</Button>
                 </Box>
             </section>
             <Footer cardProgress={null}
@@ -90,6 +98,7 @@ export const NumberOfPlayerPage = (props : NumberofPlayerProps) => {
                 playerId={null}
                 children={undefined!} 
                 isScore={false}
-            />            </>
-        );
-    }
+            />
+        </>
+    );
+}
