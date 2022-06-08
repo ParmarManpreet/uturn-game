@@ -5,6 +5,8 @@
 
     "settings-title": "Game Settings",
     "settings-score": "Make Score Visible",
+    "settings-teambuildlogo": "Change Team Building Logo",
+    "settings-clientlogo": "Change Client Logo",
 
     "number-players-title": "Number of Players",
     "number-players-entry-text": "Enter Number of Players",

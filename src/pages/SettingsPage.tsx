@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 import FolderIcon from '@mui/icons-material/Folder';
 import { getVisibleScoreState, updateVisibleScoreState } from "../services/GameStatesService";
 import { storage } from "..";
-import { ref } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import SettingService from "../services/SettingService";
 
 interface SettingsProp {
@@ -48,19 +48,26 @@ export const SettingsPage = (props : SettingsProp) => {
 
     async function uploadTeamBuildingLogo(file : any) {
         const storageRef = ref(storage, `teamBuilding-logos/${file}`)
-        const fileURL = URL.createObjectURL(file)
-        if (fileURL) {
-            SettingService.setTeamBuildingLogo(fileURL)
-            setTeamBuildLogoURL(fileURL)
+        //const fileURL = URL.createObjectURL(file)
+        if (file) {
+            const uploadResult = await uploadBytes(storageRef, file)
+            const downloadURL = await getDownloadURL(uploadResult.ref)
+            SettingService.setTeamBuildingLogo(downloadURL)
+            setTeamBuildLogoURL(downloadURL)
+            console.log("file: " + file)
+            console.log("downlowd " + downloadURL)
         }
     }
 
     async function uploadCompanyLogo(file : any) {
         const storageRef = ref(storage, `company-logos/${file}`)
-        const fileURL = URL.createObjectURL(file)
-        if (fileURL) {
-            SettingService.setCompanyLogo(fileURL)
-            setCompanyLogoURL(fileURL)
+        if (file) {
+            const uploadResult = await uploadBytes(storageRef, file)
+            const downloadURL = await getDownloadURL(uploadResult.ref)
+            SettingService.setCompanyLogo(downloadURL)
+            setCompanyLogoURL(downloadURL)
+            console.log("file: " + file)
+            console.log("downlowd " + downloadURL)
         }
     }
 
@@ -112,10 +119,15 @@ async function initializeCompanyLogo() {
                         alignItems: 'center',
                         margingBottom: '200px',
                         }}
-                >                    <span>{props.translate('settings-score')}</span>
-                    <Switch aria-label= 'Switch for Score Visibility'
-                        onChange={(e) => handleChangeVisibleScoreSwitch(e)}
-                        checked={isScoreVisible}
+                >   
+                <span>{props.translate('settings-score')}</span>
+                <Switch aria-label= 'Switch for Score Visibility'
+                    onChange={(e) => handleChangeVisibleScoreSwitch(e)}
+                    checked={isScoreVisible}
+                    sx={{
+                        marginBottom: '20px'
+                    }}
+                    
                     />
                 </Box>
 
@@ -127,12 +139,13 @@ async function initializeCompanyLogo() {
                         margingBottom: '200px',
                         }}
                 > 
+                    <span>{props.translate('settings-teambuildlogo')}</span>
                     {hasRetreivedLogo? <img src={teamBuildLogoURL} height="32" alt="Logo"/>: null}
                     <label>
                     <Input accept="image/*" id="icon-button-file" type="file" onChange={handleTeamBuildingLogoUpdate} />
                     <IconButton 
                         sx={{
-                            marginTop: '8px',
+                            marginBottom: '20px',
                             color: 'white',
                         }}
                         aria-label="upload picture" 
@@ -150,6 +163,7 @@ async function initializeCompanyLogo() {
                         margingBottom: '200px',
                         }}
                 > 
+                    <span color="white">{props.translate('settings-clientlogo')}</span>
                     {hasRetreivedLogo? <img src={companyLogoURL} height="32" alt="Logo"/>: null}
                     <label>
                     <Input accept="image/*" id="icon-button-file" type="file" onChange={handleCompanyLogoUpdate} />
