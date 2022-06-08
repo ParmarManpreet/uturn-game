@@ -29,9 +29,9 @@ import Footer from "../components/Footer";
 import { LangContext } from "../context/lang";
 
 interface PlayerProfileProps {
+    hasListeners: boolean
     translate : (key: string) => string
 }
-
 
 export const PlayerProfile = (props : PlayerProfileProps) => {
     const defaultAvatars = [
@@ -46,7 +46,9 @@ export const PlayerProfile = (props : PlayerProfileProps) => {
        userMale,
        writeMale
     ];
+
     const {dispatch: { translate }} = useContext(LangContext);
+
     // Facts Constants
     const emptyFacts: Array<string> = []
 
@@ -63,6 +65,7 @@ export const PlayerProfile = (props : PlayerProfileProps) => {
     const [name, setName] = useState("")
     const [facts, setFacts] = useState(emptyFacts)
     const [urlParameter, setUrlParameter] = useState("")
+    const [hasSubmittedFact, setHasSubmittedFact] = useState(false)
 
     // Image States 
     const [file, setFile] = useState<File>()
@@ -140,8 +143,12 @@ export const PlayerProfile = (props : PlayerProfileProps) => {
 
     async function handlePlayerDetailsSubmitButton() {
         try {
+            setHasSubmittedFact(true)
             const isSucessful = await saveProfileInformation()
             setIsWaitingForStart(isSucessful)
+            if (!props.hasListeners) {
+                setIsGameStarting(isSucessful)  
+            }
         } catch(error) {
             console.log(error)
         }
@@ -232,8 +239,14 @@ export const PlayerProfile = (props : PlayerProfileProps) => {
         }
 
         initializeFacts()
-        setupGameStartListeners()
-    }, [searchParams])
+
+        if (props.hasListeners) {
+            setupGameStartListeners()
+        }
+        else {
+            setIsGameStarting(false)
+        }
+    }, [searchParams, props.hasListeners])
 
     if (!isGameStarting && isWaitingForStart) {
         return (
@@ -248,9 +261,17 @@ export const PlayerProfile = (props : PlayerProfileProps) => {
 
     else if(isGameStarting && !isWaitingForStart) {
         return (
-            <Box className="home">
-                <GameInProgressView translate={translate}/>
-            </Box>
+            <>
+                <Box className="home">
+                    <GameInProgressView numberOfFacts={facts.length} translate={translate}/>
+                </Box>
+                <Footer cardProgress={null}
+                    isScoreVisible={null}
+                    playerId={null}
+                    children={undefined!} 
+                    isScore={false}
+                />
+            </>
         )
     }
     
@@ -312,6 +333,7 @@ export const PlayerProfile = (props : PlayerProfileProps) => {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
+                        marginBottom:'200px'
                     }}
                 >
                 <label>
@@ -416,7 +438,7 @@ export const PlayerProfile = (props : PlayerProfileProps) => {
                     id="factButton"
                     variant="contained" 
                     onClick={handlePlayerDetailsSubmitButton}
-                    disabled={areThereEmptyFields()}
+                    disabled={areThereEmptyFields() || hasSubmittedFact}
                 >
                     {props.translate('create-prfile-submit')}
                 </Button>

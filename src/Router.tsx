@@ -17,7 +17,8 @@ export const Router = () => {
             {/* <Route path="/"  element={<Admin translate={function (key: string): string {
                 throw new Error("Function not implemented.");
             } }/>} /> */}
-            <Route path="/player-profile" element={<PlayerProfile translate={translate}/>} />
+            <Route path="/player-profile" element={<PlayerProfile hasListeners={true} translate={translate}/>} />
+            <Route path="/player-profile/override" element={<PlayerProfile hasListeners={false} translate={translate}/>} />
             <Route path="/number-players" element={<NumberOfPlayerPage translate={translate}/>} />
             <Route path="/player-links" element={<PlayerLinkPage translate={translate}/>} />
             <Route path="/settings" element={<SettingsPage translate={translate}/>} />
