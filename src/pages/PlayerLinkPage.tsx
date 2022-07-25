@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import QRCode from 'qrcode';
 import { updateGameStartState } from "../services/GameStatesService";
 import Navbar from "../components/Navbar";
@@ -18,12 +18,19 @@ export const PlayerLinkPage = (props : PlayerLinkProp) => {
     const factNumber: number = factState.numberOfFacts
     const [imageUrl, setImageUrl] = useState('')
 
+    let navigate = useNavigate();
+
+    const redirectLeaderboardPage = () => {
+        navigate('/leaderboard')
+    }
+
     function startGame() {
         updateGameStartState(true)
     }
 
     function endGame() {
         updateGameStartState(false)
+        redirectLeaderboardPage()
     }
     
     useEffect(() => {
