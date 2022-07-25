@@ -8,8 +8,6 @@ import { GuessFactOwnerDialog } from "../components/dialogs/GuessFactOwnerDialog
 import Footer from "../components/Footer";
 import { LoadingView } from "../components/LoadingView";
 import Navbar from "../components/Navbar";
-import { PlayerScore } from "../components/PlayerScore";
-import { ScoreLegend } from "../components/ScoreLegend";
 import { FactPosition, UTurnCard } from "../components/UTurnCard";
 import { LangContext } from "../context/lang";
 import { FactModelGetDTO } from "../services/FactService";
